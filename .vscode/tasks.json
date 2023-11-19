@@ -1,0 +1,41 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run pyrcc5",
+            "type": "shell",
+            "command": "pyrcc5",
+            "args": [
+                "./app/resource/resource.qrc",
+                "-o",
+                "./app/common/resource.py"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "silent",
+                "panel": "new"
+            }
+        },
+        {
+            "label": "Run lrelease",
+            "type": "shell",
+            "command": "lrelease",
+            "args":[
+                "./app/resource/i18n/gallery.zh_CN.ts",
+                "./app/resource/i18n/gallery.zh_HK.ts",
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "silent",
+                "panel": "new"
+            }
+        }
+
+    ]
+}

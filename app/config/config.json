@@ -1,0 +1,44 @@
+{
+    "BasicSeting": {
+        "Multireport": true,
+        "MultireportAdress": [
+            "040123456789",
+            "610300000012"
+        ],
+        "region": "广东",
+        "ReportReplay": true
+    },
+    "Material": {
+        "AcrylicBlurRadius": 15
+    },
+    "Update": {
+        "CheckUpdateAtStartUp": true
+    },
+    "MainWindow": {
+        "DpiScale": "Auto",
+        "Language": "Auto",
+        "MicaEnabled": true
+    },
+    "Folders": {
+        "Log": "D:/ProjectWorkPlace/FrameAnalysic-V1.0/Assistent/app/log",
+        "LocalMusic": []
+    },
+    "Serial": {
+        "BaudRate": 115200,
+        "DataBits": 8,
+        "Parity": "偶校验",
+        "StopBits": 1
+    },
+    "TcpClient": {
+        "IP": "192.168.2.11",
+        "Port": 8001
+    },
+    "TcpServer": {
+        "IP": "192.168.2.16",
+        "Port": 8001
+    },
+    "QFluentWidgets": {
+        "ThemeColor": "#ff09aa51",
+        "ThemeMode": "Auto"
+    }
+}
