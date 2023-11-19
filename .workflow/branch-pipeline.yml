@@ -21,10 +21,11 @@ stages:
         pythonVersion: '3.9'
         commands:
           - python3 -m pip install --upgrade pip
-          - apt-get install python-dev
-          - apt-get install python3-dev
           - pip install pyinstaller
-          - pyinstaller --onefile --windowed --icon="D:\ProjectWorkPlace\FrameAnalysic-V1.0\Assistent\app\resource\images\logo.png" --distpath=/build/ Assistent.py
+          - apt-get install wine winetricks
+          - winetricks corefonts
+          - WINEPREFIX=~/.wine32 winecfg
+          - pyinstaller --win32 --win--onefile --windowed --icon="D:\ProjectWorkPlace\FrameAnalysic-V1.0\Assistent\app\resource\images\logo.png" --distpath=/build/ Assistent.py
         artifacts:
           - name: BUILD_ARTIFACT
             path:
