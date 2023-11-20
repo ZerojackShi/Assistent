@@ -41657,11 +41657,23 @@
 			<decimal>4</decimal>
 		</splitByLength>
 	</template>
+	<dataItem id="E2010002" protocol="csg13" region="南网">
+		<name>最大需量结算日自动复零</name>
+		<length>6</length>
+		<type>ERD2</type>
+	</dataItem>
 	<dataItem id="E201000E" protocol="csg13" region="南网">
 		<name>控制事件记录</name>
 		<length>15</length>
 		<type>ERD6</type>
 	</dataItem>
+	<template id="ERD2" protocol="csg13" region="南网">
+		<splitByLength>
+			<name>最大需量清零时间</name>
+			<length>6</length>
+			<time>YYMMDDhhmmss</time>
+		</splitByLength>
+	</template>
 	<template id="ERD6" protocol="csg13" region="南网">
 		<splitByLength>
 			<name>控制事件发生时间</name>
@@ -41690,6 +41702,22 @@
 			<decimal>2</decimal>
 		</splitByLength>
 	</template>
+	<dataItem id="E0000160" protocol="csg13" region="南网">
+		<name>月冻结结算日</name>
+		<length>2</length>
+		<splitByLength>
+			<name>结算时间的小时</name>
+			<length>1</length>
+			<unit>时</unit>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>结算时间的日</name>
+			<length>1</length>
+			<unit>日</unit>
+			<type>BCD</type>
+		</splitByLength>
+	</dataItem>
 	<dataItem id="E0000E32" protocol="csg13" region="南网">
 		<name>连续无通信保电判定时间</name>
 		<length>2</length>

@@ -84,12 +84,12 @@ class ParamFrameInterface(QWidget):
         if item is not None and item != '':
             item = int(item, 16)
         data = self.dataInput.text()
-        if data is not None and data!= '':
-            if self.switchButton.isChecked():
-                item_dic[item] = data
-            else:
-                data = None
-                item_dic[item] = data
+        if self.switchButton.isChecked():
+            item_dic[item] = data
+        else:
+            data = None
+            item_dic[item] = data
+            
         adress = [0xff] * 6  # Fix the initialization of adress
         msa = 0x10
         frame_csg.init_frame(0x4a, afn, adress, msa, 0x60, frame)
