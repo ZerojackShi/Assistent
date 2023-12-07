@@ -125,6 +125,7 @@ def parse_bitwise_data(splitbit_elem, data_segment,index,need_delete):
         result[bit_id_attr] = [bit_name, bit_value, bit_value_name,[index, index + len(data_segment)]]
     return result
 def prase_type_item(data_item_elem, data_segment, index, need_delete, singal_length):
+    from ..plugins.frame_csg import FrameCsg
     sub_type = data_item_elem.find('type').text.upper()
     sub_length = len(data_segment)
     result = {}
@@ -170,6 +171,12 @@ def prase_type_item(data_item_elem, data_segment, index, need_delete, singal_len
     elif sub_type in ("FRAME645"):
         subitem_value = []
         Analysis_645_fram_by_afn(data_segment, subitem_value,index)
+        sub_length = len(data_segment)
+        return subitem_value
+    elif sub_type in ("CSG13"):
+        subitem_value = []
+        csg = FrameCsg()
+        csg.Analysis_csg_frame_by_afn(data_segment, subitem_value,index)
         sub_length = len(data_segment)
         return subitem_value
         #result[i] = ["645报文",data_segment,frame_fun.get_data_str_reverser(data_segment),subitem_value,[index + pos,index + pos +sub_length]]
@@ -496,7 +503,7 @@ def parse_data_item(data_item_elem, data_segment, index, need_delete):
         # 包含splitbit标签，则先解析splitbit数据
         splitbit_elem = data_item_elem.find('splitbit')
         parsed_bitwise_data = parse_bitwise_data(splitbit_elem, data_segment,index, need_delete)
-        result = parsed_bitwise_data
+        result = {data_item_id: [data_item_name, data_segment, parsed_bitwise_data,[index, index + len(data_segment)]]}
         # result.update(parsed_bitwise_data)
 
     # 解析splitByLength数据
@@ -581,16 +588,167 @@ def get_relay_type(relaytype):
         return "转发主站对电能表的保电解除命令"
     else:
         return "未知"
+    
+class PraseFrameData():
+    def parse_data_item(self,data_item_elem, data_segment, index, need_delete):
+        # 解析单个dataItem数据段
+        result = {}
+        if len(data_segment) == 0:
+            return result
 
-def parse_data(data_item_id, protocol, region, data_segment, index):
-    # 根据xml配置解析数据
-    parsed_data = {}
-    data_item_elem = frame_fun.get_config_xml(data_item_id, protocol, region)
-    need_delete = True if protocol == "DLT/645-2007" else False
-    if data_item_elem is not None:
-        parsed_data = parse_data_item(data_item_elem, data_segment, index, need_delete)
-    return parsed_data
+        # 获取dataItem标签的id属性值
+        data_item_id = data_item_elem.get('id')
+        data_item_name = data_item_elem.find('name').text
 
+        # 递归解析子dataItem标签
+        sub_data_item = data_item_elem.find('dataItem')
+        if sub_data_item is not None:
+            sub_data_segment = data_segment
+            pos = 0
+            for sub_data_item_elem in data_item_elem.findall('dataItem'):
+                sub_data_item_id = sub_data_item_elem.get('id')
+                sub_item_name = sub_data_item_elem.find('name').text
+                sub_data_item_length = int(sub_data_item_elem.find('length').text)
+                sub_data_segment = data_segment[pos:pos + sub_data_item_length]
+                if sub_data_item_length > len(sub_data_segment):
+                    break
+                if 'splitByLength' in sub_data_item_elem.tag:
+                    sub_data_segment = sub_data_segment[:int(sub_data_item_elem.find('length').text)]
+                parsed_sub_data = parse_data_item(sub_data_item_elem,sub_data_segment,index + pos,need_delete)
+                result_data = [sub_item_name, sub_data_segment, parsed_sub_data, [index + pos, index + pos + sub_data_item_length]]
+                result[sub_data_item_id] = parsed_sub_data
+                pos += sub_data_item_length
+        elif data_item_elem.find('unit') is not None and data_item_elem.find('value') is not None:
+            subitem_value = prase_value_item(data_item_elem, data_segment, index,  need_delete)
+            singal_result = f"{subitem_value}"
+            result = {data_item_id: [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]}
+        elif data_item_elem.find('unit') is not None:
+            singal_result = prase_singal_item(data_item_elem, data_segment, index, need_delete)
+            #result = [data_item_name,data_segment, singal_result, [index, index+len(data_segment)]]
+            result = {data_item_id: [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]}
+            #result = singal_result
+        elif data_item_elem.find('value') is not None:
+            singal_result = prase_value_item(data_item_elem, data_segment, index,  need_delete)
+            result = {data_item_id: [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]}
+        elif data_item_elem.find('time') is not None:
+            # 解析时间数据
+            subitem_time_format = data_item_elem.find('time').text
+            subitem_type = data_item_elem.find('type')
+            data_type = ""
+            if subitem_type is not None:
+                data_type = subitem_type.text
+            time_data = data_segment[:6][::-1]
+            if data_type in ("BIN","Bin","bin"):
+                time_data = frame_fun.binary_to_bcd(time_data)
+            singal_result = frame_fun.parse_time_data(time_data,subitem_time_format,need_delete)
+            result = {data_item_id: [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]}
+                # 判断是否包含splitbit标签
+        elif data_item_elem.find('splitbit') is not None:
+            # 包含splitbit标签，则先解析splitbit数据
+            splitbit_elem = data_item_elem.find('splitbit')
+            parsed_bitwise_data = parse_bitwise_data(splitbit_elem, data_segment,index, need_delete)
+            result = {data_item_id: [data_item_name, data_segment, parsed_bitwise_data,[index, index + len(data_segment)]]}
+            # result.update(parsed_bitwise_data)
+
+        # 解析splitByLength数据
+        elif data_item_elem.find('splitByLength') is not None:
+            splitLength_elem = data_item_elem.find('splitByLength')
+            parsed_splitByLength_data = parse_splitByLength_data(data_item_elem, data_segment,index, need_delete)
+            result = parsed_splitByLength_data
+        elif data_item_elem.find('itembox') is not None:
+            result = parse_item(data_item_elem, data_segment, index + pos,  need_delete)
+            # result.update(parsed_splitByLength_data)
+        elif data_item_elem.find('indelength') is not None:
+            length = len(data_segment)
+            length_vaue = f"{length}"
+            length_elem = data_item_elem.find('indelength[@len="' + length_vaue + '"]')
+            if length_elem is not None:
+                result = parse_data_item(length_elem, data_segment, index, need_delete)
+        elif data_item_elem.find('type') is not None:
+            data_type = data_item_elem.find('type').text.upper()
+            if data_type not in ("BCD","BIN","ASCII"):
+                template = frame_fun.get_template_element(data_type,frame_fun.globalprotocol, frame_fun.globregion)
+                if template is not None:
+                    result = parse_splitByLength_data(template, data_segment, index,  need_delete)
+                elif data_type == "IPWITHPORT":
+                    i = 0
+                    port = data_segment[0:2]
+                    port_str = frame_fun.prase_port(port)
+                    ip_str = frame_fun.prase_ip_str(data_segment[2:6])
+                    subitem_value = ["IP地址", data_segment[2:6], ip_str, [index + 2,index + 8]]
+                    result[i] = subitem_value
+                    i+=1
+                    subitem_value = ["端口号", port, port_str, [index,index + 2]]
+                    result[i] = subitem_value
+                    i+=1
+                else:
+                    if data_item_id:
+                        key = data_item_id
+                    else:
+                        key = data_item_name
+                    singal_result = prase_singal_item(data_item_elem, data_segment, index, need_delete)
+                    #result = [data_item_name,data_segment, singal_result, [index, index+len(data_segment)]]
+                    result[key] = [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]
+            else:
+                if data_item_id:
+                    key = data_item_id
+                else:
+                    key = data_item_name
+                singal_result = prase_singal_item(data_item_elem, data_segment, index, need_delete)
+                #result = [data_item_name,data_segment, singal_result, [index, index+len(data_segment)]]
+                result[key] = [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]
+        else:
+            if data_item_id:
+                key = data_item_id
+            else:
+                key = data_item_name
+            singal_result = prase_singal_item(data_item_elem, data_segment, index, need_delete)
+            #result = [data_item_name,data_segment, singal_result, [index, index+len(data_segment)]]
+            result[key] = [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]
+        return result
+    def parse_data(self,data_item_id, protocol, region, data_segment, index):
+        # 根据xml配置解析数据
+        parsed_data = {}
+        data_item_elem = frame_fun.get_config_xml(data_item_id, protocol, region)
+        need_delete = True if protocol == "DLT/645-2007" else False
+        if data_item_elem is not None:
+            parsed_data = parse_data_item(data_item_elem, data_segment, index, need_delete)
+        return parsed_data
+    def caculate_item_length(self,sub_element, data_segment, all_length_items=None):
+        def execute_calculation(element, data, items=None):
+            length = 0
+            length_maap = {}
+            if items is None:
+                all_items = element.findall('splitByLength')
+            else:
+                all_items = items
+            template_element = element.find('type')
+
+            if len(all_items) == 0:
+                if template_element is not None:
+                    data_type = template_element.text.upper()
+                    if data_type not in ("BCD", "BIN", "ASCII"):
+                        template = frame_fun.get_template_element(data_type, frame_fun.globalprotocol, frame_fun.globregion)
+                        if template is not None:
+                            # 递归调用子函数
+                            template_items = template.findall('splitByLength')
+                            return execute_calculation(template, data, template_items)
+            else:
+                for data_subitem_elem in all_items:
+                    subitem_name = data_subitem_elem.find('name').text
+                    sub_length_content = data_subitem_elem.find('length').text
+                    if sub_length_content == "unknown":
+                        subitem_length = caculate_unknown_length(data_subitem_elem, data, length_maap)
+                    else:
+                        subitem_length = int(sub_length_content)
+                    length += subitem_length
+                    length_maap[subitem_name] = [length, subitem_length, data_subitem_elem]
+            return length
+
+        # 初始调用
+        length = execute_calculation(sub_element, data_segment, all_length_items)
+
+        return length
 def is_dlt645_frame(data):
     # 判断报文长度是否符合最小要求
     if len(data) < 12:

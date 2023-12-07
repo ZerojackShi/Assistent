@@ -1,4 +1,6 @@
 # coding:utf-8
+import shutil
+import os
 import sys
 from enum import Enum
 from lxml import etree as ET
@@ -121,7 +123,7 @@ class Config(QConfig):
 
     ReportReplay = ConfigItem("BasicSeting", "ReportReplay", True, BoolValidator())
 
-    Region = OptionsConfigItem("BasicSeting", "region", "南网", OptionsValidator(["南网","云南","广东","深圳","广西","贵州","海南"]), restart=False)
+    Region = OptionsConfigItem("BasicSeting", "region", "南网", OptionsValidator(["南网","云南","广东","深圳","广西","贵州","海南","topo"]), restart=False)
 
     Multireport = ConfigItem("BasicSeting", "Multireport", True, BoolValidator())
     MultireportAdress = ConfigItem("BasicSeting", "MultireportAdress", [], validator=None)
@@ -156,7 +158,13 @@ class QframeConfig(QObject):
 
         if isinstance(file, (str, Path)):
             self._cfg.file = Path(file)
-
+            if self._cfg.file.exists() == False:
+                self._cfg.file.parent.mkdir(parents=True, exist_ok=True)
+                source_path = Path(f"_internal/{file}")
+                try:
+                    source_path.replace(self._cfg.file)
+                except:
+                    self._cfg.file = source_path
         try:
             with open(self._cfg.file, encoding="utf-8") as f:
                 self.config = ET.parse(f)

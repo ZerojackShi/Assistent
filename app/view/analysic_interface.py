@@ -7,7 +7,8 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from qfluentwidgets import ScrollArea, isDarkTheme, FluentIcon,LineEdit,PlainTextEdit,SmoothScrollDelegate
 from ..common.config import cfg, HELP_URL, REPO_URL, EXAMPLE_URL, FEEDBACK_URL
 from ..common.style_sheet import StyleSheet
-from ..plugins import frame_csg,protocol
+from ..plugins import protocol
+from ..plugins.frame_csg import FrameCsg
 from .gallery_interface import GalleryInterface
 from ..common.translator import Translator
 
@@ -194,6 +195,7 @@ class Alalysic(QWidget):
         print(protocol.frame_fun.globregion)
         # Process the input text and generate the tree data
         show_data = []
+        framedis = FrameCsg()
         # Add tree data using add data function
         try:
             frame = bytearray.fromhex(input_text)
@@ -219,9 +221,9 @@ class Alalysic(QWidget):
             if protocol.is_dlt645_frame(frame):
                 protocol.frame_fun.globalprotocol = "DLT/645-2007"
                 protocol.Analysis_645_fram_by_afn(frame, show_data,0)
-            elif frame_csg.is_csg_frame(frame):
+            elif framedis.is_csg_frame(frame):
                 protocol.frame_fun.globalprotocol = "CSG13"
-                frame_csg.Analysis_csg_frame_by_afn(frame,show_data)
+                framedis.Analysis_csg_frame_by_afn(frame,show_data,0)
             create_tree(self.tree_widget.invisibleRootItem(), show_data, self.item_position)
 
             self.tree_widget.expandAll()

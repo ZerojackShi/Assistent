@@ -1,6 +1,7 @@
 from asyncio.windows_events import ERROR_CONNECTION_ABORTED
 from xml.dom.expatbuilder import FragmentBuilder
-from ..plugins import frame_fun,protocol
+from ..plugins import frame_fun
+from ..plugins.protocol import PraseFrameData
 from PyQt5.QtWidgets import QMessageBox
 import re
 from datetime import datetime, timedelta
@@ -76,62 +77,79 @@ def set_frame_len(length, frame):
     frame[FramePos.POS_DATALEN.value + 2] = length & 0X00ff
     frame[FramePos.POS_DATALEN.value + 3] = length >> 8
 def is_csg_frame(frame):
-    if len(frame) < 24:
-        return False
-    if frame[0] != 0x68 or frame[5] != 0x68:
-        return False
-    if frame[1] != frame[3] or frame[2] != frame[4]:
-        print("frame err")
-        return False
-    frame_length = ((frame[2] << 8) | frame[1])
-    if frame_length + 8 != len(frame):
-        print("length err")
-        return False
-    if frame[-1] != 0x16:
-        return False
-    return True
+        if len(frame) < 24:
+            return False
+        if frame[0] != 0x68 or frame[5] != 0x68:
+            return False
+        if frame[1] != frame[3] or frame[2] != frame[4]:
+            print("frame err")
+            return False
+        frame_length = ((frame[2] << 8) | frame[1])
+        if frame_length + 8 != len(frame):
+            print("length err")
+            return False
+        if frame[-1] != 0x16:
+            return False
+        return True
+class FrameCsg():
+    def is_csg_frame(self,frame):
+        if len(frame) < 24:
+            return False
+        if frame[0] != 0x68 or frame[5] != 0x68:
+            return False
+        if frame[1] != frame[3] or frame[2] != frame[4]:
+            print("frame err")
+            return False
+        frame_length = ((frame[2] << 8) | frame[1])
+        if frame_length + 8 != len(frame):
+            print("length err")
+            return False
+        if frame[-1] != 0x16:
+            return False
+        return True
+    def Analysis_csg_frame_by_afn(self,frame,result_list,index):
+        afn = frame[14]
+        dir, prm = Analysic_csg_head_frame(frame,result_list,index)
 
-def Analysis_csg_frame_by_afn(frame,result_list):
-    afn = frame[14]
-    dir, prm = Analysic_csg_head_frame(frame,result_list)
-
-    if afn == 0x00:
-        Analysic_csg_ack_frame(frame, dir, prm, result_list)
-    elif afn == 0x02:
-        Analysic_csg_link_frame(frame, dir, prm, result_list)
-    elif afn == 0x04:
-        Analysic_csg_write_frame(frame, dir, prm,result_list)
-    elif afn == 0x06:
-        Analysic_csg_security_frame(frame, dir, prm,result_list)
-    elif afn == 0x0C:
-        Analysic_csg_read_cur_frame(frame, dir, prm,result_list)
-    elif afn == 0x0D:
-        Analysic_csg_read_history_frame(frame, dir, prm,result_list)
-    elif afn == 0x0A:
-        Analysic_csg_read_param_frame(frame, dir, prm,result_list)
-    elif afn ==0x10:
-        Analysic_csg_relay_frame(frame, dir, prm,result_list)
-    elif afn == 0x12:
-        Analysic_csg_read_task_frame(frame, dir, prm,result_list)
-    elif afn == 0x13:
-        Analysic_csg_read_alarm_frame(frame, dir, prm,result_list)
-    elif afn == 0x0e:
-        Analysic_csg_read_event_frame(frame, dir, prm,result_list)
-    Analysic_csg_end_frame(frame,result_list)
+        if afn == 0x00:
+            Analysic_csg_ack_frame(frame, dir, prm, result_list,index)
+        elif afn == 0x02:
+            Analysic_csg_link_frame(frame, dir, prm, result_list,index)
+        elif afn == 0x04:
+            Analysic_csg_write_frame(frame, dir, prm,result_list,index)
+        elif afn == 0x06:
+            Analysic_csg_security_frame(frame, dir, prm,result_list,index)
+        elif afn == 0x0C:
+            Analysic_csg_read_cur_frame(frame, dir, prm,result_list,index)
+        elif afn == 0x0D:
+            Analysic_csg_read_history_frame(frame, dir, prm,result_list,index)
+        elif afn == 0x0A:
+            Analysic_csg_read_param_frame(frame, dir, prm,result_list,index)
+        elif afn ==0x10:
+            Analysic_csg_relay_frame(frame, dir, prm,result_list,index)
+        elif afn == 0x12:
+            Analysic_csg_read_task_frame(frame, dir, prm,result_list,index)
+        elif afn == 0x13:
+            Analysic_csg_read_alarm_frame(frame, dir, prm,result_list,index)
+        elif afn == 0x0e:
+            Analysic_csg_read_event_frame(frame, dir, prm,result_list,index)
+        elif afn == 0x23:
+            Analysic_csg_topo_frame(frame, dir, prm,result_list,index)
+        Analysic_csg_end_frame(frame,result_list,index)
 
 
-def Analysic_csg_head_frame(frame,result_list):
+def Analysic_csg_head_frame(frame,result_list,start_pos):
     length_data = frame[1:5]
     control_data = frame[6]
     length = length_data[1] << 8 | length_data[0]
     adress_data = frame[7:14]
-    frame_fun.add_data(result_list, "起始符", f"{frame[0]:02X}", "起始符",[0,1])
-    frame_fun.add_data(result_list,"长度", frame_fun.get_data_str_with_space(length_data), f"长度={length}，总长度={length + 8}(总长度=长度+8)",[1,5])
-    frame_fun.add_data(result_list,"起始符", f"{frame[5]:02X}", "起始符",[5,6])
-    contro_result, result_str,dir, prm = get_control_code_str(control_data)
-    frame_fun.add_data(result_list,"控制域", f"{frame[6]:02X}", result_str,[6,7],contro_result)
-    adress_result, ertu_adress = get_adress_result(adress_data, 7)
-    frame_fun.add_data(result_list,"地址域",frame_fun.get_data_str_with_space(adress_data), "终端逻辑地址" + ertu_adress,[7,14],adress_result)
+    frame_fun.add_data(result_list, "起始符", f"{frame[0]:02X}", "起始符",[start_pos + 0,start_pos + 1])
+    frame_fun.add_data(result_list,"长度", frame_fun.get_data_str_with_space(length_data), f"长度={length}，总长度={length + 8}(总长度=长度+8)",[start_pos + 1,start_pos + 5])
+    frame_fun.add_data(result_list,"起始符", f"{frame[5]:02X}", "起始符",[start_pos + 5,start_pos + 6])
+    contro_result, result_str,dir, prm = get_control_code_str(control_data,start_pos)
+    frame_fun.add_data(result_list,"控制域", f"{frame[6]:02X}", result_str,[start_pos + 6,start_pos + 7],contro_result)
+    adress_result, ertu_adress = get_adress_result(adress_data, start_pos + 7)
+    frame_fun.add_data(result_list,"地址域",frame_fun.get_data_str_with_space(adress_data), "终端逻辑地址" + ertu_adress,[start_pos + 7,start_pos + 14],adress_result)
     return dir, prm
 
 def get_csg_adress(frame):
@@ -139,12 +157,12 @@ def get_csg_adress(frame):
     adress_result, ertu_adress = get_adress_result(adress_data, 7)
     return ertu_adress
 
-def Analysic_csg_end_frame(frame, result_list):
+def Analysic_csg_end_frame(frame, result_list, start_pos):
     cs = frame[-2]
     caculate_cs = frame_fun.caculate_cs(frame[6:-2])
     cs_str = "校验正确" if cs == caculate_cs else f"校验码错误，应为：{caculate_cs:02X}"
-    frame_fun.add_data(result_list, "校验码CS", f"{cs:02X}", cs_str, [-2,-1])
-    frame_fun.add_data(result_list, "结束符", f"{frame[-1]:02X}","结束符",[-1,0])
+    frame_fun.add_data(result_list, "校验码CS", f"{cs:02X}", cs_str, [start_pos + len(frame)-2,start_pos + len(frame)-1])
+    frame_fun.add_data(result_list, "结束符", f"{frame[-1]:02X}","结束符",[start_pos + len(frame)-1,start_pos + len(frame)])
 
 def send_ack_frame(frame, control_code):
     replay_frame = []
@@ -202,7 +220,7 @@ def get_dir_prm(control):
 
     return dir, prm,acd,fcv
 
-def get_control_code_str(control):
+def get_control_code_str(control,start_pos):
     contro_result = []
     binary_array = []
     frame_fun.get_bit_array(control, binary_array)
@@ -252,11 +270,11 @@ def get_control_code_str(control):
     dir_str = "主站发出的下行报文" if dir == 0 else "终端发出的上行报文"
     acd_str = "有效" if fcv == 1 else "无效"
     fcv_str = "FCB位有效" if fcv == 1 else "FCB位无效"
-    frame_fun.add_data(contro_result, "D7传输方向位DIR", f"{dir}", dir_str,[6,7])
-    frame_fun.add_data(contro_result, "D6启动标志位PRM", f"{prm}", prm_str,[6,7])
-    frame_fun.add_data(contro_result, "D5帧计数位FCB(下行)/要求访问位ACD(上行)", f"{acd}", acd_str,[6,7])
-    frame_fun.add_data(contro_result, "D4帧计数有效位FCV(下行)/保留(上行)", f"{fcv}", fcv_str,[6,7])
-    frame_fun.add_data(contro_result, "D3~D0功能码", f"{control_code}", prm_str + ":" + service_fun,[6,7])
+    frame_fun.add_data(contro_result, "D7传输方向位DIR", f"{dir}", dir_str,[start_pos + 6,start_pos + 7])
+    frame_fun.add_data(contro_result, "D6启动标志位PRM", f"{prm}", prm_str,[start_pos + 6,start_pos + 7])
+    frame_fun.add_data(contro_result, "D5帧计数位FCB(下行)/要求访问位ACD(上行)", f"{acd}", acd_str,[start_pos + 6,start_pos + 7])
+    frame_fun.add_data(contro_result, "D4帧计数有效位FCV(下行)/保留(上行)", f"{fcv}", fcv_str,[start_pos + 6,start_pos + 7])
+    frame_fun.add_data(contro_result, "D3~D0功能码", f"{control_code}", prm_str + ":" + service_fun,[start_pos + 6,start_pos + 7])
     return contro_result, ayalysic_str + service_fun, dir, prm
 
 def get_adress_result(adress, index):
@@ -313,6 +331,8 @@ def get_afn_and_seq_result(data,index,result_list):
         afn_str = "数据安全传输"
     elif afn == 0x17:
         afn_str = "数据转加密"
+    elif afn == 0x23:
+        afn_str = "主站中转报文"
     else:
         afn_str = "备用"
     binary_array = []
@@ -410,7 +430,8 @@ def judge_is_exit_pw(data_segment, item_element=None, data_time=None):
         sub_length_cont = data_item_elem.find('length').text
         if sub_length_cont is not None:
             if sub_length_cont.upper() in "UNKNOWN":
-                sub_length = protocol.caculate_item_length(data_item_elem, data_segment[6:])
+                prase_data = PraseFrameData()
+                sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[6:])
             else:
                 sub_length = int(sub_length_cont)
             if sub_length == 10:
@@ -538,7 +559,8 @@ def prase_DA_data(DA):
 def recaculate_sub_length(data_item_elem, data_segment):
     sub_length_cont = data_item_elem.find('length').text
     if sub_length_cont.upper() in "UNKNOWN":
-        sub_length = protocol.caculate_item_length(data_item_elem, data_segment)
+        prase_data = PraseFrameData()
+        sub_length = prase_data.caculate_item_length(data_item_elem, data_segment)
     else:
         sub_length = int(sub_length_cont)
         if data_item_elem.get("protocol") and data_item_elem.get("region"):
@@ -577,12 +599,12 @@ def get_data_dinsty(dinsty):
         dinsty_str = "备用"
     return dinsty_str
 
-def Analysic_csg_ack_frame(frame, dir, prm, result_list):
+def Analysic_csg_ack_frame(frame, dir, prm, result_list,start_pos):
     data_segment = frame[16:-2]
-    tpv = get_afn_and_seq_result(frame[14:16], 14,result_list)
+    tpv = get_afn_and_seq_result(frame[14:16], start_pos + 14,result_list)
     length = len(data_segment)
     pos = 0
-    index = 16
+    index = 16 + start_pos
     num = 0
     sub_result = []
     if tpv:
@@ -611,12 +633,13 @@ def Analysic_csg_ack_frame(frame, dir, prm, result_list):
         item_data = []
         if data_item_elem is not None:
             sublength = data_item_elem.find('length')
-            if sublength:
+            if sublength is not None:
                 sub_length = int(sublength.text)
             else:
                 sub_length = len(sub_datament[4:])
             sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-            alalysic_result = protocol.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,sub_datament, index + pos + 4)
+            prase_data = PraseFrameData()
+            alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,sub_datament, index + pos + 4)
             frame_fun.prase_data_with_config(alalysic_result, False,item_data)
             name = data_item_elem.find('name').text
             dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
@@ -646,12 +669,12 @@ def Analysic_csg_ack_frame(frame, dir, prm, result_list):
     frame_fun.add_data(result_list, "信息体", frame_fun.get_data_str_with_space(frame[16:-2]), "", [16,-2],sub_result)
     
 
-def Analysic_csg_link_frame(frame,dir, prm,result_list):
+def Analysic_csg_link_frame(frame,dir, prm,result_list,start_pos):
     valid_data_segment = frame[16:-2]
-    tpv = get_afn_and_seq_result(frame[14:16], 14,result_list)
+    tpv = get_afn_and_seq_result(frame[14:16], start_pos + 14,result_list)
     length = len(valid_data_segment)
     pos = 0
-    index = 16
+    index = 16 + start_pos
     num = 0
     sub_result = []
 
@@ -666,6 +689,7 @@ def Analysic_csg_link_frame(frame,dir, prm,result_list):
 
     data_segment = valid_data_segment[:length]
     pw = False
+    prase_data = PraseFrameData()
     while pos < length:
         DA = data_segment[pos:pos + 2]
         item = data_segment[pos + 2: pos + 6]
@@ -688,14 +712,14 @@ def Analysic_csg_link_frame(frame,dir, prm,result_list):
                 if sub_length_cont is not None:
                     sub_length = sub_length_cont.text
                     if sub_length.upper() in "UNKNOWN":
-                        sub_length = protocol.caculate_item_length(data_item_elem, data_segment[pos + 4:])
+                        sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
                     else:
                         sub_length = int(sub_length)
                 else:
                     sub_length = len(data_segment[4:])
 
                 sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                alalysic_result = protocol.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,sub_datament, index + pos + 4)
+                alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,sub_datament, index + pos + 4)
                 frame_fun.prase_data_with_config(alalysic_result, False,item_data)
             name = data_item_elem.find('name').text
             dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
@@ -734,12 +758,12 @@ def Analysic_csg_link_frame(frame,dir, prm,result_list):
         frame_fun.add_data(sub_result, f"时间标签Tp",frame_fun.get_data_str_with_space(tpv_data),tpv_str,[-7, -2])
     frame_fun.add_data(result_list, "信息体", frame_fun.get_data_str_with_space(frame[16:-2]), "", [16,-2],sub_result)
 
-def Analysic_csg_write_frame(frame, dir, prm,result_list):
+def Analysic_csg_write_frame(frame, dir, prm,result_list,start_pos):
     valid_data_segment = frame[16:-2]
-    tpv = get_afn_and_seq_result(frame[14:16], 14,result_list)
+    tpv = get_afn_and_seq_result(frame[14:16], start_pos + 14,result_list)
     length = len(valid_data_segment)
     pos = 0
-    index = 16
+    index = 16 + start_pos
     num = 0
     sub_result = []
 
@@ -754,6 +778,7 @@ def Analysic_csg_write_frame(frame, dir, prm,result_list):
 
     data_segment = valid_data_segment[:length]
     pw = False
+    prase_data = PraseFrameData()
     while pos < length:
         DA = data_segment[pos:pos + 2]
         item = data_segment[pos + 2: pos + 6]
@@ -774,11 +799,11 @@ def Analysic_csg_write_frame(frame, dir, prm,result_list):
             else:
                 sub_length_cont = data_item_elem.find('length').text
                 if sub_length_cont.upper() in "UNKNOWN":
-                    sub_length = protocol.caculate_item_length(data_item_elem, data_segment[pos + 4:])
+                    sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
                 else:
                     sub_length = int(sub_length_cont)
                 sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                alalysic_result = protocol.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,sub_datament, index + pos + 4)
+                alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,sub_datament, index + pos + 4)
                 frame_fun.prase_data_with_config(alalysic_result, False,item_data)
             name = data_item_elem.find('name').text
             dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
@@ -817,12 +842,12 @@ def Analysic_csg_write_frame(frame, dir, prm,result_list):
     frame_fun.add_data(result_list, "信息体", frame_fun.get_data_str_with_space(frame[16:-2]), "", [16,-2],sub_result)
 
 
-def Analysic_csg_security_frame(frame, dir, prm,result_list):
+def Analysic_csg_security_frame(frame, dir, prm,result_list,start_pos):
     valid_data_segment = frame[16:-2]
-    tpv = get_afn_and_seq_result(frame[14:16], 14,result_list)
+    tpv = get_afn_and_seq_result(frame[14:16], start_pos + 14,result_list)
     length = len(valid_data_segment)
     pos = 0
-    index = 16
+    index = 16 + start_pos
     num = 0
     sub_result = []
 
@@ -841,12 +866,12 @@ def Analysic_csg_security_frame(frame, dir, prm,result_list):
     data_segment = valid_data_segment[:length]
 
 
-def Analysic_csg_read_cur_frame(frame, dir, prm,result_list):
+def Analysic_csg_read_cur_frame(frame, dir, prm,result_list,start_pos):
     valid_data_segment = frame[16:-2]
-    tpv = get_afn_and_seq_result(frame[14:16], 14,result_list)
+    tpv = get_afn_and_seq_result(frame[14:16], start_pos + 14,result_list)
     length = len(valid_data_segment)
     pos = 0
-    index = 16
+    index = 16 + start_pos
     num = 0
     sub_result = []
 
@@ -861,6 +886,7 @@ def Analysic_csg_read_cur_frame(frame, dir, prm,result_list):
     pw =False
 
     data_segment = valid_data_segment[:length]
+    prase_data = PraseFrameData()
     while pos < length:
         DA = data_segment[pos:pos + 2]
         item = data_segment[pos + 2: pos + 6]
@@ -878,14 +904,14 @@ def Analysic_csg_read_cur_frame(frame, dir, prm,result_list):
             if dir == 1 and prm == 0:#上行回复
                 sub_length_cont = data_item_elem.find('length').text
                 if sub_length_cont.upper() in "UNKNOWN":
-                    sub_length = frame_fun.caculate_item_length(data_item_elem, data_segment[pos + 4:])
+                    sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
                     sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
                     new_datament = sub_datament
                 else:
                     sub_length = int(sub_length_cont)
                     sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
                     sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
-                alalysic_result = protocol.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
+                alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
                 frame_fun.prase_data_with_config(alalysic_result, False,item_data)
             else:
                 sub_length = 0#下行读取报文
@@ -921,12 +947,12 @@ def Analysic_csg_read_cur_frame(frame, dir, prm,result_list):
 
 
 
-def Analysic_csg_read_history_frame(frame, dir, prm,result_list):
+def Analysic_csg_read_history_frame(frame, dir, prm,result_list,start_pos):
     valid_data_segment = frame[16:-2]
-    tpv = get_afn_and_seq_result(frame[14:16], 14,result_list)
+    tpv = get_afn_and_seq_result(frame[14:16], start_pos + 14,result_list)
     length = len(valid_data_segment)
     pos = 0
-    index = 16
+    index = 16 + start_pos
     num = 0
     sub_result = []
     fiirst = True
@@ -944,6 +970,7 @@ def Analysic_csg_read_history_frame(frame, dir, prm,result_list):
     data_item_elem = None
     sub_length = 0
     data_time = None
+    prase_data = PraseFrameData()
     while pos < length:
         if guest_next_data_is_cur_item_data(data_item_elem, data_segment[pos:], data_time) == False:
             DA = data_segment[pos:pos + 2]
@@ -966,7 +993,7 @@ def Analysic_csg_read_history_frame(frame, dir, prm,result_list):
                 sub_length = int(data_item_elem.find('length').text)
                 sub_datament = data_segment[pos:pos + sub_length]
                 sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
-                alalysic_result = protocol.parse_data_item(data_item_elem,new_datament, index + pos, False)
+                alalysic_result = prase_data.parse_data_item(data_item_elem,new_datament, index + pos, False)
                 frame_fun.prase_data_with_config(alalysic_result, False,item_data)
             else:
                 sub_length = 0#下行读取报文
@@ -1013,12 +1040,12 @@ def Analysic_csg_read_history_frame(frame, dir, prm,result_list):
     frame_fun.add_data(result_list, "信息体", frame_fun.get_data_str_with_space(frame[16:-2]), "", [16,-2],sub_result)
 
 
-def Analysic_csg_read_param_frame(frame, dir, prm,result_list):
+def Analysic_csg_read_param_frame(frame, dir, prm,result_list,start_pos):
     valid_data_segment = frame[16:-2]
-    tpv = get_afn_and_seq_result(frame[14:16], 14,result_list)
+    tpv = get_afn_and_seq_result(frame[14:16], start_pos + 14,result_list)
     length = len(valid_data_segment)
     pos = 0
-    index = 16
+    index = 16 + start_pos
     num = 0
     sub_result = []
 
@@ -1033,6 +1060,7 @@ def Analysic_csg_read_param_frame(frame, dir, prm,result_list):
     pw =False
 
     data_segment = valid_data_segment[:length]
+    prase_data = PraseFrameData()
     while pos < length:
         DA = data_segment[pos:pos + 2]
         item = data_segment[pos + 2: pos + 6]
@@ -1050,7 +1078,7 @@ def Analysic_csg_read_param_frame(frame, dir, prm,result_list):
             if dir == 1 and prm == 0:#上行回复
                 sub_length_cont = data_item_elem.find('length').text
                 if sub_length_cont.upper() in "UNKNOWN":
-                    sub_length = protocol.caculate_item_length(data_item_elem, data_segment[pos + 4:])
+                    sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
                     sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
                     new_datament = sub_datament
                 else:
@@ -1058,7 +1086,7 @@ def Analysic_csg_read_param_frame(frame, dir, prm,result_list):
                     sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
                     sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
 
-                alalysic_result = protocol.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
+                alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
                 frame_fun.prase_data_with_config(alalysic_result, False,item_data)
             else:
                 sub_length = 0#下行读取报文
@@ -1093,12 +1121,12 @@ def Analysic_csg_read_param_frame(frame, dir, prm,result_list):
     frame_fun.add_data(result_list, "信息体", frame_fun.get_data_str_with_space(frame[16:-2]), "", [16,-2],sub_result)
 
 
-def Analysic_csg_read_task_frame(frame, dir, prm,result_list):
+def Analysic_csg_read_task_frame(frame, dir, prm,result_list,start_pos):
     valid_data_segment = frame[16:-2]
-    tpv = get_afn_and_seq_result(frame[14:16], 14,result_list)
+    tpv = get_afn_and_seq_result(frame[14:16], start_pos + 14,result_list)
     length = len(valid_data_segment)
     pos = 0
-    index = 16 + 9
+    index = 16 + 9 + start_pos
     num = 0
     sub_result = []
     task_result = []
@@ -1138,6 +1166,7 @@ def Analysic_csg_read_task_frame(frame, dir, prm,result_list):
         data_segment = valid_data_segment
     data_item_elem = None
     data_time=None
+    prase_data = PraseFrameData()
     while pos < length:
         if guest_next_data_is_cur_item_data(data_item_elem, data_segment[pos:], data_time) == False:
             DA = data_segment[pos:pos + 2]
@@ -1166,7 +1195,7 @@ def Analysic_csg_read_task_frame(frame, dir, prm,result_list):
                 sub_length = int(data_item_elem.find('length').text)
                 sub_datament = data_segment[pos:pos + sub_length]
                 sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
-                alalysic_result = protocol.parse_data_item(data_item_elem,new_datament, index + pos, False)
+                alalysic_result = prase_data.parse_data_item(data_item_elem,new_datament, index + pos, False)
                 frame_fun.prase_data_with_config(alalysic_result, False,item_data)
             else:
                 sub_length = 0#下行读取报文
@@ -1220,12 +1249,12 @@ def Analysic_csg_read_task_frame(frame, dir, prm,result_list):
         frame_fun.add_data(sub_result, f"时间标签Tp",frame_fun.get_data_str_with_space(tpv_data),tpv_str,[-7, -2])
     frame_fun.add_data(result_list, "信息体", frame_fun.get_data_str_with_space(frame[16:-2]), "", [16,-2],sub_result)
 
-def Analysic_csg_read_alarm_frame(frame, dir, prm,result_list):
+def Analysic_csg_read_alarm_frame(frame, dir, prm,result_list,start_pos):
     valid_data_segment = frame[16:-2]
-    tpv = get_afn_and_seq_result(frame[14:16], 14,result_list)
+    tpv = get_afn_and_seq_result(frame[14:16], start_pos + 14,result_list)
     length = len(valid_data_segment)
     pos = 0
-    index = 16
+    index = 16 + start_pos
     num = 0
     sub_result = []
 
@@ -1240,6 +1269,7 @@ def Analysic_csg_read_alarm_frame(frame, dir, prm,result_list):
     pw =False
 
     data_segment = valid_data_segment[:length]
+    prase_data = PraseFrameData()
     while pos < length:
         DA = data_segment[pos:pos + 2]
         item = data_segment[pos + 2: pos + 6]
@@ -1257,7 +1287,7 @@ def Analysic_csg_read_alarm_frame(frame, dir, prm,result_list):
             if dir == 1:#上行回复
                 sub_length_cont = data_item_elem.find('length').text
                 if sub_length_cont.upper() in "UNKNOWN":
-                    sub_length = protocol.caculate_item_length(data_item_elem, data_segment[pos + 4:])
+                    sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
                     sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
                     new_datament = sub_datament
                 else:
@@ -1265,7 +1295,7 @@ def Analysic_csg_read_alarm_frame(frame, dir, prm,result_list):
                     sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
                     sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
 
-                alalysic_result = protocol.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
+                alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
                 frame_fun.prase_data_with_config(alalysic_result, False,item_data)
             else:
                 sub_length = 0#下行读取报文
@@ -1308,12 +1338,12 @@ def Analysic_csg_read_alarm_frame(frame, dir, prm,result_list):
         frame_fun.add_data(sub_result, f"时间标签Tp",frame_fun.get_data_str_with_space(tpv_data),tpv_str,[-7, -2])
     frame_fun.add_data(result_list, "信息体", frame_fun.get_data_str_with_space(frame[16:-2]), "", [16,-2],sub_result)
 
-def Analysic_csg_read_event_frame(frame, dir, prm,result_list):
+def Analysic_csg_read_event_frame(frame, dir, prm,result_list,start_pos):
     valid_data_segment = frame[16:-2]
-    tpv = get_afn_and_seq_result(frame[14:16], 14,result_list)
+    tpv = get_afn_and_seq_result(frame[14:16], start_pos + 14,result_list)
     length = len(valid_data_segment)
     pos = 0
-    index = 16
+    index = 16 + start_pos
     num = 0
     sub_result = []
 
@@ -1328,6 +1358,7 @@ def Analysic_csg_read_event_frame(frame, dir, prm,result_list):
     pw =False
 
     data_segment = valid_data_segment[:length]
+    prase_data = PraseFrameData()
     while pos < length:
         DA = data_segment[pos:pos + 2]
         item = data_segment[pos + 2: pos + 6]
@@ -1345,7 +1376,7 @@ def Analysic_csg_read_event_frame(frame, dir, prm,result_list):
             if dir == 1 and prm == 0:#上行回复
                 sub_length_cont = data_item_elem.find('length').text
                 if sub_length_cont.upper() in "UNKNOWN":
-                    sub_length = protocol.caculate_item_length(data_item_elem, data_segment[pos + 4:])
+                    sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
                     sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
                     new_datament = sub_datament
                 else:
@@ -1353,7 +1384,7 @@ def Analysic_csg_read_event_frame(frame, dir, prm,result_list):
                     sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
                     sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
 
-                alalysic_result = protocol.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
+                alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
                 frame_fun.prase_data_with_config(alalysic_result, False,item_data)
             else:
                 sub_length = 0#下行读取报文
@@ -1396,12 +1427,12 @@ def Analysic_csg_read_event_frame(frame, dir, prm,result_list):
         frame_fun.add_data(sub_result, f"时间标签Tp",frame_fun.get_data_str_with_space(tpv_data),tpv_str,[-7, -2])
     frame_fun.add_data(result_list, "信息体", frame_fun.get_data_str_with_space(frame[16:-2]), "", [16,-2],sub_result)
 
-def Analysic_csg_relay_frame(frame, dir, prm,result_list):
+def Analysic_csg_relay_frame(frame, dir, prm,result_list,start_pos):
     valid_data_segment = frame[16:-2]
-    tpv = get_afn_and_seq_result(frame[14:16], 14,result_list)
+    tpv = get_afn_and_seq_result(frame[14:16], start_pos + 14,result_list)
     length = len(valid_data_segment)
     pos = 0
-    index = 16
+    index = 16 + start_pos
     num = 0
     sub_result = []
 
@@ -1416,6 +1447,7 @@ def Analysic_csg_relay_frame(frame, dir, prm,result_list):
     pw =False
 
     data_segment = valid_data_segment[:length]
+    prase_data = PraseFrameData()
     while pos < length:
         DA = data_segment[pos:pos + 2]
         item = data_segment[pos + 2: pos + 6]
@@ -1432,11 +1464,11 @@ def Analysic_csg_relay_frame(frame, dir, prm,result_list):
         if data_item_elem is not None:
             if dir == 1 and prm == 0:#上行回复
                 frame_result = []
-                sub_length, frame_len = protocol.get_sub_length(data_segment[pos+5:],data_item_elem,"中继报文长度")
-                replay_type = protocol.get_relay_type(data_segment[pos +4])
+                sub_length, frame_len = prase_data.get_sub_length(data_segment[pos+5:],data_item_elem,"中继报文长度")
+                replay_type = prase_data.get_relay_type(data_segment[pos +4])
                 frame_fun.add_data(item_data, "中继类型",frame_fun.get_data_str_with_space(data_segment[pos +4:pos + 5]), f"中继类型:{replay_type}", [index +pos +4,index+pos + 5])
                 frame_fun.add_data(item_data, "中继应答长度",frame_fun.get_data_str_with_space(data_segment[pos +5:pos + 5 +sub_length]), f"中继应答长度{frame_len}", [index +pos +5,index+pos + 5 +sub_length])
-                protocol.Analysis_645_fram_by_afn(data_segment[pos + 5 + sub_length:pos + 5 + frame_len + sub_length],frame_result,pos + 5 + sub_length  + index)
+                prase_data.Analysis_645_fram_by_afn(data_segment[pos + 5 + sub_length:pos + 5 + frame_len + sub_length],frame_result,pos + 5 + sub_length  + index)
                 frame_fun.add_data(item_data, "中继应答内容",frame_fun.get_data_str_with_space(data_segment[pos + 5 + sub_length:pos + 5 + frame_len]), f"中继应答内容", [index + pos + 5 + sub_length,index+pos + 5 + frame_len],frame_result)
                 sub_length += frame_len
                 sub_length+=1
@@ -1444,7 +1476,7 @@ def Analysic_csg_relay_frame(frame, dir, prm,result_list):
             else:
                 sub_length_cont = data_item_elem.find('length').text
                 if sub_length_cont.upper() in "UNKNOWN":
-                    sub_length = protocol.caculate_item_length(data_item_elem, data_segment[pos + 4:])
+                    sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
                     sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
                     new_datament = sub_datament
                 else:
@@ -1452,7 +1484,7 @@ def Analysic_csg_relay_frame(frame, dir, prm,result_list):
                     sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
                     sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
 
-                alalysic_result = protocol.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
+                alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
                 frame_fun.prase_data_with_config(alalysic_result, False,item_data)
             name = data_item_elem.find('name').text
             dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
@@ -1478,3 +1510,82 @@ def Analysic_csg_relay_frame(frame, dir, prm,result_list):
         tpv_str = prase_tpv_data(tpv_data)
         frame_fun.add_data(sub_result, f"时间标签Tp",frame_fun.get_data_str_with_space(tpv_data),tpv_str,[-7, -2])
     frame_fun.add_data(result_list, "信息体", frame_fun.get_data_str_with_space(frame[16:-2]), "", [16,-2],sub_result)
+
+def Analysic_csg_topo_frame(frame, dir, prm,result_list,start_pos):
+    valid_data_segment = frame[16:-2]
+    tpv = get_afn_and_seq_result(frame[14:16], start_pos + 14,result_list)
+    length = len(valid_data_segment)
+    pos = 0
+    index = 16 + start_pos
+    num = 0
+    sub_result = []
+
+    if tpv:
+        tpv_data = frame[-7:-2]
+        pw_data = valid_data_segment[-21:-5]
+        length -= 5
+        pw_pos = [start_pos + len(frame)-23,start_pos + len(frame)-7]
+    else:
+        pw_data = valid_data_segment[-16:]
+        pw_pos = [start_pos + len(frame)-18,start_pos + len(frame)-2]
+    pw =False
+
+    data_segment = valid_data_segment[:length]
+    prase_data = PraseFrameData()
+    while pos < length:
+        DA = data_segment[pos:pos + 2]
+        item = data_segment[pos + 2: pos + 6]
+
+        point_str = prase_DA_data(DA)
+
+        data_item = frame_fun.get_data_str_reverser(item)
+
+        frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
+        pos += 2
+
+        data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
+        item_data = []
+        if data_item_elem is not None:
+            sub_length_cont = data_item_elem.find('length').text
+            if sub_length_cont.upper() in "UNKNOWN":
+                sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
+                sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                new_datament = sub_datament
+            else:
+                sub_length = int(sub_length_cont)
+                sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
+
+            alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
+            # print(alalysic_result)
+            frame_fun.prase_data_with_config(alalysic_result, False, item_data)
+            # else:
+            #     sub_length = 0#下行读取报文
+            name = data_item_elem.find('name').text
+            dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
+        else:
+            if dir == 1 and prm == 0:
+                pw = guest_is_exit_pw(length,data_segment)
+                frame_fun.CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                break
+            else:
+                sub_length = 0
+            dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
+
+        frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
+        frame_fun.add_data(sub_result, f"<第{num + 1}组>数据内容",frame_fun.get_data_str_with_space(sub_datament),point_str[len("Pn="):] + "-" + dis_data_identifier[len("数据标识编码："):],[index + pos + 4, index + pos + 4 + sub_length], item_data)
+        pos += (sub_length + 4)
+        num += 1
+
+        if length - pos == 16:
+            pw  = guest_is_exit_pw(length, pw_data)
+            if pw:
+                length -= 16
+
+    if pw:
+        pw_str = "PW由16个字节组成，是由主站按系统约定的认证算法产生，并在主站发送的报文中下发给终端，由终端进行校验认证。"
+        frame_fun.add_data(sub_result, f"消息验证码Pw",frame_fun.get_data_str_with_space(pw_data),pw_str,pw_pos)
+    if tpv:
+        tpv_str = prase_tpv_data(tpv_data)
+        frame_fun.add_data(sub_result, f"时间标签Tp",frame_fun.get_data_str_with_space(tpv_data),tpv_str,[start_pos + len(frame)-7, start_pos + len(frame)-2])
+    frame_fun.add_data(result_list, "信息体", frame_fun.get_data_str_with_space(frame[16:-2]), "", [index, start_pos + len(frame)-2],sub_result)

@@ -36794,6 +36794,22 @@
 			<type>BCD</type>
 		</dataItem>
 	</dataItem>
+	<dataItem id="E1800034" protocol="csg13" region="南网">
+		<name>台区户变关系识别结果</name>
+		<length>unknown</length>
+		<splitByLength>
+			<name>应答的台区节点总数量</name>
+			<length>2</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>台区识别结果</name>
+			<length>unknown</length>
+			<lengthrule>7 * 应答的台区节点总数量</lengthrule>
+			<type>IDENTIFICATION_RESULTS</type>
+		</splitByLength>
+	</dataItem>
+	
 	<dataItem id="E1800018" protocol="csg13" region="南网">
 		<name>本地通信模块程序版本号</name>
 		<length>9</length>
@@ -40782,6 +40798,26 @@
 			<type>TOPONODEINFO</type>
 		</splitByLength>
 	</dataItem>
+	<template id="IDENTIFICATION_RESULTS" protocol="csg13" region="南网">
+		<length>7</length>
+		<name>识别结果</name>
+		<splitByLength>
+			<name>节点地址</name>
+			<length>6</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>识别结果</name>
+			<length>1</length>
+			<type>BCD</type>
+			<value key="00">该测量点属于终端所在台区</value>
+			<value key="01">:该测量点不属于终端所在台区</value>
+			<value key="02">该节点无法通信</value>
+			<value key="03">无法判断测量点所属台区</value>
+			<value key="04">不支持台区识别</value>
+			<value key="other">未知</value>
+		</splitByLength>
+	</template>
 	<template id="APP" protocol="csg13" region="南网">
 		<length>26</length>
 		<name>APP信息</name>
@@ -41271,7 +41307,7 @@
 	</dataItem>
 	<dataItem id="E1008070" protocol="csg13" region="南网">
 		<name>用电安全统计数据</name>
-		<length>107</length>
+		<length>90</length>
 		<splitByLength>
 			<name>存储时间</name>
 			<length>5</length>
@@ -41346,18 +41382,6 @@
 			<length>4</length>
 			<unit>kW</unit>
 			<decimal>4</decimal>
-		</splitByLength>
-		<splitByLength>
-			<name>发生告警类型</name>
-			<length>1</length>
-		</splitByLength>
-		<splitByLength>
-			<name>预留告警发生时间</name>
-			<length>12</length>
-		</splitByLength>
-		<splitByLength>
-			<name>预留告警发生特征值</name>
-			<length>4</length>
 		</splitByLength>
 	</dataItem>
 
@@ -43965,6 +43989,118 @@
 			<name>每次执行时长</name>
 			<length>1</length>
 			<unit>小时</unit>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E1020000" protocol="csg13" region="南网">
+		<name>主站中转报文</name>
+		<length>unknown</length>
+		<splitByLength>
+			<name>报文长度</name>
+			<length>2</length>
+			<type>bin</type>
+		</splitByLength>
+		<splitByLength>
+			<name>报文内容</name>
+			<length>unknown</length>
+			<lengthrule>1 * 报文长度</lengthrule>
+			<type>CSG13</type>
+		</splitByLength>
+	</dataItem>	
+	<dataItem id="E1800034" protocol="csg13" region="topo">
+		<name>拓扑识别启停信息</name>
+		<length>unknown</length>
+		<splitByLength>
+			<name>源终端地址Ao</name>
+			<length>6</length>
+		</splitByLength>
+		<splitByLength>
+			<name>启停标志</name>
+			<length>1</length>
+			<value key="00">启动</value>
+			<value key="01">停止</value>
+		</splitByLength>
+		<splitByLength>
+			<name>需要拓扑识别终端数量</name>
+			<length>1</length>
+			<type>bin</type>
+		</splitByLength>
+		<splitByLength>
+			<name>拓扑识别终端地址</name>
+			<length>unknown</length>
+			<lengthrule>6 * 需要拓扑识别终端数量</lengthrule>
+			<type>ADRESS</type>
+		</splitByLength>
+	</dataItem>	
+	<template id="ADRESS" protocol="csg13" region="topo">
+		<length>6</length>
+		<name>拓扑识别终端地址</name>
+		<type>BCD</type>
+	</template>
+	<dataItem id="E1800052" protocol="csg13" region="南网">
+		<name>APP签名信息</name>
+		<length>unknown</length>
+		<splitByLength>
+			<name>APP数量</name>
+			<length>1</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>APP信息</name>
+			<length>unknown</length>
+			<lengthrule>56 * APP数量</lengthrule>
+			<type>APPSIGN</type>
+		</splitByLength>
+	</dataItem>	
+	<template id="APPSIGN" protocol="csg13" region="南网">
+		<splitByLength>
+			<length>24</length>
+			<name>APP名称</name>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<length>16</length>
+			<name>APP摘要</name>
+			<type>BIN</type>
+		</splitByLength>
+		<splitByLength>
+			<length>16</length>
+			<name>APP签名</name>
+			<type>BIN</type>
+		</splitByLength>
+	</template>
+	<dataItem id="E0000134" protocol="csg13" region="南网">
+		<name>分段广播对时参数</name>
+		<length>16</length>
+		<splitByLength>
+			<name>是否开启分段广播对时功能</name>
+			<length>1</length>
+			<value key="00">关闭</value>
+			<value key="01">开启</value>
+		</splitByLength>
+		<splitByLength>
+			<name>执行分段对时总次数</name>
+			<length>1</length>
+			<unit>次</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>两次广播间隔</name>
+			<length>1</length>
+			<unit>分钟</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>两次校时间隔</name>
+			<length>1</length>
+			<unit>分钟</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>分段广播对时开始时间</name>
+			<length>6</length>
+			<time>YYMMDDhhmmss</time>
+		</splitByLength>
+		<splitByLength>
+			<name>分段广播对时结束时间</name>
+			<length>6</length>
+			<time>YYMMDDhhmmss</time>
 		</splitByLength>
 	</dataItem>
 </config>
