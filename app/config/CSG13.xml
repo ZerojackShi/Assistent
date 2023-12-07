@@ -44103,4 +44103,18 @@
 			<time>YYMMDDhhmmss</time>
 		</splitByLength>
 	</dataItem>
+	<dataItem id="E1020001" protocol="csg13" region="topo">
+		<name>对端回复</name>
+		<length>7</length>
+		<splitByLength>
+			<name>对端地址</name>
+			<length>6</length>
+		</splitByLength>
+		<splitByLength>
+			<name>回复结果</name>
+			<length>1</length>
+			<value key="00">关闭</value>
+			<value key="01">开启</value>
+		</splitByLength>
+	</dataItem>
 </config>
