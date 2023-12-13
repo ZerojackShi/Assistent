@@ -9,7 +9,8 @@ from PyQt5.QtCore import QLocale,QObject,pyqtSignal
 from qfluentwidgets import (qconfig, QConfig, ConfigItem, OptionsConfigItem, BoolValidator,
                             OptionsValidator, RangeConfigItem, RangeValidator,
                             FolderListValidator, Theme, FolderValidator, ConfigSerializer, ConfigValidator,__version__)
-
+import logging
+from datetime import datetime
 class Language(Enum):
     """ Language enumeration """
 
@@ -242,7 +243,44 @@ class QframeConfig(QObject):
             region = "南网"
             target = find_target_dataitem(root, item_id, protocol, region)
         return target
+    
+class LogConfig:
+    def __init__(self, log_dir='app/log', log_level=logging.INFO):
+        # 获取当前日期
+        current_date = datetime.now().strftime('%Y-%m-%d')
 
+        # 创建日期命名的日志文件夹
+        log_folder = os.path.join(log_dir, current_date)
+        os.makedirs(log_folder, exist_ok=True)
+
+        # 设置日志器
+        self.logger = logging.getLogger(__name__)
+        self.logger.setLevel(log_level)
+
+        formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+
+        # 创建文件处理器并设置格式
+        log_path = os.path.join(log_folder, 'sys_log.log')
+        file_handler = logging.FileHandler(log_path, encoding='utf-8')
+        file_handler.setFormatter(formatter)
+        self.logger.addHandler(file_handler)
+
+        # 创建控制台处理器并设置格式
+        console_handler = logging.StreamHandler()
+        console_handler.setFormatter(formatter)
+        self.logger.addHandler(console_handler)
+
+    def log_info(self, message, exc_info=True):
+        self.logger.info(message,exc_info=exc_info)
+
+    def log_warning(self, message):
+        self.logger.warning(message)
+
+    def log_error(self, message,exc_info=True):
+        self.logger.error(message,exc_info=exc_info)
+
+    def log_critical(self, message,exc_info=True):
+        self.logger.critical(message,exc_info=exc_info)
 
 YEAR = 2023
 AUTHOR = "zhiyiYo"
@@ -265,3 +303,5 @@ config_645.load('app/config/DLT645.xml')
 
 config_csg13 = QframeConfig()
 config_csg13.load('app/config/CSG13.xml')
+
+log_config = LogConfig()

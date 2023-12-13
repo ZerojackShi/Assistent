@@ -5,13 +5,13 @@ from PyQt5.QtWidgets import QApplication,QVBoxLayout,QVBoxLayout
 # coding:utf-8
 from PyQt5.QtWidgets import QWidget, QVBoxLayout
 from qfluentwidgets import ScrollArea, isDarkTheme, FluentIcon,LineEdit,PlainTextEdit,SmoothScrollDelegate
-from ..common.config import cfg, HELP_URL, REPO_URL, EXAMPLE_URL, FEEDBACK_URL
+from ..common.config import cfg, log_config
 from ..common.style_sheet import StyleSheet
 from ..plugins import protocol
 from ..plugins.frame_csg import FrameCsg
 from .gallery_interface import GalleryInterface
 from ..common.translator import Translator
-
+import sys
 class CustomTreeWidgetItem(QtWidgets.QTreeWidgetItem):
     def __init__(self, parent, text_list):
         self.data = text_list  # Store the associated data
@@ -125,7 +125,7 @@ class Alalysic(QWidget):
         self.highlight_format.setForeground(QtGui.QColor(255, 255, 255))  # 白色字体
 
         StyleSheet.HOME_INTERFACE.apply(self)
-        self.input_text.textChanged.connect(self.display_tree)
+        self.reconnect_text_changed()
         self.tree_widget.custom_signal.connect(self.highlight_text)
 
     def update_tree_widget(self):
@@ -134,7 +134,7 @@ class Alalysic(QWidget):
         self.tree_widget.header().resizeSection(1,int(w * 0.25))   
 
     def highlight_text(self, item):
-        self.input_text.textChanged.disconnect(self.display_tree)
+        self.disconnect_text_changed()
         # Find the target_data in the input_text and highlight it
         cursor = self.input_text.textCursor()
 
@@ -170,7 +170,7 @@ class Alalysic(QWidget):
             cursor.movePosition(QtGui.QTextCursor.Right, QtGui.QTextCursor.KeepAnchor, length)
             cursor.setCharFormat(self.highlight_format)
         self.input_text.setTextCursor(self.input_text.textCursor())
-        self.input_text.textChanged.connect(self.display_tree)
+        self.reconnect_text_changed()
 
     def moveEvent(self, event):
         # 当窗口位置发生变化时，更新显示器信息
@@ -187,6 +187,17 @@ class Alalysic(QWidget):
             self.current_screen_number = screen_number
             screen = QApplication.desktop().screen(screen_number)
             self.resize(int(screen.size().width() * 0.8), int(screen.size().height() * 0.6))
+    def disconnect_text_changed(self):
+        # 断开连接
+        self.input_text.textChanged.disconnect(self.display_tree)
+        # 将连接状态设置为 False
+        self.is_connected = False
+
+    def reconnect_text_changed(self):
+        # 重新连接
+        self.input_text.textChanged.connect(self.display_tree)
+        # 将连接状态设置为 True
+        self.is_connected = True
 
     def display_tree(self):
         self.tree_widget.clear()
@@ -205,7 +216,7 @@ class Alalysic(QWidget):
             hex_str = input_text.replace(' ', '')
             for i in range(0, len(hex_str), 2):
                 formatted_frame += hex_str[i:i + 2] + ' '
-            self.input_text.textChanged.disconnect(self.display_tree)
+            self.disconnect_text_changed()
             self.input_text.setPlainText(formatted_frame)
             cursor = self.input_text.textCursor()
 
@@ -227,17 +238,32 @@ class Alalysic(QWidget):
             create_tree(self.tree_widget.invisibleRootItem(), show_data, self.item_position)
 
             self.tree_widget.expandAll()
-            self.input_text.textChanged.connect(self.display_tree)
-        except ValueError:
-            # frame_fun.CustomMessageBox("告警",'输入的字符中包含非十六进制字符！')
-            self.input_text.textChanged.disconnect(self.display_tree)
+            self.reconnect_text_changed()
+        except Exception as e:
+            # 处理特定异常（如果需要）
+            print(f"捕获到一个异常: {e}")
+            log_config.log_error(f"报文：{input_text} \n 捕获到一个异常: {e}", exc_info=True)
+            if isinstance(e, ValueError):
+                # frame_fun.CustomMessageBox("告警",'输入的字符中包含非十六进制字符！')
+                if self.is_connected:
+                    self.disconnect_text_changed()
                 # 保存当前文本内容
-            temp_text = self.input_text.toPlainText()
-            # 清除输入框内容
-            self.input_text.clear()
-            # 将保存的文本内容设置回输入框
-            self.input_text.setPlainText(temp_text)
-            self.input_text.textChanged.connect(self.display_tree)
+                temp_text = self.input_text.toPlainText()
+                # 清除输入框内容
+                self.input_text.clear()
+                # 将保存的文本内容设置回输入框
+                self.input_text.setPlainText(temp_text)
+                self.reconnect_text_changed()
+            else:
+                # 获取异常信息
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                # 打印原始回溯信息
+                import traceback
+                traceback.print_exception(exc_type, exc_value, exc_traceback)
+                self.reconnect_text_changed()
+
+
+        
 
 
 class ViewAnalysic(GalleryInterface):

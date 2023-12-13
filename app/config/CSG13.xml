@@ -36809,6 +36809,21 @@
 			<type>IDENTIFICATION_RESULTS</type>
 		</splitByLength>
 	</dataItem>
+	<dataItem id="E1800035" protocol="csg13" region="南网">
+		<name>非本台区户变关系识别结果</name>
+		<length>unknown</length>
+		<splitByLength>
+			<name>应答的非本台区节点总数量</name>
+			<length>2</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>非本台区户变关系识别结果</name>
+			<length>unknown</length>
+			<lengthrule>12 * 应答的非本台区节点总数量</lengthrule>
+			<type>UNIDENTIFICATION_RESULTS</type>
+		</splitByLength>
+	</dataItem>
 	
 	<dataItem id="E1800018" protocol="csg13" region="南网">
 		<name>本地通信模块程序版本号</name>
@@ -40816,6 +40831,20 @@
 			<value key="03">无法判断测量点所属台区</value>
 			<value key="04">不支持台区识别</value>
 			<value key="other">未知</value>
+		</splitByLength>
+	</template>
+	<template id="UNIDENTIFICATION_RESULTS" protocol="csg13" region="南网">
+		<length>12</length>
+		<name>非本台区识别结果</name>
+		<splitByLength>
+			<name>节点地址</name>
+			<length>6</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>应属台区主节点地址</name>
+			<length>6</length>
+			<type>BCD</type>
 		</splitByLength>
 	</template>
 	<template id="APP" protocol="csg13" region="南网">

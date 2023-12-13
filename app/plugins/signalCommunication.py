@@ -326,7 +326,7 @@ class CommunicationModule(QObject):
         else:
             dir_str = "<<< 接收:"
         try:
-            with open(file_path, 'a') as file:
+            with open(file_path, 'a', encoding='utf-8') as file:
                 file.write(f"{current_time} [{link_type}] {dir_str} {text}\n")
         except FileNotFoundError:
             # 如果文件不存在，创建新文件并以二进制方式写入内容

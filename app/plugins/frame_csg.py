@@ -1192,9 +1192,15 @@ def Analysic_csg_read_task_frame(frame, dir, prm,result_list,start_pos):
         item_data = []
         if data_item_elem is not None:
             if dir == 1:#上行回复
-                sub_length = int(data_item_elem.find('length').text)
-                sub_datament = data_segment[pos:pos + sub_length]
-                sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
+                sub_length_cont = data_item_elem.find('length').text
+                if sub_length_cont.upper() in "UNKNOWN":
+                    sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos:])
+                    sub_datament = data_segment[pos:pos + sub_length]
+                    new_datament = sub_datament
+                else:
+                    sub_length = int(sub_length_cont)
+                    sub_datament = data_segment[pos:pos + sub_length]
+                    sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
                 alalysic_result = prase_data.parse_data_item(data_item_elem,new_datament, index + pos, False)
                 frame_fun.prase_data_with_config(alalysic_result, False,item_data)
             else:
