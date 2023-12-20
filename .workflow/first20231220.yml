@@ -27,7 +27,7 @@ stages:
           - python --version
           - cat /etc/os-release
           - chmod +x install_python_dev
-          - ./install_python_dev
+          - ./install_python_dev.sh
           - '#yum install -y python3-devel'
           - '#pip install --user -r requirements.txt'
           - '#current_dir=$(pwd)'
