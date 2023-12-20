@@ -26,6 +26,7 @@ stages:
           - python --version
           - pip install --user -r requirements.txt
           - pwd
+          - ls -l
           - pyinstaller --windowed --add-data "./Assistent/app/config;./app/config" --icon="./Assistent/app/resource/images/logo.png" Assistent.py
         artifacts:
           - name: BUILD_ARTIFACT
