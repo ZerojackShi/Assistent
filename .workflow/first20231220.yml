@@ -22,12 +22,12 @@ stages:
         commands:
           - pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
           - '# 可以使用pip下载依赖'
+          - export PATH="$PATH:$HOME/.local/bin"
           - pip install --upgrade pip
           - python --version
           - pip install --user -r requirements.txt
-          - pwd
-          - ls -l
-          - pyinstaller --windowed --add-data "./Assistent/app/config;./app/config" --icon="./Assistent/app/resource/images/logo.png" Assistent.py
+          - current_dir=$(pwd)
+          - pyinstaller --windowed --add-data "$current_dir/app/config;./app/config" --icon="$current_dir/app/resource/images/logo.png" Assistent.py
         artifacts:
           - name: BUILD_ARTIFACT
             path:
