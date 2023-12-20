@@ -27,7 +27,7 @@ stages:
           - python --version
           - pip install --user -r requirements.txt
           - current_dir=$(pwd)
-          - pyinstaller --windowed --add-data "$current_dir/app/config:$current_dir/dist/Assistent/app/config" --icon="$current_dir/app/resource/images/logo.png" Assistent.py
+          - pyinstaller --windowed --add-data "$current_dir/app/config:./app/config" --icon="$current_dir/app/resource/images/logo.png" Assistent.py
         artifacts:
           - name: BUILD_ARTIFACT
             path:
