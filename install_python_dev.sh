@@ -1,19 +1,13 @@
 #!/bin/bash
 
-# 获取系统信息
-source /etc/os-release
+# Find the path of libpython3.9.so
+python_lib_path=$(find /usr/lib64 /usr/lib -name libpython3.9.so* 2>/dev/null)
 
-# 判断系统类型
-if [ "$ID" == "ubuntu" ] || [ "$ID" == "debian" ]; then
-    echo "Installing on Ubuntu/Debian"
-    apt-get update
-    apt-get install python3-dev
-elif [ "$ID" == "centos" ] || [ "$ID" == "rhel" ]; then
-    echo "Installing on CentOS/RHEL"
-    yum install python3-devel
-elif [ "$ID" == "fedora" ]; then
-    echo "Installing on Fedora"
-    dnf install python3-devel
+if [ -n "$python_lib_path" ]; then
+    # Add the path to LD_LIBRARY_PATH
+    export LD_LIBRARY_PATH="$python_lib_path:$LD_LIBRARY_PATH"
+    echo "LD_LIBRARY_PATH updated with: $python_lib_path"
 else
-    echo "Unsupported system"
+    echo "Error: libpython3.9.so not found."
 fi
+
