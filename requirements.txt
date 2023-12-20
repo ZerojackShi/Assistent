@@ -41,7 +41,7 @@ PyQt5-sip==12.12.2
 pyserial==3.5
 python-dateutil==2.8.2
 pytz==2023.3.post1
-pywin32==<desired_version>
+pywin32==306
 pywin32-ctypes==0.2.2
 PyYAML==6.0.1
 requests==2.31.0
