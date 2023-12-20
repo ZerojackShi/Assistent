@@ -186,8 +186,8 @@ def send_ack_frame(frame, control_code):
         tpv = False
     replay_frame[FramePos.POS_SEQ.value] &= 0x7F
     replay_frame[FramePos.POS_SEQ.value] |= MASK_FIR | MASK_FIN
-    replay_frame[FramePos.POS_DATA.value] = 0x00
-    replay_frame[FramePos.POS_DATA.value + 1] = 0x00
+    replay_frame[FramePos.POS_DATA.value] = frame[FramePos.POS_DATA.value]
+    replay_frame[FramePos.POS_DATA.value + 1] = frame[FramePos.POS_DATA.value + 1]
     replay_frame[FramePos.POS_DATA.value + 2] = (ITEM_ACK_NAK) & 0xFF
     replay_frame[FramePos.POS_DATA.value + 3] = (ITEM_ACK_NAK >> 8) & 0xFF
     replay_frame[FramePos.POS_DATA.value + 4] = (ITEM_ACK_NAK >> 16) & 0xFF
@@ -469,15 +469,22 @@ def bcd_array_to_datetime(bcd_array):
         minute = 0
     
     full_year = century * 100 + year
-    dt = datetime(full_year, month, day, hour, minute)
-    return dt
+    try:
+        dt = datetime(full_year, month, day, hour, minute)
+        return dt
+    except ValueError:
+        return False
 
 def is_within_one_month(bcd_array1, bcd_array2):
     # 解析BCD码数组为日期时间对象
     dt1 = bcd_array_to_datetime(bcd_array1)
     dt2 = bcd_array_to_datetime(bcd_array2)
-
+    
+    if dt1 is False or dt2 is False:
+        return False
     # 计算日期时间对象之间的差值
+    if dt1 < dt2:
+        return False
     time_difference = dt2 - dt1
 
     # 检查差值是否不超过一个月
