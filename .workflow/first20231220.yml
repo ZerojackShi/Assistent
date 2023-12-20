@@ -1,0 +1,36 @@
+version: '1.0'
+name: first20231220
+displayName: test
+triggers:
+  trigger: auto
+  push:
+    branches:
+      prefix:
+        - master
+stages:
+  - name: stage-e304ec54
+    displayName: 安装依赖
+    strategy: naturally
+    trigger: auto
+    executor:
+      - zerokit
+    steps:
+      - step: build@python
+        name: build_python
+        displayName: Python 构建
+        pythonVersion: '3.9'
+        commands:
+          - pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+          - '# 可以使用pip下载依赖'
+          - '# pip install --user -r requirements.txt'
+          - python --version
+          - ''
+          - pyinstaller --windowed --add-data "./app/config;./app/config" --icon="./app/resource/images/logo.png" Assistent.py
+        artifacts:
+          - name: BUILD_ARTIFACT
+            path:
+              - ./
+        caches: []
+        notify: []
+        strategy:
+          retry: '0'
