@@ -20,7 +20,7 @@ stages:
         displayName: Python 构建
         pythonVersion: '3.9'
         commands:
-          - pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+          - '#pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple'
           - '# 可以使用pip下载依赖'
           - ''
           - python --version
