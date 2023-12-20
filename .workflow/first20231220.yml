@@ -25,8 +25,7 @@ stages:
           - export PATH="$PATH:$HOME/.local/bin"
           - pip install --upgrade pip
           - python --version
-          - chmod +x install_python_dev.sh
-          - ./install_python_dev.sh
+          - apt-get install python3-dev
           - pip install --user -r requirements.txt
           - current_dir=$(pwd)
           - pyinstaller --windowed --add-data "$current_dir/app/config:./app/config" --icon="$current_dir/app/resource/images/logo.png" Assistent.py
