@@ -27,6 +27,8 @@ stages:
           - python --version
           - cat /etc/os-release
           - yum install -y python3-devel
+          - find / -name libpython3.9.so
+          - ''
           - chmod +x install_python_dev.sh
           - ./install_python_dev.sh
           - '#pip install --user -r requirements.txt'
