@@ -7,6 +7,8 @@ triggers:
     branches:
       prefix:
         - master
+variables:
+  version: V1.0.0.1
 stages:
   - name: stage-e304ec54
     displayName: 安装依赖
@@ -32,6 +34,11 @@ stages:
           - pip install --user -r requirements.txt
           - current_dir=$(pwd)
           - pyinstaller --windowed --add-data "$current_dir/app/config:./app/config" --icon="$current_dir/app/resource/images/logo.png" Assistent.py
+          - ''
+          - echo "构建完成"
+          - ''
+          - tar -zcvf "$current_dir/Assistent.tar.gz" "$current_dir/Assistent"
+          - ' echo "$version"'
         artifacts:
           - name: BUILD_ARTIFACT
             path:
