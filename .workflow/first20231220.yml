@@ -26,7 +26,7 @@ stages:
           - pip install --upgrade pip
           - python --version
           - cat /etc/os-release
-          - chmod +x install_python_dev
+          - chmod +x install_python_dev.sh
           - ./install_python_dev.sh
           - '#yum install -y python3-devel'
           - '#pip install --user -r requirements.txt'
