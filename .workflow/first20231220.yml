@@ -26,9 +26,9 @@ stages:
           - pip install --upgrade pip
           - python --version
           - cat /etc/os-release
+          - yum install -y python3-devel
           - chmod +x install_python_dev.sh
           - ./install_python_dev.sh
-          - '#yum install -y python3-devel'
           - '#pip install --user -r requirements.txt'
           - '#current_dir=$(pwd)'
           - '#pyinstaller --windowed --onefile --add-data "$current_dir/app/config:./app/config" --icon="$current_dir/app/resource/images/logo.png" Assistent.py'
