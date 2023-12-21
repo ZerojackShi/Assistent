@@ -27,7 +27,7 @@ stages:
           - python --version
           - cat /etc/os-release
           - yum install python39-devel
-          - find / -name libpython3.9.so
+          - find /usr/lib* -name libpython3.9.so
           - ''
           - chmod +x install_python_dev.sh
           - ./install_python_dev.sh
