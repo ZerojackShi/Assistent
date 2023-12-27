@@ -40789,6 +40789,20 @@
 			<type>BCD</type>
 		</splitByLength>
 	</dataItem>
+	<dataItem id="E1006001" protocol="csg13" region="南网">
+		<name>台区信息</name>
+		<length>1</length>
+		<value key="00">该测量点属于终端所在台区</value>
+		<value key="01">该测量点不属于终端所在台区</value>
+		<value key="02">该节点无法通信</value>
+		<value key="03">无法判断测量点所属台区</value>
+		<value key="04">不支持台区识别</value>
+	</dataItem>
+	<dataItem id="E1006002" protocol="csg13" region="南网">
+		<name>应属台区主节点MAC地址</name>
+		<length>6</length>
+		<type>BCD</type>
+	</dataItem>
 	<dataItem id="E1800023" protocol="csg13" region="南网">
 		<name>拓扑关系详细信息</name>
 		<length>unknown</length>
@@ -41459,7 +41473,7 @@
 		<length>unknown</length>
 		<type>ARD36</type>
 	</dataItem>
-	<dataItem id="E2000058" protocol="csg13" region="广东">
+	<dataItem id="E2000058" protocol="csg13" region="广东,云南">
 		<name>通信模块变更</name>
 		<length>21</length>
 		<type>ARD36</type>
@@ -41537,7 +41551,7 @@
 			<type>BIN</type>
 		</splitByLength>
 	</template>
-	<template id="ARD36" protocol="csg13" region="广东">
+	<template id="ARD36" protocol="csg13" region="广东,云南">
 		<splitByLength>
 			<name>告警状态</name>
 			<length>1</length>
@@ -41720,9 +41734,21 @@
 		<length>15</length>
 		<type>ERD6</type>
 	</dataItem>
+	<dataItem id="E2010019" protocol="csg13" region="南网">
+		<name>电能表广播校时记录</name>
+		<length>6</length>
+		<type>ERD13</type>
+	</dataItem>
 	<template id="ERD2" protocol="csg13" region="南网">
 		<splitByLength>
 			<name>最大需量清零时间</name>
+			<length>6</length>
+			<time>YYMMDDhhmmss</time>
+		</splitByLength>
+	</template>
+	<template id="ERD13" protocol="csg13" region="南网">
+		<splitByLength>
+			<name>电表广播校时发生时间</name>
 			<length>6</length>
 			<time>YYMMDDhhmmss</time>
 		</splitByLength>
@@ -43870,7 +43896,7 @@
 		<splitByLength>
 			<name>测量点</name>
 			<length>2</length>
-			<type>PN</type>
+			<type>BIN</type>
 		</splitByLength>
 		<splitByLength>
 			<name>终端时间</name>
@@ -43978,7 +44004,7 @@
 			<unit>分</unit>
 		</splitByLength>
 	</dataItem>
-	<dataItem id="E0001210" protocol="csg13" region="广西,贵州">
+	<dataItem id="E0001210" protocol="csg13" region="广西,贵州,云南">
 		<name>心跳是否带时标</name>
 		<length>1</length>
 		<type>BCD</type>
@@ -44020,6 +44046,105 @@
 			<unit>小时</unit>
 		</splitByLength>
 	</dataItem>
+	<dataItem id="E0001200" protocol="csg13" region="云南">
+		<name>台区户变关系功能</name>
+		<length>5</length>
+		<splitByLength>
+			<name>是否启用功能</name>
+			<length>1</length>
+			<value key="00">关闭</value>
+			<value key="01">开启</value>
+		</splitByLength>
+		<splitByLength>
+			<name>台区识别起始时间</name>
+			<length>2</length>
+			<time>hhmm</time>
+		</splitByLength>
+		<splitByLength>
+			<name>执行周期</name>
+			<length>1</length>
+			<unit>日</unit>
+			<value key="00">每日启动</value>
+		</splitByLength>
+		<splitByLength>
+			<name>每次执行时长</name>
+			<length>1</length>
+			<unit>小时</unit>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0001202" protocol="csg13" region="南网">
+		<name>定时搜表功能</name>
+		<length>5</length>
+		<splitByLength>
+			<name>是否启用功能</name>
+			<length>1</length>
+			<value key="00">关闭</value>
+			<value key="01">开启</value>
+		</splitByLength>
+		<splitByLength>
+			<name>台区识别起始时间</name>
+			<length>2</length>
+			<time>hhmm</time>
+		</splitByLength>
+		<splitByLength>
+			<name>执行周期</name>
+			<length>1</length>
+			<unit>日</unit>
+			<value key="00">每日启动</value>
+		</splitByLength>
+		<splitByLength>
+			<name>每次执行时长</name>
+			<length>1</length>
+			<unit>小时</unit>
+			<value key="00">不需要设置时长</value>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0001203" protocol="csg13" region="南网">
+		<name>手动搜表</name>
+		<length>2</length>
+		<splitByLength>
+			<name>手动搜表启用标志</name>
+			<length>1</length>
+			<value key="00">关闭</value>
+			<value key="01">开启</value>
+		</splitByLength>
+		<splitByLength>
+			<name>搜表允许执行时长</name>
+			<length>1</length>
+			<type>BCD</type>
+			<unit>小时</unit>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0001205" protocol="csg13" region="南网">
+		<name>电能表停电/上电告警功能</name>
+		<length>1</length>
+		<splitByLength>
+			<name>是否启用功能</name>
+			<length>1</length>
+			<value key="00">关闭</value>
+			<value key="01">开启</value>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0001206" protocol="csg13" region="南网">
+		<name>精准校时功能</name>
+		<length>1</length>
+		<splitByLength>
+			<name>是否启用功能</name>
+			<length>1</length>
+			<value key="00">关闭</value>
+			<value key="01">开启</value>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0001207" protocol="csg13" region="南网">
+		<name>终端采集模块负荷曲线功能</name>
+		<length>1</length>
+		<splitByLength>
+			<name>是否启用功能</name>
+			<length>1</length>
+			<value key="00">关闭</value>
+			<value key="01">开启</value>
+		</splitByLength>
+	</dataItem>
 	<dataItem id="E1020000" protocol="csg13" region="南网">
 		<name>主站中转报文</name>
 		<length>unknown</length>
@@ -44035,6 +44160,22 @@
 			<type>CSG13</type>
 		</splitByLength>
 	</dataItem>	
+	<dataItem id="E1800033" protocol="csg13" region="南网">
+		<name>台区户变关系识别状态</name>
+		<length>3</length>
+		<splitByLength>
+			<name>台区识别状态</name>
+			<length>1</length>
+			<value key="00">未识别或识别完成或识别停止</value>
+			<value key="01">识别中</value>
+		</splitByLength>
+		<splitByLength>
+			<name>剩余时长</name>
+			<length>2</length>
+			<type>BCD</type>
+			<unit>分钟</unit>
+		</splitByLength>
+	</dataItem>
 	<dataItem id="E1800034" protocol="csg13" region="topo">
 		<name>拓扑识别启停信息</name>
 		<length>unknown</length>
@@ -44109,16 +44250,19 @@
 		<splitByLength>
 			<name>执行分段对时总次数</name>
 			<length>1</length>
+			<type>BIN</type>
 			<unit>次</unit>
 		</splitByLength>
 		<splitByLength>
 			<name>两次广播间隔</name>
 			<length>1</length>
+			<type>BIN</type>
 			<unit>分钟</unit>
 		</splitByLength>
 		<splitByLength>
 			<name>两次校时间隔</name>
 			<length>1</length>
+			<type>BIN</type>
 			<unit>分钟</unit>
 		</splitByLength>
 		<splitByLength>
@@ -44145,5 +44289,191 @@
 			<value key="00">关闭</value>
 			<value key="01">开启</value>
 		</splitByLength>
+	</dataItem>
+	<dataItem id="E080000F" protocol="csg13" region="南网">
+		<name>测量点参数集合</name>
+		<length>29</length>
+		<dataItem id="E0800000" protocol="csg13" region="南网">
+			<name>测量点的状态</name>
+			<length>1</length>
+			<value key="00">无效</value>
+			<value key="01">有效</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0800001" protocol="csg13" region="南网">
+			<name>测量点性质</name>
+			<length>1</length>
+			<value key="01">485表</value>
+			<value key="02">模拟量</value>
+			<value key="03">脉冲量</value>
+			<value key="04">计算值</value>
+			<value key="05">交流采样</value>
+			<value key="06">水表</value>
+			<value key="07">热表</value>
+			<value key="08">气表</value>
+			<value key="0B">485副表</value>
+			<value key="1D">1级拓扑识别设备</value>
+			<value key="0B">智能断路器</value>
+			<value key="0B">分支检测终端</value>
+			<value key="20">分支数据监测单元</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0800002" protocol="csg13" region="南网">
+			<name>测量点地址</name>
+			<length>6</length>
+		</dataItem>
+		<dataItem id="E0800003" protocol="csg13" region="南网">
+			<name>测量点通信规约</name>
+			<length>1</length>
+			<value key="00">DL/T645-1997 规约</value>
+			<value key="01">DL/T645-2007 规约</value>
+			<value key="02">广东 97 电表规约</value>
+			<value key="03">广东 07 电表规约</value>
+			<value key="04">威胜自定义规约</value>
+			<value key="05">兰吉尔 B 表规约</value>
+			<value key="06">兰吉尔 D 表规约</value>
+			<value key="07">EDMI 表规约</value>
+			<value key="08">ABB 方表规约</value>
+			<value key="09">埃托利表规约</value>
+			<value key="0A">EMAIL 表规约</value>
+			<value key="0B">CJ/T 188 规约</value>
+			<value key="0C">其他规约</value>
+			<value key="0D">量测开关及分支装置规约</value>
+			<value key="other">保留</value>
+		</dataItem>
+		<dataItem id="E0800004" protocol="csg13" region="南网">
+			<name>电能表类型</name>
+			<length>1</length>
+			<value key="01">单相电子表</value>
+			<value key="02">多功能表</value>
+			<value key="03">三相电子表</value>
+			<value key="04">分支装置</value>
+			<value key="05">智能量测断路器</value>
+			<value key="06">其他类型</value>
+			<value key="other">保留</value>
+		</dataItem>
+		<dataItem id="E0800005" protocol="csg13" region="南网">
+			<name>总分类型</name>
+			<length>1</length>
+			<value key="00">用户表</value>
+			<value key="01">总表</value>
+			<value key="other">保留</value>
+		</dataItem>
+		<dataItem id="E0800006" protocol="csg13" region="南网">
+			<name>重点用户属性</name>
+			<length>1</length>
+			<value key="00">普通用户</value>
+			<value key="01">重点用户</value>
+			<value key="other">保留</value>
+		</dataItem>
+		<dataItem id="E0800007" protocol="csg13" region="南网">
+			<name>拉闸功能</name>
+			<length>1</length>
+			<value key="00">不带拉闸</value>
+			<value key="01">带拉闸</value>
+			<value key="other">保留</value>
+		</dataItem>
+		<dataItem id="E0800008" protocol="csg13" region="南网">
+			<name>最大费率数</name>
+			<length>1</length>
+		</dataItem>
+		<dataItem id="E0800009" protocol="csg13" region="南网">
+			<name>采集器地址</name>
+			<length>6</length>
+		</dataItem>
+		<dataItem id="E080000A" protocol="csg13" region="南网">
+			<name>测量点端口号</name>
+			<length>1</length>
+			<value key="00">485-1</value>
+			<value key="01">485-2</value>
+			<value key="02">485-3</value>
+			<value key="03">485-4</value>
+			<value key="04">485-5</value>
+			<value key="05">485-6</value>
+			<value key="06">485-7</value>
+			<value key="07">485-8</value>
+			<value key="08">485-9</value>
+			<value key="09">485-10</value>
+			<value key="0A">485-11</value>
+			<value key="0B">485-12</value>
+			<value key="0C">485-13</value>
+			<value key="0D">485-14</value>
+			<value key="0E">485-15</value>
+			<value key="0F">485-16</value>
+			<value key="10">485-17</value>
+			<value key="11">485-18</value>
+			<value key="12">485-19</value>
+			<value key="13">485-20</value>
+			<value key="14">485-21</value>
+			<value key="15">485-22</value>
+			<value key="16">485-23</value>
+			<value key="17">485-24</value>
+			<value key="18">485-25</value>
+			<value key="19">485-26</value>
+			<value key="1A">485-27</value>
+			<value key="1B">485-28</value>
+			<value key="1C">485-29</value>
+			<value key="1D">485-30</value>
+			<value key="1E">485-31</value>
+			<value key="1F">载波通道</value>
+			<value key="20">无线通道</value>
+			<value key="21">光纤通道</value>
+			<value key="22">混合通道</value>
+			<value key="other">其他备用通道</value>
+		</dataItem>
+		<dataItem id="E080000B" protocol="csg13" region="南网">
+			<name>端口参数</name>
+			<length>4</length>
+			<splitByLength>
+				<name>波特率</name>
+				<length>1</length>
+				<type>BIN</type>
+				<value key="00">1200bps</value>
+				<value key="01">300bps</value>
+				<value key="02">600bps</value>
+				<value key="04">1200bps</value>
+				<value key="08">2400bps</value>
+				<value key="10">4800bps</value>
+				<value key="20">9600bps</value>
+				<value key="40">9600bps</value>
+				<value key="80">38400bps</value>
+			</splitByLength>
+			<splitByLength>
+				<name>校验位</name>
+				<length>1</length>
+				<type>BIN</type>
+				<value key="00">无校验</value>
+				<value key="01">偶校验</value>
+				<value key="02">奇校验</value>
+				<value key="other">偶校验</value>
+			</splitByLength>
+			<splitByLength>
+				<name>数据位</name>
+				<length>1</length>
+				<type>BIN</type>
+				<value key="5">5位</value>
+				<value key="6">6位</value>
+				<value key="7">7位</value>
+				<value key="8">8位</value>
+				<value key="other">8位</value>
+			</splitByLength>
+			<splitByLength>
+				<name>停止位</name>
+				<length>1</length>
+				<type>BIN</type>
+				<value key="0">1位</value>
+				<value key="1">1.5位</value>
+				<value key="2">2位</value>
+				<value key="other">1位</value>
+			</splitByLength>
+		</dataItem>
+		<dataItem id="E080000C" protocol="csg13" region="南网">
+			<name>TA 变比</name>
+			<length>2</length>
+		</dataItem>
+		<dataItem id="E080000D" protocol="csg13" region="南网">
+			<name>TV 变比</name>
+			<length>2</length>
+		</dataItem>
 	</dataItem>
 </config>

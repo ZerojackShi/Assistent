@@ -483,7 +483,7 @@ def is_within_one_month(bcd_array1, bcd_array2):
     if dt1 is False or dt2 is False:
         return False
     # 计算日期时间对象之间的差值
-    if dt1 < dt2:
+    if dt1 <= dt2:
         return False
     time_difference = dt2 - dt1
 
@@ -1175,6 +1175,10 @@ def Analysic_csg_read_task_frame(frame, dir, prm,result_list,start_pos):
     data_time=None
     prase_data = PraseFrameData()
     while pos < length:
+        if frame_fun.globregion == "海南":
+            data_count = data_segment[pos]
+            pos += 1
+
         if guest_next_data_is_cur_item_data(data_item_elem, data_segment[pos:], data_time) == False:
             DA = data_segment[pos:pos + 2]
             item = data_segment[pos + 2: pos + 6]
@@ -1195,6 +1199,9 @@ def Analysic_csg_read_task_frame(frame, dir, prm,result_list,start_pos):
                 pos += 2
                 frame_fun.add_data(sub_result, f"数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
                 pos += 4
+                
+                if frame_fun.globregion == "海南":
+                    frame_fun.add_data(sub_result, f"数据个数",f"{data_count}:02X",f"数据个数：{data_count}",[index + pos -6, index + pos -5])
 
         item_data = []
         if data_item_elem is not None:

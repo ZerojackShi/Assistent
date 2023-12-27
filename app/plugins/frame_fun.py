@@ -6,8 +6,9 @@ from PyQt5.QtWidgets import QMessageBox,QDialogButtonBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt,pyqtSlot
 import re
-from ..common.config import config_645, config_csg13
+from ..common.config import config_645, config_csg13,log_config
 from qfluentwidgets import InfoBarIcon
+import traceback,sys
 class CustomMessageBox(QMessageBox):
     def __init__(self, title, message, parent=None):
         super().__init__(parent)
@@ -445,9 +446,9 @@ def get_config_xml(data_item_id:str, protocol:str, region:str):
 def get_template_element(template:str, protocol:str, region:str):
     find_protocol = protocol.upper()
     if "DLT/645" in protocol:
-        return config_645.get_template_item(template, find_protocol, region)
+        return config_645.get_item(template, find_protocol, region)
     elif "CSG13" in protocol:
-        return config_csg13.get_template_item(template, find_protocol, region)
+        return config_csg13.get_item(template, find_protocol, region)
 
 
 

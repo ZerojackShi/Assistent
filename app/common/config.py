@@ -224,6 +224,7 @@ class QframeConfig(QObject):
                 print("No node found with id {} protocol {} and region {}".format(target_id))
                 return None
             #当前标签无法找到
+            print("found with id {} protocol {} and region {}".format(target_id,target_protocol,region))
             for node in target_node:
                 if is_vaild_data_item(node, target_protocol, region):
                     return node
@@ -238,10 +239,18 @@ class QframeConfig(QObject):
         if self.config is None:
             return None
         root = self.config.getroot()
+        protocol = protocol.lower()
         target = find_target_dataitem(root, item_id, protocol, region)
         if target is None:
-            region = "南网"
+            protocol = protocol.upper()
             target = find_target_dataitem(root, item_id, protocol, region)
+            if target is None:
+                region = "南网"
+                protocol = protocol.lower()
+                target = find_target_dataitem(root, item_id, protocol, region)
+                if target is None:
+                    protocol = protocol.upper()
+                    target = find_target_dataitem(root, item_id, protocol, region)
         return target
     
 class LogConfig:

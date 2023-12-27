@@ -131,12 +131,16 @@ def prase_type_item(data_item_elem, data_segment, index, need_delete, singal_len
     result = {}
     pos = 0
     i = 0
+    ret = False
 
     if need_delete:
         new_data = frame_fun.frame_delete_33H(data_segment)
     else:
         new_data = data_segment
-    if sub_type in ("PN"):
+    ret = prase_simple_type_data(data_item_elem, data_segment,index, need_delete)
+    if ret is not False:
+        subitem_value = ret
+    elif sub_type in ("PN"):
         if sub_length % singal_length == 0:
             while pos < sub_length:
                 da = new_data[pos:pos + singal_length]
@@ -352,6 +356,32 @@ def parse_splitByLength_data(data_item_elem, data_segment,index, need_delete):
     # result[splitbit_name] = [splitbit_name, data_segment, splitlength]
     return splitlength
 
+def prase_simple_type_data(data_item_elem, data_segment,index, need_delete):
+    subitem_decimal = data_item_elem.find('decimal')
+    is_sign = data_item_elem.find('sign')
+    decimal = 0
+    if subitem_decimal is not None:
+        decimal = int(subitem_decimal.text)
+    sign = False
+    if is_sign is not None:
+        sign = True if is_sign.text=="yes" else False
+    subitem_type = data_item_elem.find('type')
+    data_type = ""
+    if subitem_type is not None:
+        data_type = subitem_type.text
+    if data_type in ("BCD","Bcd","bcd"):
+         subitem_value = frame_fun.bcd_to_decimal(data_segment,decimal,need_delete,sign)
+    elif data_type in ("BIN","Bin","bin"):
+         subitem_value = frame_fun.bin_to_decimal(data_segment,decimal,need_delete,sign)
+    elif data_type in ("ASCII","ascii"):
+         subitem_value = frame_fun.ascii_to_str(data_segment)
+    elif data_type == "PORT":
+        subitem_value = frame_fun.prase_port(data_segment)
+    elif data_type == "IP":
+        subitem_value = frame_fun.prase_ip_str(data_segment)
+    else:
+        subitem_value = False
+    return subitem_value
 
 def prase_singal_item(data_item_elem, data_segment,index, need_delete):
     subitem_name = data_item_elem.find('name').text
@@ -359,29 +389,12 @@ def prase_singal_item(data_item_elem, data_segment,index, need_delete):
     if data_item_elem.find('unit') is not None:
         # 解析有单位的数据
         subitem_unit = data_item_elem.find('unit').text
-        subitem_decimal = data_item_elem.find('decimal')
-        subitem_type = data_item_elem.find('type')
-        decimal = 0
-        if subitem_decimal is not None:
-            decimal = int(subitem_decimal.text)
-        data_type = ""
-        if subitem_type is not None:
-            data_type = subitem_type.text
-        is_sign = data_item_elem.find('sign')
-        sign = False
-        if is_sign is not None:
-            sign = True if is_sign.text=="yes" else False
-        if data_type in ("BCD","Bcd","bcd"):
-             subitem_value = frame_fun.bcd_to_decimal(data_segment,decimal,need_delete,sign)
-        elif data_type in ("BIN","Bin","bin"):
-             subitem_value = frame_fun.bin_to_decimal(data_segment,decimal,need_delete,sign)
-        elif data_type in ("ASCII","ascii"):
-             subitem_value = frame_fun.ascii_to_str(data_segment)
-        else:
-             subitem_value = frame_fun.bcd_to_decimal(data_segment,decimal,need_delete,sign)
-
-        if subitem_value != "无效数据":
+        subitem_value = prase_simple_type_data(data_item_elem, data_segment,index, need_delete)
+        if subitem_value is not False:
             subitem_value = f"{subitem_value}" + subitem_unit
+        else:
+            subitem_value = "无效数据"
+            
     elif data_item_elem.find('time') is not None:
         # 解析时间数据
         subitem_time_format = data_item_elem.find('time').text
@@ -406,22 +419,11 @@ def prase_singal_item(data_item_elem, data_segment,index, need_delete):
         sign = False
         if is_sign is not None:
             sign = True if is_sign.text=="yes" else False
-        subitem_type = data_item_elem.find('type')
-        data_type = ""
-        if subitem_type is not None:
-            data_type = subitem_type.text
-        if data_type in ("BCD","Bcd","bcd"):
-             subitem_value = frame_fun.bcd_to_decimal(data_segment,decimal,need_delete,sign)
-        elif data_type in ("BIN","Bin","bin"):
-             subitem_value = frame_fun.bin_to_decimal(data_segment,decimal,need_delete,sign)
-        elif data_type in ("ASCII","ascii"):
-             subitem_value = frame_fun.ascii_to_str(data_segment)
-        elif data_type == "PORT":
-            subitem_value = frame_fun.prase_port(data_segment)
-        elif data_type == "IP":
-            subitem_value = frame_fun.prase_ip_str(data_segment)
+        ret = prase_simple_type_data(data_item_elem, data_segment,index, need_delete)
+        if ret == True:
+            subitem_value = ret
         else:
-             subitem_value = frame_fun.bcd_to_decimal(data_segment,decimal,need_delete,sign)
+            subitem_value = frame_fun.bcd_to_decimal(data_segment,decimal,need_delete,sign)
 
     return subitem_value
 
@@ -911,6 +913,7 @@ def analyze_read_response_frame(frame, result_list,indx):
     data_content = frame[14:-2]  # 数据内容
     length = len(frame)
     # 转换数据标识和数据内容为字符串形式
+    prase_data = PraseFrameData()
     data_identifier_str = frame_fun.get_data_str_delete_33h_reverse(data_identifier)
     data_item_elem = frame_fun.get_config_xml(data_identifier_str, "DLT/645-2007", frame_fun.globregion)
     if data_item_elem is not None:
@@ -930,7 +933,7 @@ def analyze_read_response_frame(frame, result_list,indx):
             indx += 5
         pos = 0
         while pos < all_length:
-            alalysic_result = parse_data(data_identifier_str,"DLT/645-2007", frame_fun.globregion,data_content[pos:pos+sublength], 14 + pos +indx)
+            alalysic_result = prase_data.parse_data(data_identifier_str,"DLT/645-2007", frame_fun.globregion,data_content[pos:pos+sublength], 14 + pos +indx)
             frame_fun.prase_data_with_config(alalysic_result, True,sub_result)
             pos += sublength
         dis_data_identifier = "数据标识编码：" + f"[{data_identifier_str}]" + "-" + data_item_elem.find('name').text
@@ -994,13 +997,14 @@ def analyze_read_subsequent_response_frame(frame, result_list,indx):
     data_content = frame[14:-2]  # 数据内容
     seq = frame[-3]
     length = len(frame)
+    prase_data = PraseFrameData()
     # 转换数据标识和数据内容为字符串形式
     data_identifier_str = frame_fun.get_data_str_delete_33h_reverse(data_identifier)
     data_item_elem = frame_fun.get_config_xml(data_identifier_str, "DLT/645-2007", frame_fun.globregion)
     frame_fun.add_data(data_list, "数据标识编码",frame_fun.get_data_str_with_space(data_identifier),"数据标识编码：" + data_identifier_str,[indx+10,indx+14])
     if data_item_elem is not None:
         sub_result = []
-        alalysic_result = parse_data(data_identifier_str,"DLT/645-2007", frame_fun.globregion,data_content, indx+14)
+        alalysic_result = prase_data.parse_data(data_identifier_str,"DLT/645-2007", frame_fun.globregion,data_content, indx+14)
         print(alalysic_result)
         frame_fun.prase_data_with_config(alalysic_result, True,sub_result)
         frame_fun.add_data(data_list, "数据标识内容",frame_fun.get_data_str_with_space(data_content),f"数据标识[{data_identifier_str}]内容数据{frame_fun.get_data_str_delete_33h_reverse(data_content)}", [indx+14,indx+length-2], sub_result)
@@ -1021,6 +1025,7 @@ def Alalysis_write_frame(frame, result_list,indx):
     item_str = frame_fun.get_data_str_delete_33h_reverse(data_identifier)
 
     data_list = []
+    prase_data = PraseFrameData()
     data_item = frame_fun.get_config_xml(item_str, "DLT/645-2007", frame_fun.globregion)
     if data_item is not None:
         data_identifier_str = "数据标识编码：" + f"[{item_str}]" + "-" + data_item.find('name').text
@@ -1033,7 +1038,7 @@ def Alalysis_write_frame(frame, result_list,indx):
 
     if data_item is not None:
         write_result = []
-        alalysic_result = parse_data(item_str,"DLT/645-2007", frame_fun.globregion,write_data, 22 + indx)
+        alalysic_result = prase_data.parse_data(item_str,"DLT/645-2007", frame_fun.globregion,write_data, 22 + indx)
         frame_fun.prase_data_with_config(alalysic_result, True,write_result)
         frame_fun.add_data(data_list, "数据内容",frame_fun.get_data_str_with_space(write_data), "写数据内容："+frame_fun.get_data_str_delete_33h_reverse(write_data),[indx+22,indx+len(write_data) + 22],write_result)
     else:
