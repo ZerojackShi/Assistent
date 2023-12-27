@@ -139,7 +139,7 @@ def prase_type_item(data_item_elem, data_segment, index, need_delete, singal_len
         new_data = data_segment
     ret = prase_simple_type_data(data_item_elem, data_segment,index, need_delete)
     if ret is not False:
-        subitem_value = ret
+        result = ret
     elif sub_type in ("PN"):
         if sub_length % singal_length == 0:
             while pos < sub_length:
@@ -196,7 +196,7 @@ def prase_type_item(data_item_elem, data_segment, index, need_delete, singal_len
         i+=1
     else:
         template = frame_fun.get_template_element(sub_type,frame_fun.globalprotocol, frame_fun.globregion)
-        if template:
+        if template is not None:
             if sub_length % singal_length == 0:
                 while pos < sub_length:
                     splitname_elem = template.find('name')
