@@ -19,6 +19,8 @@ def pack_assistent(workspace_path):
         os.path.join(workspace_path, "Assistent.py")
     ]
 
+    print(f"Executing PyInstaller command: {' '.join(pyinstaller_cmd)}")
+
     # Execute the command
     try:
         subprocess.run(pyinstaller_cmd, check=True)
