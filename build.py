@@ -16,6 +16,8 @@ def pack_assistent(workspace_path):
         f'{os.path.join(workspace_path, "app", "config")};app/config',
         "--icon",
         f'{os.path.join(workspace_path, "app", "resource", "images", "logo.png")}',
+        '--exclude-module',
+        'pythoncom',
         os.path.join(workspace_path, "Assistent.py")
     ]
 
