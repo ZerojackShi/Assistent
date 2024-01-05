@@ -482,9 +482,7 @@ def parse_data_item(data_item_elem, data_segment, index, need_delete):
         result = {data_item_id: [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]}
     elif data_item_elem.find('unit') is not None:
         singal_result = prase_singal_item(data_item_elem, data_segment, index, need_delete)
-        #result = [data_item_name,data_segment, singal_result, [index, index+len(data_segment)]]
         result = {data_item_id: [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]}
-        #result = singal_result
     elif data_item_elem.find('value') is not None:
         singal_result = prase_value_item(data_item_elem, data_segment, index,  need_delete)
         result = {data_item_id: [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]}
@@ -506,7 +504,6 @@ def parse_data_item(data_item_elem, data_segment, index, need_delete):
         splitbit_elem = data_item_elem.find('splitbit')
         parsed_bitwise_data = parse_bitwise_data(splitbit_elem, data_segment,index, need_delete)
         result = {data_item_id: [data_item_name, data_segment, parsed_bitwise_data,[index, index + len(data_segment)]]}
-        # result.update(parsed_bitwise_data)
 
     # 解析splitByLength数据
     elif data_item_elem.find('splitByLength') is not None:
@@ -515,7 +512,6 @@ def parse_data_item(data_item_elem, data_segment, index, need_delete):
         result = parsed_splitByLength_data
     elif data_item_elem.find('itembox') is not None:
         result = parse_item(data_item_elem, data_segment, index + pos,  need_delete)
-        # result.update(parsed_splitByLength_data)
     elif data_item_elem.find('indelength') is not None:
         length = len(data_segment)
         length_vaue = f"{length}"
@@ -523,48 +519,20 @@ def parse_data_item(data_item_elem, data_segment, index, need_delete):
         if length_elem is not None:
             result = parse_data_item(length_elem, data_segment, index, need_delete)
     elif data_item_elem.find('type') is not None:
-        data_type = data_item_elem.find('type').text.upper()
-        if data_type not in ("BCD","BIN","ASCII"):
-            template = frame_fun.get_template_element(data_type,frame_fun.globalprotocol, frame_fun.globregion)
-            if template is not None:
-                result = parse_splitByLength_data(template, data_segment, index,  need_delete)
-            elif data_type == "IPWITHPORT":
-                i = 0
-                port = data_segment[0:2]
-                port_str = frame_fun.prase_port(port)
-                ip_str = frame_fun.prase_ip_str(data_segment[2:6])
-                subitem_value = ["IP地址", data_segment[2:6], ip_str, [index + 2,index + 8]]
-                result[i] = subitem_value
-                i+=1
-                subitem_value = ["端口号", port, port_str, [index,index + 2]]
-                result[i] = subitem_value
-                i+=1
-            else:
-                if data_item_id:
-                    key = data_item_id
-                else:
-                    key = data_item_name
-                singal_result = prase_singal_item(data_item_elem, data_segment, index, need_delete)
-                #result = [data_item_name,data_segment, singal_result, [index, index+len(data_segment)]]
-                result[key] = [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]
+        singal_result = prase_type_item(data_item_elem, data_segment, index,  need_delete, len(data_segment))
+        if data_item_id:
+            key = data_item_id
         else:
-            if data_item_id:
-                key = data_item_id
-            else:
-                key = data_item_name
-            singal_result = prase_singal_item(data_item_elem, data_segment, index, need_delete)
-            #result = [data_item_name,data_segment, singal_result, [index, index+len(data_segment)]]
-            result[key] = [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]
+            key = data_item_name
+        result[key] = [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]
     else:
         if data_item_id:
             key = data_item_id
         else:
             key = data_item_name
         singal_result = prase_singal_item(data_item_elem, data_segment, index, need_delete)
-        #result = [data_item_name,data_segment, singal_result, [index, index+len(data_segment)]]
         result[key] = [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]
     return result
-    #return {data_item_id: [data_item_name, data_segment, result,[index, index + len(data_segment)]]}
 def get_sub_length(data,sub_item_ele, target_name):
     length = 0
     sub_length = 0
