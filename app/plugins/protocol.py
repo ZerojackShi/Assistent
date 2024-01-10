@@ -330,7 +330,7 @@ def parse_splitByLength_data(data_item_elem, data_segment,index, need_delete):
             data_type = ""
             if subitem_type is not None:
                 data_type = subitem_type.text
-            time_data = subitem_content[:6][::-1]
+            # time_data = subitem_content[:6][::-1]
             if data_type in ("BIN","Bin","bin"):
                 time_data = frame_fun.binary_to_bcd(subitem_content[:6][::-1])
             subitem_value = frame_fun.parse_time_data(time_data,subitem_time_format,need_delete)
@@ -867,7 +867,7 @@ def Alalysis_read_frame(frame, result_list,indx):
     elif read_type == 6:
         block_num = frame[14] - 0x33
         frame_fun.add_data(data_list, "负荷记录块数", f"{frame[14]:02X}",f"负荷记录块数={block_num}",[indx+14,indx+15])
-        frame_fun.add_data(data_list, "给定时间", frame_fun.get_data_str_with_space(frame[15:-2]),frame_fun.parse_time_data(frame[15:-2],"mmhhDDMMYY",True),[indx+15,length + indx-2])
+        frame_fun.add_data(data_list, "给定时间", frame_fun.get_data_str_with_space(frame[15:-2]),frame_fun.parse_time_data(frame[15:-2],"YYMMDDhhmm",True),[indx+15,length + indx-2])
     elif read_type > 0:
         frame_fun.add_data(data_list, "液晶查看命令"," ".join(f"{b:02X}" for b in frame[14:-2]),"",[indx + 14,length + indx-2])
 
@@ -894,7 +894,7 @@ def analyze_read_response_frame(frame, result_list,indx):
             sublength = len(data_content)
         if len(data_content) % sublength != 0 and len(data_content) > sublength:
             time = data_content[:5]
-            time_str = frame_fun.parse_time_data(time,"mmhhDDMMYY",True)
+            time_str = frame_fun.parse_time_data(time,"YYMMDDhhmm",True)
             frame_fun.add_data(sub_result, "数据起始时间",frame_fun.get_data_str_with_space(time),time_str,[indx+14,indx +19])
             all_length -= 5
             data_content = data_content[5:]
@@ -1041,7 +1041,7 @@ def Alalysis_brodcast_time_frame(frame, result_list,indx):
     time = frame[10:16]
     data_list = []
     form_time = time[:6][::-1]
-    frame_fun.add_data(data_list, "数据内容",frame_fun.get_data_str_with_space(time), "校时时间："+ frame_fun.parse_time_data(form_time, "YYMMDDhhmmss",True),[indx+10,indx+16])
+    frame_fun.add_data(data_list, "数据内容",frame_fun.get_data_str_with_space(time), "校时时间："+ frame_fun.parse_time_data(form_time, "ssmmhhDDMMYY",True),[indx+10,indx+16])
     frame_fun.add_data(result_list, "数据域", "", "数据域传输时按字节进行加33H处理，接收后应按字节减33H处理", [indx+10,indx+16],data_list)
 
 def Alalysis_write_frozen_time_frame(frame, result_list,indx):
