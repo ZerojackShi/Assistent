@@ -43525,6 +43525,154 @@
 			</bit>
 		</splitbit>
 	</dataItem>
+	<dataItem id="E0000111" protocol="csg13" region="南网">
+		<name>移动运营商通信参数</name>
+		<length>420</length>
+		<type>GPRSPARAM</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E0000112" protocol="csg13" region="南网">
+		<name>联通运营商通信参数</name>
+		<length>420</length>
+		<type>GPRSPARAM</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E0000113" protocol="csg13" region="南网">
+		<name>电信运营商通信参数</name>
+		<length>420</length>
+		<type>GPRSPARAM</type>
+		<single>YES</single>
+	</dataItem>
+	<template id="GPRSPARAM" protocol="csg13" region="南网">
+		<splitByLength>
+			<name>主通信地址</name>
+			<length>8</length>
+			<type>IPWITHPORT</type>
+		</splitByLength>
+		<splitByLength>
+			<name>主通信通道类型</name>
+			<length>1</length>
+			<type>BCD</type>
+			<value key="FF">无效</value>
+			<value key="02">GPRS/CDMA/3G/4G/5G</value>
+			<value key="03">PSTN</value>
+			<value key="04">Ethernet</value>
+			<value key="06">RS232/RS485</value>
+			<value key="07">CSD</value>
+			<value key="08">Radio</value>
+		</splitByLength>
+			<splitByLength>
+			<name>备用通信地址1</name>
+			<length>8</length>
+			<type>IPWITHPORT</type>
+		</splitByLength>
+		<splitByLength>
+			<name>备用通信通道类型1</name>
+			<length>1</length>
+			<type>BCD</type>
+			<value key="FF">无效</value>
+			<value key="02">GPRS/CDMA/3G/4G/5G</value>
+			<value key="03">PSTN</value>
+			<value key="04">Ethernet</value>
+			<value key="06">RS232/RS485</value>
+			<value key="07">CSD</value>
+			<value key="08">Radio</value>
+		</splitByLength>
+		<splitByLength>
+			<name>备用通信地址2</name>
+			<length>8</length>
+			<type>IPWITHPORT</type>
+		</splitByLength>
+		<splitByLength>
+			<name>备用通信通道类型2</name>
+			<length>1</length>
+			<type>BCD</type>
+			<value key="FF">无效</value>
+			<value key="02">GPRS/CDMA/3G/4G/5G</value>
+			<value key="03">PSTN</value>
+			<value key="04">Ethernet</value>
+			<value key="06">RS232/RS485</value>
+			<value key="07">CSD</value>
+			<value key="08">Radio</value>
+		</splitByLength>
+		<splitByLength>
+			<name>网关或代理服务器地址</name>
+			<length>8</length>
+			<type>IPWITHPORT</type>
+		</splitByLength>
+		<splitByLength>
+			<name>网关或代理服务器地址类型</name>
+			<length>1</length>
+			<type>BCD</type>
+			<value key="FF">无效</value>
+			<value key="02">GPRS/CDMA/3G/4G/5G</value>
+			<value key="03">PSTN</value>
+			<value key="04">Ethernet</value>
+			<value key="06">RS232/RS485</value>
+			<value key="07">CSD</value>
+			<value key="08">Radio</value>
+		</splitByLength>
+		<splitByLength>
+			<name>第一套APN</name>
+			<length>32</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>登录第一套APN用户名</name>
+			<length>32</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>登录第一套APN密码</name>
+			<length>32</length>
+			<type>ASCII</type>
+		</splitByLength>
+			<splitByLength>
+			<name>第二套APN</name>
+			<length>32</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>登录第二套APN用户名</name>
+			<length>32</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>登录第二套APN密码</name>
+			<length>32</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>第三套APN</name>
+			<length>32</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>登录第三套APN用户名</name>
+			<length>32</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>登录第三套APN密码</name>
+			<length>32</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>第四套APN</name>
+			<length>32</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>登录第四套APN用户名</name>
+			<length>32</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>登录第四套APN密码</name>
+			<length>32</length>
+			<type>ASCII</type>
+		</splitByLength>
+	</template>
 	<dataItem id="E000012F" protocol="csg13" region="南网">
 		<name>终端通信参数</name>
 		<length>22</length>

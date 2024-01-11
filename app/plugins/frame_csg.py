@@ -1016,15 +1016,15 @@ def Analysic_csg_read_history_frame(frame, dir, prm,result_list,start_pos):
         if dir == 1:
             frame_fun.add_data(sub_result, f"<第{num + 1}组>数据内容",frame_fun.get_data_str_with_space(sub_datament),point_str[len("Pn="):] + "-" + dis_data_identifier[len("数据标识编码："):],[index + pos, index + pos + sub_length + 6], item_data)
             data_time = data_segment[pos + sub_length:pos + sub_length + 6]
-            time_str = frame_fun.parse_time_data(data_time, "mmhhDDMMYYCC", False)
+            time_str = frame_fun.parse_time_data(data_time, "CCYYMMDDhhmm", False)
             frame_fun.add_data(sub_result, f"<第{num + 1}组>数据时间",frame_fun.get_data_str_with_space(data_time),f"数据时间：" + time_str,[index + pos + sub_length,index + pos + sub_length + 6])
             pos += 6
         else:
             start_time = data_segment[pos:pos + 6]
             end_time = data_segment[pos + 6:pos + 12]
             data_dinsty = data_segment[pos + 12]
-            start_time_str = frame_fun.parse_time_data(start_time, "mmhhDDMMYYCC", False)
-            end_time_str = frame_fun.parse_time_data(end_time, "mmhhDDMMYYCC", False)
+            start_time_str = frame_fun.parse_time_data(start_time, "CCYYMMDDhhmm", False)
+            end_time_str = frame_fun.parse_time_data(end_time, "CCYYMMDDhhmm", False)
             data_dinsty_str = get_data_dinsty(data_dinsty)
             frame_fun.add_data(sub_result, f"<第{num + 1}组>数据起始时间",frame_fun.get_data_str_with_space(start_time),start_time_str,[index + pos, index + pos + 6])
             frame_fun.add_data(sub_result, f"<第{num + 1}组>数据结束时间",frame_fun.get_data_str_with_space(end_time),end_time_str,[index + pos + 6, index + pos + 12])
@@ -1226,15 +1226,15 @@ def Analysic_csg_read_task_frame(frame, dir, prm,result_list,start_pos):
         if dir == 1:
             frame_fun.add_data(task_result, f"<第{num + 1}组>数据内容",frame_fun.get_data_str_with_space(sub_datament),point_str[len("Pn="):] + "-" + dis_data_identifier[len("数据标识编码："):],[index + pos, index + pos + sub_length], item_data)
             data_time = data_segment[pos + sub_length:pos + sub_length + 5]
-            time_str = frame_fun.parse_time_data(data_time, "mmhhDDMMYY", False)
+            time_str = frame_fun.parse_time_data(data_time, "YYMMDDhhmm", False)
             frame_fun.add_data(task_result, f"<第{num + 1}组>数据时间",frame_fun.get_data_str_with_space(data_time),f"数据时间：" + time_str,[index + pos + sub_length,index + pos + sub_length + 5])
             pos += 5
         else:
             start_time = data_segment[pos:pos + 6]
             end_time = data_segment[pos + 6:pos + 12]
             data_dinsty = data_segment[pos + 12]
-            start_time_str = frame_fun.parse_time_data(start_time, "mmhhDDMMYYCC", False)
-            end_time_str = frame_fun.parse_time_data(end_time, "mmhhDDMMYYCC", False)
+            start_time_str = frame_fun.parse_time_data(start_time, "CCYYMMDDhhmm", False)
+            end_time_str = frame_fun.parse_time_data(end_time, "CCYYMMDDhhmm", False)
             data_dinsty_str = get_data_dinsty(data_dinsty)
             frame_fun.add_data(sub_result, f"数据起始时间",frame_fun.get_data_str_with_space(start_time),start_time_str,[index + pos, index + pos + 6])
             frame_fun.add_data(sub_result, f"数据结束时间",frame_fun.get_data_str_with_space(end_time),end_time_str,[index + pos + 6, index + pos + 12])
@@ -1258,7 +1258,7 @@ def Analysic_csg_read_task_frame(frame, dir, prm,result_list,start_pos):
             length -= 16;
         if length - pos == 6:
             data_time = data_segment[pos:pos + 6]
-            time_str = frame_fun.parse_time_data(data_time, "mmhhDDMMYYCC", False)
+            time_str = frame_fun.parse_time_data(data_time, "CCYYMMDDhhmm", False)
             frame_fun.add_data(sub_result, f"任务数据时间",frame_fun.get_data_str_with_space(data_time),time_str,[index + pos,index + pos + 6])
         
     if pw:
@@ -1337,8 +1337,8 @@ def Analysic_csg_read_alarm_frame(frame, dir, prm,result_list,start_pos):
         else:
             start_time = data_segment[pos:pos + 6]
             end_time = data_segment[pos + 6:pos + 12]
-            start_time_str = frame_fun.parse_time_data(start_time, "mmhhDDMMYYCC", False)
-            end_time_str = frame_fun.parse_time_data(end_time, "mmhhDDMMYYCC", False)
+            start_time_str = frame_fun.parse_time_data(start_time, "CCYYMMDDhhmm", False)
+            end_time_str = frame_fun.parse_time_data(end_time, "CCYYMMDDhhmm", False)
             frame_fun.add_data(sub_result, f"数据起始时间",frame_fun.get_data_str_with_space(start_time),start_time_str,[index + pos, index + pos + 6])
             frame_fun.add_data(sub_result, f"数据结束时间",frame_fun.get_data_str_with_space(end_time),end_time_str,[index + pos + 6, index + pos + 12])
             pos += 12
@@ -1426,8 +1426,8 @@ def Analysic_csg_read_event_frame(frame, dir, prm,result_list,start_pos):
         else:
             start_time = data_segment[pos:pos + 6]
             end_time = data_segment[pos + 6:pos + 12]
-            start_time_str = frame_fun.parse_time_data(start_time, "mmhhDDMMYYCC", False)
-            end_time_str = frame_fun.parse_time_data(end_time, "mmhhDDMMYYCC", False)
+            start_time_str = frame_fun.parse_time_data(start_time, "CCYYMMDDhhmm", False)
+            end_time_str = frame_fun.parse_time_data(end_time, "CCYYMMDDhhmm", False)
             frame_fun.add_data(sub_result, f"数据起始时间",frame_fun.get_data_str_with_space(start_time),start_time_str,[index + pos, index + pos + 6])
             frame_fun.add_data(sub_result, f"数据结束时间",frame_fun.get_data_str_with_space(end_time),end_time_str,[index + pos + 6, index + pos + 12])
             pos += 12

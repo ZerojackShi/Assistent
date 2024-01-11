@@ -127,6 +127,15 @@ def parse_bitwise_data(splitbit_elem, data_segment,index,need_delete):
 def prase_type_item(data_item_elem, data_segment, index, need_delete, singal_length):
     from ..plugins.frame_csg import FrameCsg
     sub_type = data_item_elem.find('type').text.upper()
+    is_singal = data_item_elem.find('single')
+    if is_singal is not None:
+        if is_singal.text.upper() == "YES":
+            is_singal = True
+        else:
+            is_singal = False
+    else:
+        is_singal = False
+        
     sub_length = len(data_segment)
     result = {}
     pos = 0
@@ -197,6 +206,8 @@ def prase_type_item(data_item_elem, data_segment, index, need_delete, singal_len
     else:
         template = frame_fun.get_template_element(sub_type,frame_fun.globalprotocol, frame_fun.globregion)
         if template is not None:
+            if sub_length / singal_length != 1:
+                is_singal = False
             if sub_length % singal_length == 0:
                 while pos < sub_length:
                     splitname_elem = template.find('name')
@@ -208,7 +219,8 @@ def prase_type_item(data_item_elem, data_segment, index, need_delete, singal_len
                         subitem_name = f"第{i + 1}组{splitname_elem.text}" if splitname_elem is not None else f"第{i + 1}组内容"
                     data_seg = new_data[pos:pos + singal_length]
                     subitem_value = parse_splitByLength_data(template,data_seg,index + pos,need_delete)
-                    subitem_value = [subitem_name, data_seg, subitem_value, [index + pos,index + pos +singal_length]]
+                    if is_singal == False:
+                        subitem_value = [subitem_name, data_seg, subitem_value, [index + pos,index + pos +singal_length]]
                     result[i] = subitem_value
                     i += 1
                     pos += singal_length
@@ -300,29 +312,22 @@ def parse_splitByLength_data(data_item_elem, data_segment,index, need_delete):
             subitem_value = prase_value_item(data_subitem_elem, subitem_content, index + pos,  need_delete)
             subitem_value = f"{subitem_value}"
         elif data_subitem_elem.find('unit') is not None:
-            # 解析有单位的数据
             subitem_unit = data_subitem_elem.find('unit').text
-            subitem_decimal = data_subitem_elem.find('decimal')
-            subitem_type = data_subitem_elem.find('type')
-            data_type = ""
-            if subitem_type is not None:
-                data_type = subitem_type.text
-            if subitem_decimal is not None:
-                decimal = int(data_subitem_elem.find('decimal').text)
-            else:
-                decimal = 0
-            is_sign = data_subitem_elem.find('sign')
-            sign = False
-            if is_sign is not None:
-                sign = True if is_sign.text=="yes" else False
-            if data_type in ("BCD","Bcd","bcd"):
-                subitem_value = frame_fun.bcd_to_decimal(subitem_content,decimal,need_delete,sign)
-            elif data_type in ("BIN","Bin","bin"):
-                subitem_value = frame_fun.bin_to_decimal(subitem_content,decimal,need_delete,sign)
-            else:
-                subitem_value = frame_fun.bcd_to_decimal(subitem_content,decimal,need_delete,sign)
-            if subitem_value != "无效数据":
+            subitem_value = prase_simple_type_data(data_subitem_elem, subitem_content, index, need_delete)
+            if subitem_value is not False:
                 subitem_value = f"{subitem_value}" + subitem_unit
+            else:
+                subitem_decimal = data_subitem_elem.find('decimal')
+                is_sign = data_subitem_elem.find('sign')
+                decimal = 0
+                if subitem_decimal is not None:
+                    decimal = int(subitem_decimal.text)
+                sign = False
+                if is_sign is not None:
+                    sign = True if is_sign.text=="yes" else False
+                subitem_value = frame_fun.bcd_to_decimal(subitem_content,decimal,need_delete,sign)
+                if subitem_value != "无效数据":
+                    subitem_value = f"{subitem_value}" + subitem_unit
         elif data_subitem_elem.find('time') is not None:
             # 解析时间数据
             subitem_time_format = data_subitem_elem.find('time').text
@@ -393,8 +398,18 @@ def prase_singal_item(data_item_elem, data_segment,index, need_delete):
         if subitem_value is not False:
             subitem_value = f"{subitem_value}" + subitem_unit
         else:
-            subitem_value = "无效数据"
-            
+            subitem_decimal = data_item_elem.find('decimal')
+            is_sign = data_item_elem.find('sign')
+            decimal = 0
+            if subitem_decimal is not None:
+                decimal = int(subitem_decimal.text)
+            sign = False
+            if is_sign is not None:
+                sign = True if is_sign.text=="yes" else False
+            subitem_value = frame_fun.bcd_to_decimal(data_segment,decimal,need_delete,sign)
+            if subitem_value != "无效数据":
+                subitem_value = f"{subitem_value}" + subitem_unit
+
     elif data_item_elem.find('time') is not None:
         # 解析时间数据
         subitem_time_format = data_item_elem.find('time').text
