@@ -9844,7 +9844,11 @@
 		<!--(上1结算日)正向有功最大需量及发生时间数据块-->
 		<dataItem id="0101FF01" protocol="csg13" region="南网">
 			<name>(上1结算日)正向有功最大需量及发生时间数据块</name>
-			<length>64</length>
+			<length>65</length>
+			<dataItem id="费率数">
+				<name>费率数</name>
+				<length>1</length>
+			</dataItem>
 			<dataItem id="01010001">
 				<name>(上1结算日)正向有功总最大需量及发生时间</name>
 				<length>8</length>
@@ -9969,7 +9973,11 @@
 		<!--(上1结算日)反向有功最大需量及发生时间数据块-->
 		<dataItem id="0102FF01" protocol="csg13" region="南网">
 			<name>(上1结算日)反向有功最大需量及发生时间数据块</name>
-			<length>64</length>
+			<length>65</length>
+			<dataItem id="费率数">
+				<name>费率数</name>
+				<length>1</length>
+			</dataItem>
 			<dataItem id="01020001">
 				<name>(上1结算日)反向有功总最大需量及发生时间</name>
 				<length>8</length>
@@ -10094,7 +10102,11 @@
 		<!--(上1结算日)组合无功1最大需量及发生时间数据块-->
 		<dataItem id="0103FF01" protocol="csg13" region="南网">
 			<name>(上1结算日)组合无功1最大需量及发生时间数据块</name>
-			<length>64</length>
+			<length>65</length>
+			<dataItem id="费率数">
+				<name>费率数</name>
+				<length>1</length>
+			</dataItem>
 			<dataItem id="01030001">
 				<name>(上1结算日)组合无功1总最大需量及发生时间</name>
 				<length>8</length>
@@ -10227,7 +10239,11 @@
 		<!--(上1结算日)组合无功2最大需量及发生时间数据块-->
 		<dataItem id="0104FF01" protocol="csg13" region="南网">
 			<name>(上1结算日)组合无功2最大需量及发生时间数据块</name>
-			<length>64</length>
+			<length>65</length>
+			<dataItem id="费率数">
+				<name>费率数</name>
+				<length>1</length>
+			</dataItem>
 			<dataItem id="01040001">
 				<name>(上1结算日)组合无功2总最大需量及发生时间</name>
 				<length>8</length>
@@ -10360,7 +10376,11 @@
 		<!--(上1结算日)第一象限无功最大需量及发生时间数据块-->
 		<dataItem id="0105FF01" protocol="csg13" region="南网">
 			<name>(上1结算日)第一象限无功最大需量及发生时间数据块</name>
-			<length>64</length>
+			<length>65</length>
+			<dataItem id="费率数">
+				<name>费率数</name>
+				<length>1</length>
+			</dataItem>
 			<dataItem id="01050001">
 				<name>(上1结算日)第一象限无功总最大需量及发生时间</name>
 				<length>8</length>
@@ -10485,7 +10505,11 @@
 		<!--(上1结算日)第二象限无功最大需量及发生时间数据块-->
 		<dataItem id="0106FF01" protocol="csg13" region="南网">
 			<name>(上1结算日)第二象限无功最大需量及发生时间数据块</name>
-			<length>64</length>
+			<length>65</length>
+			<dataItem id="费率数">
+				<name>费率数</name>
+				<length>1</length>
+			</dataItem>
 			<dataItem id="01060001">
 				<name>(上1结算日)第二象限无功总最大需量及发生时间</name>
 				<length>8</length>
@@ -10610,7 +10634,11 @@
 		<!--(上1结算日)第三象限无功最大需量及发生时间数据块-->
 		<dataItem id="0107FF01" protocol="csg13" region="南网">
 			<name>(上1结算日)第三象限无功最大需量及发生时间数据块</name>
-			<length>64</length>
+			<length>65</length>
+			<dataItem id="费率数">
+				<name>费率数</name>
+				<length>1</length>
+			</dataItem>
 			<dataItem id="01070001">
 				<name>(上1结算日)第三象限无功总最大需量及发生时间</name>
 				<length>8</length>
@@ -10735,7 +10763,11 @@
 		<!--(上1结算日)第四象限无功最大需量及发生时间数据块-->
 		<dataItem id="0108FF01" protocol="csg13" region="南网">
 			<name>(上1结算日)第四象限无功最大需量及发生时间数据块</name>
-			<length>64</length>
+			<length>65</length>
+			<dataItem id="费率数">
+				<name>费率数</name>
+				<length>1</length>
+			</dataItem>
 			<dataItem id="01080001">
 				<name>(上1结算日)第四象限无功总最大需量及发生时间</name>
 				<length>8</length>
@@ -10860,7 +10892,11 @@
 		<!--(上1结算日)正向视在无功最大需量及发生时间数据块-->
 		<dataItem id="0109FF01" protocol="csg13" region="南网">
 			<name>(上1结算日)正向视在无功最大需量及发生时间数据块</name>
-			<length>64</length>
+			<length>65</length>
+			<dataItem id="费率数">
+				<name>费率数</name>
+				<length>1</length>
+			</dataItem>
 			<dataItem id="01090001">
 				<name>(上1结算日)正向视在无功总最大需量及发生时间</name>
 				<length>8</length>
@@ -10985,7 +11021,11 @@
 		<!--(上1结算日)反向视在无功最大需量及发生时间数据块-->
 		<dataItem id="010AFF01" protocol="csg13" region="南网">
 			<name>(上1结算日)反向视在无功最大需量及发生时间数据块</name>
-			<length>64</length>
+			<length>65</length>
+			<dataItem id="费率数">
+				<name>费率数</name>
+				<length>1</length>
+			</dataItem>
 			<dataItem id="010A0001">
 				<name>(上1结算日)反向视在无功总最大需量及发生时间</name>
 				<length>8</length>
