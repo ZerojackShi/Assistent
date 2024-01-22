@@ -31,6 +31,8 @@ from .receive_send_interface import SendReceive
 from ..common import resource
 from .param_interface import ParamInterface
 from .custom_frame_interface import CustomFrame
+from .database_interface import DataBaseInterface
+from .app_message_interface import AppMessageInterface
 class MainWindow(FluentWindow):
 
     def __init__(self):
@@ -55,6 +57,8 @@ class MainWindow(FluentWindow):
         self.viewInterface = ViewInterface(self)
         self.sendreceive = SendReceive(self)
         self.customFrame = CustomFrame(self)
+        self.dataBaseView = DataBaseInterface(self)
+        self.appmessage = AppMessageInterface(self)
         # self.param_interface = ParamInterface(self)
         # enable acrylic effect
         self.navigationInterface.setAcrylicEnabled(True)
@@ -93,6 +97,8 @@ class MainWindow(FluentWindow):
         self.addSubInterface(self.analysicView, Icon.FRAME_ALALYSIC, t.frameanalysic,pos)
         self.addSubInterface(self.sendreceive, FIF.SEND, t.sendreceive, pos)
         self.addSubInterface(self.customFrame, FIF.SCROLL, t.param, pos)
+        self.addSubInterface(self.dataBaseView, FIF.ZOOM, t.param, pos)
+        self.addSubInterface(self.appmessage, FIF.MESSAGE, t.param, pos)
         # self.addSubInterface(self.param_interface, FIF.SCROLL, t.param, pos) 
 
         # add custom widget to bottom
@@ -104,6 +110,9 @@ class MainWindow(FluentWindow):
         # )
         self.addSubInterface(
             self.settingInterface, FIF.SETTING, self.tr('Settings'), NavigationItemPosition.BOTTOM)
+        
+        size = QSize(self.size().width() - self.splashScreen.iconSize().width()- 10, self.size().height() - self.splashScreen.iconSize().height() - 10)
+        signalBus.windowschange.emit(size)
 
     def initWindow(self):
         self.resize(960, 780)
@@ -138,7 +147,8 @@ class MainWindow(FluentWindow):
     def resizeEvent(self, e):
         super().resizeEvent(e)
         self.splashScreen.resize(self.size())
-        signalBus.windowschange.emit()
+        size = QSize(self.size().width() - self.splashScreen.iconSize().width() - 10, self.size().height() - self.splashScreen.iconSize().height() - 10)
+        signalBus.windowschange.emit(size)
 
     def switchToSample(self, routeKey, index):
         """ switch to sample """

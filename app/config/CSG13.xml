@@ -36851,6 +36851,11 @@
 		</splitByLength>
 	</dataItem>
 	<!--普通任务-->
+	<dataItem id="E0000300" protocol="csg13" region="南网">
+		<name>有效的普通任务总数</name>
+		<length>1</length>
+		<type>bin</type>
+	</dataItem>
 	<dataItem id="E0000301" protocol="csg13" region="南网">
 		<name>普通任务</name>
 		<length>unknown</length>
@@ -38128,6 +38133,11 @@
 	</dataItem>
 
 	<!--中继任务-->
+	<dataItem id="E0000400" protocol="csg13" region="南网">
+		<name>有效的普通任务总数</name>
+		<length>1</length>
+		<type>bin</type>
+	</dataItem>
 	<dataItem id="E0000401" protocol="csg13" region="南网">
 		<name>中继任务</name>
 		<length>unknown</length>

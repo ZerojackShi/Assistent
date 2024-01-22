@@ -335,9 +335,9 @@ def parse_splitByLength_data(data_item_elem, data_segment,index, need_delete):
             data_type = ""
             if subitem_type is not None:
                 data_type = subitem_type.text
-            # time_data = subitem_content[:6][::-1]
+            time_data = subitem_content[:6]
             if data_type in ("BIN","Bin","bin"):
-                time_data = frame_fun.binary_to_bcd(subitem_content[:6][::-1])
+                time_data = frame_fun.binary_to_bcd(subitem_content[:6])
             subitem_value = frame_fun.parse_time_data(time_data,subitem_time_format,need_delete)
         elif data_subitem_elem.find('splitbit') is not None:
             splitbit_elem = data_subitem_elem.find('splitbit')
@@ -417,7 +417,7 @@ def prase_singal_item(data_item_elem, data_segment,index, need_delete):
         data_type = ""
         if subitem_type is not None:
             data_type = subitem_type.text
-        time_data = data_segment[:6][::-1]
+        time_data = data_segment[:6]
         if data_type in ("BIN","Bin","bin"):
             time_data = frame_fun.binary_to_bcd(data_segment[:6][::-1])
         subitem_value = frame_fun.parse_time_data(time_data, subitem_time_format,need_delete)
@@ -508,7 +508,7 @@ def parse_data_item(data_item_elem, data_segment, index, need_delete):
        data_type = ""
        if subitem_type is not None:
            data_type = subitem_type.text
-       time_data = data_segment[:6][::-1]
+       time_data = data_segment[:6]
        if data_type in ("BIN","Bin","bin"):
            time_data = frame_fun.binary_to_bcd(time_data)
        singal_result = frame_fun.parse_time_data(time_data,subitem_time_format,need_delete)
@@ -622,7 +622,7 @@ class PraseFrameData():
             data_type = ""
             if subitem_type is not None:
                 data_type = subitem_type.text
-            time_data = data_segment[:6][::-1]
+            time_data = data_segment[:6]
             if data_type in ("BIN","Bin","bin"):
                 time_data = frame_fun.binary_to_bcd(time_data)
             singal_result = frame_fun.parse_time_data(time_data,subitem_time_format,need_delete)

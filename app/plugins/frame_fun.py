@@ -4,7 +4,7 @@ import os, json
 from lxml import etree as ET
 from PyQt5.QtWidgets import QMessageBox,QDialogButtonBox
 from PyQt5.QtGui import QIcon
-from PyQt5.QtCore import Qt,pyqtSlot
+from PyQt5.QtCore import Qt,pyqtSlot,QDateTime,QDate,QTime
 import re
 from ..common.config import config_645, config_csg13,log_config
 from qfluentwidgets import InfoBarIcon
@@ -278,7 +278,11 @@ def binary_to_bcd(binary_array):
         bcd_array.append(bcd)
     
     return bcd_array
-
+def int16_to_bcd(int16):
+    bcd_array = []
+    bcd_array.append(int16 & 0x00ff)
+    bcd_array.append(int16 >> 8)
+    return bcd_array
 def binary2bcd(binary):
      # 将十进制数转换为BCD码
     bcd = ((binary // 10) << 4) + (binary % 10)
@@ -676,7 +680,13 @@ def parse_meterpoint_input(input_text):
         # 将结果按升序排序并返回
         sorted_result = sorted(integers)
     return sorted_result
+def prase_item_by_input_text(input_text):
+    # Split the input by commas or spaces, and remove any leading/trailing whitespace
+    hex_values = [x.strip() for x in input_text.replace(',', ' ').split()]
 
+    # Convert the hexadecimal strings to integers
+    item_array = [int(x, 16) for x in hex_values]
+    return item_array
 def item_to_di(item, frame):
     for _ in range(4):
         byte = item & 0xFF  # 获取最低8位的数据
@@ -699,3 +709,35 @@ def prase_text_to_frame(text:str, frame:list):
     hex_array  = [int(cleaned_string[i:i + 2], 16) for i in range(0, len(cleaned_string), 2)]
     frame.extend(hex_array)
     return int(len(cleaned_string) / 2)
+
+def add_time_interval(current_datetime:QDateTime, index, interval):
+    interval_map = {
+        0: "1分钟",
+        1: "5分钟",
+        2: "15分钟",
+        3: "30分钟",
+        4: "60分钟",
+        5: "1日",
+        6: "1月",
+    }
+
+    interval_kind = interval_map.get(index, "1分钟")
+    interval_value = int(interval_kind.split("分钟")[0])
+
+    if "分钟" in interval_kind:
+        new_datetime = current_datetime.addSecs(interval_value * 60 * interval)
+    elif "日" in interval_kind:
+        new_datetime = current_datetime.addDays(interval_value * interval)
+    elif "月" in interval_kind:
+        new_datetime = current_datetime.addMonths(interval_value * interval)
+    else:
+        # 默认为分钟
+        new_datetime = current_datetime.addSecs(interval_value * 60 * interval)
+
+    return new_datetime
+
+def get_time_bcd_array(date:QDate, time:QTime):
+    year = date.year()
+    bcd_array = [binary2bcd(year//100),binary2bcd(year % 100),binary2bcd(date.month()),binary2bcd(date.day()),binary2bcd(time.hour()),
+                binary2bcd(time.minute()),binary2bcd(time.second())]
+    return bcd_array

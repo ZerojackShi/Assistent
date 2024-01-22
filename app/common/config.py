@@ -95,7 +95,8 @@ class Config(QConfig):
         "Folders", "LocalMusic", [], FolderListValidator())
     logFolder = ConfigItem(
         "Folders", "Log", "app/log", FolderValidator())
-
+    messageFolder = ConfigItem(
+        "Folders", "AppInterface", "app/config/appinterface", FolderValidator())
     # main window
     micaEnabled = ConfigItem("MainWindow", "MicaEnabled", isWin11(), BoolValidator())
     dpiScale = OptionsConfigItem(
@@ -126,7 +127,7 @@ class Config(QConfig):
 
     Region = OptionsConfigItem("BasicSeting", "region", "南网", OptionsValidator(["南网","云南","广东","深圳","广西","贵州","海南","topo"]), restart=False)
 
-    Multireport = ConfigItem("BasicSeting", "Multireport", True, BoolValidator())
+    Multireport = ConfigItem("BasicSeting", "Multireport", False, BoolValidator())
     MultireportAdress = ConfigItem("BasicSeting", "MultireportAdress", [], validator=None)
 
 class QframeConfig(QObject):

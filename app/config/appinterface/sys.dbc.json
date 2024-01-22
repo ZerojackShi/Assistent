@@ -1,0 +1,747 @@
+{
+    "name": "数据中心",
+    "description": "数据中心用于存储数据，便于APP之间共享数据。数据中心统一设计了数据字典、写数据和查询数据方式。",
+    "version": "1.0.0",
+    "date": "2023-11-10T08:18:28",
+    "service_name": "sys.dbc.main",
+    "interface": [
+        {
+            "name": "上线通知",
+            "description": "数据中心上线通知",
+            "type": "active",
+            "input": [
+                
+            ],
+            "output": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.brd/sys.dbc/S-datacenter/F-Online",
+                        "payload": {
+                            "token": "#",
+                            "time": "#",
+                            "data": {
+                                "version": "V#.#.#"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "查询版本信息",
+            "description": "查询版本信息",
+            "type": "inactive",
+            "input": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.dbc/sys.test/S-datacenter/F-GetVersion",
+                        "payload": {
+                            "token": "2",
+                            "time": "2021-05-08T09:30:08.230+0800"
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.test/sys.dbc/S-datacenter/F-GetVersion",
+                        "payload": {
+                            "token": "2",
+                            "time": "#",
+                            "data": {
+                                "version": "V#.#.#"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "订阅设置",
+            "description": "订阅设置",
+            "type": "inactive",
+            "input": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.dbc/sys.test/S-datacenter/F-SetSubscribe",
+                        "payload": {
+                            "token": "1000000001",
+                            "time": "2021-05-10T08:18:28.666+0800",
+                            "data": {
+                                "subparam": [
+                                    {
+                                        "metid": "0",
+                                        "idclass": [
+                                            "1",
+                                            "2"
+                                        ]
+                                    },
+                                    {
+                                        "metid": "65535",
+                                        "idclass": [
+                                            "4"
+                                        ]
+                                    },
+                                    {
+                                        "metid": "0",
+                                        "idclass": [
+                                            "30"
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.test/sys.dbc/S-datacenter/F-SetSubscribe",
+                        "payload": {
+                            "token": "1000000001",
+                            "time": "#",
+                            "ack": "true"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "id": 0,
+            "name": "数据更新事件",
+            "description": "数据更新事件",
+            "type": "inactive",
+            "input": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.dbc/sys.test/S-datacenter/F-SetSubscribe",
+                        "payload": {
+                            "token":"1000000001",
+                            "time":"2021-05-10T08:18:28.666+0800",
+                            "data":
+                            {
+                                "subparam":[
+                                 {
+                                 "metid":"0",
+                                    "idclass":["1","2"]
+                                 },
+                                 {
+                                 "metid":"65535",
+                                    "idclass":["4"]
+                                 },
+                                 {
+                                 "metid":"0",
+                                    "idclass":["30"]
+                                 }]
+                            }
+                        }                            
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.test/sys.dbc/S-datacenter/F-NotifyUpdate",
+                        "payload": {
+                            "token":"#",
+                            "time":"#",
+                            "data":
+                            {
+                                "source":"sys.test2",
+                                "updateinfo":
+                                [
+                                    {
+                                        "metid":"0",
+                                        "afn":"04",
+                                        "dataid":"E000010F",
+                                        "idclass":"1"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "id": 0,
+            "name": "读普通数据",
+            "description": "读普通数据",
+            "type": "inactive",
+            "input": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.dbc/sys.test/S-datacenter/F-ReadData",
+                        "payload": {
+                            "token": "1000000011",
+                            "time": "2021-05-10T08:18:28.666+0800",
+                            "data": {
+                                "reqdata": [
+                                    {
+                                        "metid": "0",
+                                        "afn": "04",
+                                        "dataid": "E0000100"
+                                    },
+                                    {
+                                        "metid": "0",
+                                        "afn": "04",
+                                        "dataid": "E0000101"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.test/sys.dbc/S-datacenter/F-ReadData",
+                        "payload": {
+                            "token": "1000000011",
+                            "time": "#",
+                            "data": {
+                                "complete": "1",
+                                "dataarray": [
+                                    {
+                                        "metid": "0",
+                                        "afn": "04",
+                                        "dataid": "E0000100",
+                                        "createdtime": "#",
+                                        "source": "sys.test",
+                                        "databuff": "000102030405060708090A0B0C0D"
+                                    },
+                                    {
+                                        "metid": "0",
+                                        "afn": "04",
+                                        "dataid": "E0000101",
+                                        "createdtime": "#",
+                                        "source": "sys.test",
+                                        "databuff": "000102030405060708090A0B0C0D"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "写普通数据",
+            "description": "写普通数据",
+            "type": "inactive",
+            "input": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.dbc/sys.test/S-datacenter/F-WriteData",
+                        "payload": {
+                            "token": "1000000002",
+                            "time": "#",
+                            "data": {
+                                "dataarray": [
+                                    {
+                                        "metid": "0",
+                                        "afn": "04",
+                                        "dataid": "E0000100",
+                                        "databuff": "000102030405060708090A0B0C0D"
+                                    },
+                                    {
+                                        "metid": "0",
+                                        "afn": "04",
+                                        "dataid": "E0000101",
+                                        "databuff": "000102030405060708090A0B0C0D"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.test/sys.dbc/S-datacenter/F-WriteData",
+                        "payload": {
+                            "token": "1000000002",
+                            "time": "2021-05-10T08:18:28.666+0800",
+                            "data": {
+                                "rtnmsg": [
+                                    {
+                                        "metid": "0",
+                                        "afn": "04",
+                                        "dataid": "E0000100",
+                                        "errmsg": "0"
+                                    },
+                                    {
+                                        "metid": "0",
+                                        "afn": "04",
+                                        "dataid": "E0000101",
+                                        "errmsg": "1"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "开始读记录型数据",
+            "description": "开始读记录型数据",
+            "type": "inactive",
+            "input": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.dbc/sys.test/S-datacenter/F-ReadRecordBegin",
+                        "payload": {
+                            "token": "1000000013",
+                            "time": "2021-05-10T08:18:28.666+0800",
+                            "data": {
+                                "metid": "1",
+                                "afn": "0D",
+                                "choice": "2",
+                                "from": "2021-05-10T00:00:00",
+                                "to": "2021-05-11T00:00:00",
+                                "orderby": 0,
+                                "dataids": [
+                                    "050601FF",
+                                    "050602FF"
+                                ]
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.test/sys.dbc/S-datacenter/F-ReadRecordBegin",
+                        "payload": {
+                            "token":"1000000013",
+                            "time":"2021-05-10T08:18:28.666+0800", 
+                            "data":
+                            {
+                                "dbhandle":"123456",
+                                "recordcount":"10", 
+                                "currentnum":"2",
+                                "dataarray":
+                                [
+                                    {
+                                        "metid":"1",
+                                        "dataid":"050601FF",
+                                        "createdtime":"2021-05-10T08:18:28",
+                                        "frozentime":"2021-05-10T00:00:00",
+                                        "source":"app1",
+                                        "crcaux":"010203040506",
+                                        "databuff":"000102030405060708090A0B0C0D"
+                                    },
+                                    {
+                                        "metid":"1",
+                                        "dataid":"050602FF",
+                                        "createdtime":"2021-05-10T08:18:28",
+                                        "frozentime":"2021-05-10T00:00:00",
+                                        "source":"app1",
+                                        "crcaux":"010203040506",
+                                        "databuff":"000102030405060708090A0B0C0D"
+                                    }
+                                ]
+                            }
+    
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "写记录型数据",
+            "description": "写记录型数据",
+            "type": "inactive",
+            "input": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.dbc/sys.test/S-datacenter/F-InsertRecord",
+                        "payload": {
+                            "token": "1000000016",
+                            "time": "2021-05-10T08:18:28.666+0800",
+                            "data": {
+                                "dataarray": [
+                                    {
+                                        "metid": "1",
+                                        "afn": "0D",
+                                        "dataid": "050601FF",
+                                        "frozentime": "2021-05-10T00:00:00",
+                                        "crcaux": "010203040506",
+                                        "databuff": "000102030405060708090A0B0C0D"
+                                    },
+                                    {
+                                        "metid": "1",
+                                        "afn": "0D",
+                                        "dataid": "050602FF",
+                                        "frozentime": "2021-05-10T00:00:00",
+                                        "crcaux": "010203040506",
+                                        "databuff": "000102030405060708090A0B0C0D"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.test/sys.dbc/S-datacenter/F-InsertRecord",
+                        "payload": {
+                            "token": "1000000016",
+                            "time": "#",
+                            "ack": "true",
+                            "data": {
+                                "dataindex": [
+                                    "0",
+                                    "0"
+                                ]
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "更新记录数据",
+            "description": "更新记录数据",
+            "type": "inactive",
+            "input": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.dbc/sys.test/S-datacenter/F-UpdateRecord",
+                        "payload": {
+                            "token": "1000000017",
+                            "time": "2021-05-10T08:18:28.666+0800",
+                            "data": {
+                                "metid": "0",
+                                "afn": "13",
+                                "dataid": "E2000001",
+                                "updatetype": "1",
+                                "updatefilter": "2021-05-10T00:00:00",
+                                "crcaux": "010203040506",
+                                "databuff": "000102030405060708090A0B0C0D"
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.test/sys.dbc/S-datacenter/F-UpdateRecord",
+                        "payload": {
+                            "token": "1000000017",
+                            "time": "#",
+                            "ack": "true"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "获取存储记录条数",
+            "description": "获取存储记录条数",
+            "type": "inactive",
+            "input": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.dbc/sys.test/S-datacenter/F-GetSaveCount",
+                        "payload": {
+                            "token": "1000000018",
+                            "time": "2021-05-10T08:18:28.666+0800",
+                            "data": {
+                                "metid": "0",
+                                "afn": "13",
+                                "dataid": "E2000001",
+                                "choice": "1",
+                                "from": "2021-05-10T00:00:00",
+                                "to": "2021-05-10T00:00:00"
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.test/sys.dbc/S-datacenter/F-GetSaveCount",
+                        "payload": {
+                            "token": "1000000018",
+                            "time": "#",
+                            "data": {
+                                "savecount": "0"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "获取存储记录最大深度",
+            "description": "获取存储记录最大深度",
+            "type": "inactive",
+            "input": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.dbc/sys.test/S-datacenter/F-GetSupportNum",
+                        "payload": {
+                            "token": "1000000019",
+                            "time": "2021-05-10T08:18:28.666+0800",
+                            "data": {
+                                "afn": "0D",
+                                "dataid": "050601FF"
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.test/sys.dbc/S-datacenter/F-GetSupportNum",
+                        "payload": {
+                            "token": "1000000019",
+                            "time": "#",
+                            "data": {
+                                "supportnum": "#"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "设置存储记录最大深度",
+            "description": "设置存储记录最大深度",
+            "type": "inactive",
+            "input": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.dbc/sys.test/S-datacenter/F-SetSupportNum",
+                        "payload": {
+                            "token": "1000000019",
+                            "time": "2021-05-10T08:18:28.666+0800",
+                            "data": {
+                                "diarray": [
+                                    {
+                                        "idclass": "42",
+                                        "timeofend": "62"
+                                    },
+                                    {
+                                        "idclass": "41",
+                                        "timeofend": "30"
+                                    },
+                                    {
+                                        "afn": "12",
+                                        "dataid": "E0000301",
+                                        "suppnum": "960"
+                                    },
+                                    {
+                                        "afn": "12",
+                                        "dataid": "E0000302",
+                                        " suppnum": "480"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.test/sys.dbc/S-datacenter/F-SetSupportNum",
+                        "payload": {
+                            "token": "1000000019",
+                            "time": "#",
+                            "ack": "true"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "数据初始化",
+            "description": "数据初始化",
+            "type": "inactive",
+            "input": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.dbc/sys.base/S-datacenter/F-FormatData",
+                        "payload": {
+                            "token": "1000000020",
+                            "time": "2021-05-10T08:18:28.666+0800"
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.base/sys.dbc/S-datacenter/F-FormatData",
+                        "payload": {
+                            "token": "1000000020",
+                            "time": "#",
+                            "ack": "true"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "清除指定存储类型数据",
+            "description": "清除指定存储类型数据",
+            "type": "inactive",
+            "input": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.dbc/sys.test/S-datacenter/F-DeleteData",
+                        "payload": {
+                            "token": "1000000021",
+                            "time": "2021-05-10T08:18:28.666+0800",
+                            "data": {
+                                "idclass": "3"
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.test/sys.dbc/S-datacenter/F-DeleteData",
+                        "payload": {
+                            "token": "1000000021",
+                            "time": "#",
+                            "ack": "true"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "恢复出厂参数",
+            "description": "恢复出厂参数",
+            "type": "inactive",
+            "input": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.dbc/sys.base/S-datacenter/F-FactoryReset",
+                        "payload": {
+                            "token": "1000000022",
+                            "time": "2021-05-10T08:18:28.666+0800"
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.base/sys.dbc/S-datacenter/F-FactoryReset",
+                        "payload": {
+                            "token": "1000000022",
+                            "time": "#",
+                            "ack": "true"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "添加/修改扩展自定义字典信息",
+            "description": "添加/修改扩展自定义字典信息",
+            "type": "inactive",
+            "input": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.dbc/sys.test/S-datacenter/F-AddUserDic",
+                        "payload": {
+                            "token": "1100000001",
+                            "time": "2021-05-10T08:18:28.666+0800",
+                            "data": {
+                                "userdic": [
+                                    {
+                                        "afn": "04",
+                                        "dataid": "EF000100",
+                                        "maxmetidnum": "1",
+                                        "maxsavenum": "1",
+                                        "idclass": "3",
+                                        "exattr": "00000000"
+                                    },
+                                    {
+                                        "afn": "04",
+                                        "dataid": "EF000101",
+                                        "maxmetidnum": "1",
+                                        "maxsavenum": "1",
+                                        "idclass": "3",
+                                        "exattr": "00000000"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.test/sys.dbc/S-datacenter/F-AddUserDic",
+                        "payload": {
+                            "token": "1100000001",
+                            "time": "#",
+                            "ack": "true"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "删除扩展自定义字典信息",
+            "description": "删除扩展自定义字典信息",
+            "type": "inactive",
+            "input": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.dbc/sys.test/S-datacenter/F-DelUserDic",
+                        "payload": {
+                            "token": "1100000002",
+                            "time": "2021-05-10T08:18:28.666+0800",
+                            "data": {
+                                "deleteall": "0",
+                                "deletedic": [
+                                    {
+                                        "afn": "04",
+                                        "dataid": "EF000100"
+                                    },
+                                    {
+                                        "afn": "04",
+                                        "dataid": "EF000101"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "mqtt_message": {
+                        "topic": "/sys.test/sys.dbc/S-datacenter/F-DelUserDic",
+                        "payload": {
+                            "token": "1100000002",
+                            "time": "#",
+                            "ack": "true"
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -18,6 +18,7 @@ class StyleSheet(StyleSheetBase, Enum):
     CUSTOM_TREE = "custom_tree"
     SET_CARD = "setting_card"
     STATE_TOOL_TIP = "state_tool_tip"
+    CUSTOM_INTERFACE = "custom_frame"
     
     def path(self, theme=Theme.AUTO):
         theme = qconfig.theme if theme == Theme.AUTO else theme

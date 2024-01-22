@@ -1,5 +1,5 @@
 # coding: utf-8
-from PyQt5.QtCore import QObject, pyqtSignal
+from PyQt5.QtCore import QObject, pyqtSignal,QSize
 
 
 class SignalBus(QObject):
@@ -8,7 +8,7 @@ class SignalBus(QObject):
     switchToSampleCard = pyqtSignal(str, int)
     micaEnableChanged = pyqtSignal(bool)
     supportSignal = pyqtSignal()
-    windowschange = pyqtSignal()
+    windowschange = pyqtSignal(QSize)
     sendmessage = pyqtSignal(str)
     messagereceive = pyqtSignal(str, object)
     tcpSocketChange = pyqtSignal(list)

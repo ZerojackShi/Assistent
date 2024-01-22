@@ -59,7 +59,88 @@ def get_frame(point_arrray:list, itemData:dict, frame:list=None):
             frame_len += push_item_data_into_frame(itemData, frame)
 
     return frame_len
-    
+ 
+def add_point_and_item_to_frame(point_arrray:list, item_array:list, frame:list=None):
+    if frame is None:
+        frame = bytearray()
+    frame_len = 0
+    def push_item_into_frame(meter_point, itemData:dict, frame):
+        pos = 0
+        for item in item_array:
+            if meter_point == 0XFFFF:
+                frame.extend([0xFF, 0XFF])
+                pos += 2
+            else:
+                da1, da2 = toDA(meter_point)
+                frame.extend([da1, da2])
+                pos += 2
+            pos += frame_fun.item_to_di(item, frame)
+        return pos
+    if point_arrray[0] == 0xFF and point_arrray[1] == 0xff:
+        meter_point = 0xFFFF
+        frame_len += push_item_into_frame(meter_point, item_array, frame)
+
+    else:
+        for meter_point in point_arrray:
+            frame_len += push_item_into_frame(meter_point, item_array, frame)
+
+    return frame_len
+
+def add_point_and_item_and_time_to_frame(point_arrray:list, item_array:list, start_time:list, endtime:list, datakind:int=None, frame:list=None):
+    frame_len = 0
+    def push_item_into_frame(meter_point, itemData:dict, frame):
+        pos = 0
+        for item in item_array:
+            if meter_point == 0XFFFF:
+                frame.extend([0xFF, 0XFF])
+                pos += 2
+            else:
+                da1, da2 = toDA(meter_point)
+                frame.extend([da1, da2])
+                pos += 2
+            pos += frame_fun.item_to_di(item, frame)
+            frame.extend(start_time)
+            frame.extend(endtime)
+            if datakind is not None:
+                frame.extend([datakind])
+                pos += 1
+            pos += 12
+            
+        return pos
+    if point_arrray[0] == 0xFF and point_arrray[1] == 0xff:
+        meter_point = 0xFFFF
+        frame_len += push_item_into_frame(meter_point, item_array, frame)
+
+    else:
+        for meter_point in point_arrray:
+            frame_len += push_item_into_frame(meter_point, item_array, frame)
+
+    return frame_len
+
+def add_point_array_to_frame(frame, point_array):
+    pos = 0
+    count = 0
+    if point_array[0] == 0xFF and point_array[1] == 0xff:
+        frame.append(0xff)
+        frame.append(0xff)
+        count = 1
+        pos += 2
+    else:
+        count = len(point_array)
+        for meter_point in point_array:
+            da1, da2 = toDA(meter_point)
+            frame.append(da1)
+            frame.append(da2)
+            pos += 2
+
+    return count, pos
+
+def add_item_array_to_frame(frame, item_array):
+    pos = 0
+    for item in item_array:
+        pos += frame_fun.item_to_di(item, frame)
+    return pos
+
 def set_frame_finish(data, frame:list):
     frame_len = 0
     if (len(data) +  FramePos.POS_START1.value < FramePos.POS_DATA.value + 16) and (frame[FramePos.POS_AFN.value] == 0x04):
@@ -423,23 +504,26 @@ def judge_is_exit_pw(data_segment, item_element=None, data_time=None):
         if guest_next_data_is_cur_item_data(item_element, data_segment, data_time):
             return False
         return True
-    item = data_segment[2:6]
-    data_item = frame_fun.get_data_str_reverser(item)
-    data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
-    if data_item_elem is not None:
-        sub_length_cont = data_item_elem.find('length').text
-        if sub_length_cont is not None:
-            if sub_length_cont.upper() in "UNKNOWN":
-                prase_data = PraseFrameData()
-                sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[6:])
+    total_len = len(data_segment)
+    pos = 0
+    while total_len > pos:
+        item = data_segment[2 + pos:6 + pos]
+        data_item = frame_fun.get_data_str_reverser(item)
+        data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
+        if data_item_elem is not None:
+            sub_length_cont = data_item_elem.find('length').text
+            if sub_length_cont is not None:
+                if sub_length_cont.upper() in "UNKNOWN":
+                    prase_data = PraseFrameData()
+                    sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[6:])
+                else:
+                    sub_length = int(sub_length_cont)
+                pos += sub_length + 6
             else:
-                sub_length = int(sub_length_cont)
-            if sub_length == 10:
                 return False
-            else:
-                return True
-    else:
-        return True
+        else:
+            return True
+    return False
 def guest_is_exit_pw(length,data_segment, data_item_elem=None, data_time=None):
     if length < 16:
         return False

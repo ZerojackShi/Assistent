@@ -113,7 +113,7 @@ class CommunicationModule(QObject):
             try:
                 while self.connected:
                     try:
-                        data = client_socket.recv(1024)
+                        data = client_socket.recv(2049)
                         if not data:
                             if client_socket in self.clientSocket:
                                 self.clientSocket.remove(client_socket)
@@ -299,6 +299,8 @@ class CommunicationModule(QObject):
 
     def write_log(self, text, diraction, client_socket = None):
         def get_link_type_str():
+            if client_socket is None:
+                return "socket disconnect"
             if self.communication_type == CommType.SERIAL:
                 return self.serial_port
             elif self.communication_type == CommType.TCP_CLIENT:

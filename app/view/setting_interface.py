@@ -242,6 +242,64 @@ class SerialConfig(QWidget):
         self.DataBitComBox.setEnabled(enable)
         self.StopBitComBox.setEnabled(enable)
 
+class MqttConfig(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self.type = type
+        self.setFixedSize(300, 100)
+        ip_validator = QRegExpValidator(QRegExp(r"\b(?:\d{1,3}\.){3}\d{1,3}\b"))
+        self.iplayout = QHBoxLayout()  # 使用水平布局
+        self.iplabel = QLabel("主机IP")
+        self.iplabel.setFont(QFont("Courier New", 12))
+        self.iplabel.setAlignment(Qt.AlignLeft)
+        self.ipNumberInput = LineEdit()
+        self.ipNumberInput.setAlignment(Qt.AlignRight)
+        self.ipNumberInput.setMaximumWidth(200)
+        self.ipNumberInput.setValidator(ip_validator)
+        self.iplayout.addWidget(self.iplabel, 1)
+        self.iplayout.addWidget(self.ipNumberInput)
+
+        self.portlayout = QHBoxLayout()  # 使用水平布局
+        self.portlabel = QLabel()
+        self.portlabel.setText("端口")
+        self.portlabel.setFont(QFont("Courier New", 12))
+        self.portlabel.setAlignment(Qt.AlignLeft)
+        self.portNumberInput = LineEdit()
+        self.portNumberInput.setMaximumWidth(200)
+        self.portNumberInput.setAlignment(Qt.AlignRight)
+        self.portlayout.addWidget(self.portlabel, 1)
+        self.portlayout.addWidget(self.portNumberInput)
+
+        self.qvlayout = CustomVBoxLayout(self)  # 使用垂直布局
+        self.qvlayout.addLayout(self.iplayout)
+        self.qvlayout.addLayout(self.portlayout)
+
+        self.qvlayout.setContentsMargins(0,0,0,0)
+        self.qvlayout.setSpacing(2)
+        self.init_widget()
+
+    def init_widget(self):
+        if self.type == CommType.TCP_CLIENT:
+            ip = cfg.get(cfg.tcpClientIP)
+            port = cfg.get(cfg.tcpClientPort)
+        else:
+            ip = cfg.get(cfg.tcpServerIP)
+            port = cfg.get(cfg.tcpServerPort)
+        self.ipNumberInput.setText(ip)
+        self.portNumberInput.setText(str(port))
+
+    def setAlignment(self, a0: Union[Qt.Alignment, Qt.AlignmentFlag]):
+        self.qvlayout.setAlignment(a0)
+
+    def get_tcp_connect_param(self):
+        port = self.portNumberInput.text()
+        ipaddr = self.ipNumberInput.text()    
+        return ipaddr,int(port)
+    
+    def set_edit_enable(self, enable=True):
+        self.ipNumberInput.setEnabled(enable)
+        self.portNumberInput.setEnabled(enable)
+
 class ConnectConfig(QWidget):
     """ Pivot interface """
 
@@ -258,11 +316,12 @@ class ConnectConfig(QWidget):
         self.tcpclientInterface = Tcpconfig(CommType.TCP_CLIENT, '远程地址',text,self)
         self.tcpserverInterface = Tcpconfig(CommType.TCP_SERVICE, '本地地址',text, self)
         self.serialInterface = SerialConfig(self)
-
+        # self.mqttInterface = MqttConfig(self)
         # add items to pivot
         self.addSubInterface(self.tcpclientInterface, 'tcpclientInterface', self.tr('TCP客户端'))
         self.addSubInterface(self.tcpserverInterface, 'tcpserverInterface', self.tr('TCP服务器'))
         self.addSubInterface(self.serialInterface, 'serialInterface', self.tr('串口'))
+        # self.addSubInterface(self.mqttInterface, 'mqttInterface', self.tr('MQTT'))
 
         self.vBoxLayout.addWidget(self.pivot, 0, Qt.AlignLeft)
         self.vBoxLayout.addWidget(self.stackedWidget)
@@ -294,7 +353,7 @@ class ConnectConfig(QWidget):
             self.connectType = CommType.TCP_CLIENT
         elif index == 1:
             self.connectType = CommType.TCP_SERVICE
-        else:
+        elif index == 2:
             self.connectType = CommType.SERIAL
 
     def resizeEvent(self, event):

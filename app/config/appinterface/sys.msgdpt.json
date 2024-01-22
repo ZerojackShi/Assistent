@@ -1,0 +1,308 @@
+{
+    "name": "报文分发",
+    "description": "报文分发APP具备多种规约解析功能，具备报文预解析功能，能够过滤非法帧（例如长度不符合要求、校验和不符合要求、地址不符合要求等）。",
+    "version": "1.0.0",
+    "date": "2023-11-10T08:18:28",
+    "service_name": "sys.msgdpt.main",
+    "interface": [
+        {
+          "name": "上线通知",
+          "description": "报文分发上线通知",
+          "type": "active",
+          "input": [
+            
+          ],
+          "output": [   
+            {
+              "mqtt_message": 
+              {
+                  "topic": "/sys.brd/sys.msgdpt/S-distributor/F-Online",
+                  "payload": 
+                  {
+                      "token": "#",
+                      "time":"#"
+                  }
+              }
+          }
+          ]
+        },
+      {
+          "name": "查询版本信息",
+          "description": "查询版本信息",
+          "type": "inactive",
+          "input": [
+            {
+              "mqtt_message": {
+                "topic": "/sys.msgdpt/sys.test/S-distributor/F-GetVersion",
+                "payload": {
+                  "token": "2",
+                  "time": "2021-05-10T08:18:28.666+0800"
+                }
+              }
+            }
+          ],
+          "output": [
+            {
+              "mqtt_message": {
+                "topic": "/sys.test/sys.msgdpt/S-distributor/F-GetVersion/csg13",
+                "payload": {
+                  "token": "2",
+                  "time": "#",
+                  "data": {
+                    "version": "V#.#.#"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "注册/注销请求",
+          "description": "注册/注销请求",
+          "type": "inactive",
+          "input": [
+            {
+              "mqtt_message": {
+                "topic": "/sys.msgdpt/sys.test/S-distributor/F-Regist",
+                "payload": {
+                  "token": "123",
+                  "time": "2021-05-08T09:30:08.230+0800",
+                  "data": {
+            "type": "register",
+            "list": [
+                      {
+                        "protocol": "csg13",
+                        "afn": "04",
+                        "fns": [
+                          "E000010F",
+                          "E000012F",
+                          "E0000130"
+                        ]
+                      },
+                      {
+                        "protocol": "csg13",
+                        "afn": "0C",
+                        "fns": [
+                          "E1800001",
+                          "E1800002",
+                          "E1800003"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ],
+          "output": [
+            {
+              "mqtt_message": {
+                "topic": "/sys.test/sys.msgdpt/S-distributor/F-Regist",
+                "payload": {
+                  "token": "123",
+                  "time": "#",
+                  "ack": "true"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "主站召读请求",
+          "description": "主站召读请求",
+          "type": "inactive",
+          "input": [
+            {
+              "mqtt_message": {
+                "topic": "/sys.msgdpt/sys.upcomm/S-uplink/F-RecvData",
+                "payload": {
+                  "token":"123",
+                  "time":"2021-05-08T09:30:08.230+0800",
+                  "data":
+                  {
+                    "channel":"M01",
+                    "frame": "6810001000684AFFFFFFFFFFFF0A0A600000300100E0C916"
+                  }
+                }
+              }
+            }
+          ],
+          "output": [
+            {
+              "mqtt_message": {
+                "topic": "/sys.base/sys.msgdpt/S-distributor/F-CallData/csg13",
+                "payload": {
+                  "token": "#",
+                  "time": "2021-05-08T09:30:08.230+0800",
+                  "data": {
+                    "channel": "N01",
+                    "frame": "6810001000684AFFFFFFFFFFFF0A0A600000300100E0C916"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "主动上报请求",
+          "description": "主动上报请求",
+          "type": "inactive",
+          "input": [
+            {
+              "mqtt_message": {
+                "topic": "/sys.msgdpt/sys.test/S-distributor/F-Report/csg13",
+                "payload": {
+                  "token": "123",
+                  "time": "2021-05-08T09:30:08.230+0800",
+                  "data": {
+            "timeout":"60",
+                    "channel": "N01",
+                    "frame": "6810001000684B003107010000020A620000300100E00316"
+                  }
+                }
+              }
+            }
+          ],
+          "output": [
+            {
+              "mqtt_message": {
+                "topic": "/sys.test/sys.msgdpt/S-distributor/F-Report/csg13",
+                "payload": {
+                  "token": "#",
+                  "time": "#",
+                  "ack": false,
+                  "errmsg": "err_channel"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "连接状态查询请求",
+          "description": "连接状态查询请求",
+          "type": "inactive",
+          "input": [
+            {
+              "mqtt_message": {
+                "topic": "/sys.msgdpt/sys.test/S-distributor/F-GetState",
+                "payload": {
+                  "token": "123",
+                  "time": "2021-05-08T09:30:08.230+0800"
+                }
+              }
+            }
+          ],
+          "output": [
+            {
+              "mqtt_message": {
+                "topic": "/sys.test/sys.msgdpt/S-distributor/F-GetState",
+                "payload": {
+                  "token": "123",
+                  "time": "#",
+                  "data": {
+                    "list": [
+                      {
+                        "channel": "N01",
+                        "protocol": "#",
+                        "linkstatu": "#",
+                        "channelmode ": "#"
+                      },
+                      {
+                        "channel": "U01",
+                        "protocol": "#",
+                        "linkstatu": "# ",
+                        "channelmode ": "#"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "连接状态设置请求",
+          "description": "连接状态设置请求",
+          "type": "inactive",
+          "input": [
+            {
+              "mqtt_message": {
+                "topic": "/sys.msgdpt/sys.test/S-distributor/F-AskSetState",
+                "payload": {
+                  "token": "123",
+                  "time": "2021-05-08T09:30:09.123+0800",
+                  "data": {
+                    "channel": "N01",
+                    " appLinkState ": " registsuccess"
+                  }
+                }
+              }
+            }
+          ],
+          "output": [
+            {
+              "mqtt_message": {
+                "topic": "/sys.upcomm/sys.msgdpt/S-uplink/F-AskSetState",
+                "payload": {
+                  "token": "123",
+                  "time": "#",
+                  "data": {
+                    "channel": "N01",
+                    " appLinkState ": " registsuccess"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "连接详细信息查询请求",
+          "description": "连接详细信息查询请求",
+          "type": "inactive",
+          "input": [
+            {
+              "mqtt_message": {
+                "topic": "/sys.msgdpt/sys.test/S-distributor/F-GetStateDetails",
+                "payload": {
+                  "token": "123",
+                  "time": "2021-05-08T09:30:09.123+0800",
+                  "data": {
+                    "channel": "N01"
+                  }
+                }
+              }
+            }
+          ],
+          "output": [
+            {
+              "mqtt_message": {
+                "topic": "/sys.test/sys.msgdpt/S-distributor/F-GetStateDetails",
+                "payload": {
+                  "token": "123",
+                  "time": "#",
+                  "data": {
+                    "channel": "N01",
+                    "state": "#",
+                    "mode": "#",
+                    "lastCommTime": "#",
+            "lastCommTime_tick10ms": 0,
+                    "sockInfo": {
+                      "name": "eth0",
+                      "type": "wired",
+                      "ip": "#",
+                      "netmask": "255.255.255.0"
+                    },
+                    "peerInfo": {},
+                    "wiredHardWare": {
+                      "cableState": "#",
+                      "dhcpState": "static",
+                      "macAddr": "#"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+}

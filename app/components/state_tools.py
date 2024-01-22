@@ -1,8 +1,8 @@
 # coding:utf-8
-from PyQt5.QtCore import QPropertyAnimation, Qt, QTimer, pyqtSignal, QPoint, QRectF
+from PyQt5.QtCore import QPropertyAnimation, Qt, QTimer, pyqtSignal, QPoint, QRectF,QDate, QTime,pyqtProperty
 from PyQt5.QtGui import QPainter
-from PyQt5.QtWidgets import QLabel, QWidget, QToolButton, QGraphicsOpacityEffect
-from qfluentwidgets import  isDarkTheme,Theme
+from PyQt5.QtWidgets import QLabel, QWidget, QToolButton, QGraphicsOpacityEffect,QHBoxLayout
+from qfluentwidgets import  isDarkTheme,Theme,CalendarPicker,TimePicker
 from qfluentwidgets import FluentIcon as FIF
 from ..common.style_sheet import StyleSheet
 
@@ -188,3 +188,33 @@ class CustomStateToolTip(QWidget):
         else:
             self.icon.render(painter, QRectF(11, 10, 16, 16), theme)
 
+class DateTimePicker(QWidget):
+    dateTimeChanged = pyqtSignal(QDate, QTime)
+
+    def __init__(self, parent=None, showSeconds=False):
+        super().__init__(parent)
+
+        self.calendar_picker = CalendarPicker(self)
+        self.time_picker = TimePicker(self, showSeconds)
+
+        self.layout = QHBoxLayout(self)
+        self.layout.addWidget(self.calendar_picker)
+        self.layout.addWidget(self.time_picker)
+
+        # Connect signals from individual pickers to the combined signal
+        self.calendar_picker.dateChanged.connect(self._onDateTimeChanged)
+        self.time_picker.timeChanged.connect(self._onDateTimeChanged)
+
+    def getDateTime(self):
+        return self.calendar_picker.getDate(), self.time_picker.getTime()
+
+    def setDateTime(self, date: QDate, time: QTime):
+        self.calendar_picker.setDate(date)
+        self.time_picker.setTime(time)
+
+    dateTime = pyqtProperty(tuple, getDateTime, setDateTime)
+
+    def _onDateTimeChanged(self):
+        date = self.calendar_picker.getDate()
+        time = self.time_picker.getTime()
+        self.dateTimeChanged.emit(date, time)

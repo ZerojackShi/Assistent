@@ -11,6 +11,7 @@ from ..plugins import protocol
 from ..plugins.frame_csg import FrameCsg
 from .gallery_interface import GalleryInterface
 from ..common.translator import Translator
+from ..common.signal_bus import signalBus
 import sys
 class CustomTreeWidgetItem(QtWidgets.QTreeWidgetItem):
     def __init__(self, parent, text_list):
@@ -127,11 +128,14 @@ class Alalysic(QWidget):
         StyleSheet.HOME_INTERFACE.apply(self)
         self.reconnect_text_changed()
         self.tree_widget.custom_signal.connect(self.highlight_text)
-
-    def update_tree_widget(self):
-        w, h = self.width(), self.height()
+        signalBus.windowschange.connect(self.update_size)
+    def update_size(self, size: QtCore.QSize):
+        self.setFixedSize(size + QtCore.QSize(50, 50))
+        self.update_tree_widget(self.size())
+    def update_tree_widget(self, size: QtCore.QSize):
+        w, h = size.width(), size.height()
         self.tree_widget.header().resizeSection(0,int(w * 0.35))
-        self.tree_widget.header().resizeSection(1,int(w * 0.25))   
+        self.tree_widget.header().resizeSection(1,int(w * 0.25))  
 
     def highlight_text(self, item):
         self.disconnect_text_changed()
@@ -172,21 +176,6 @@ class Alalysic(QWidget):
         self.input_text.setTextCursor(self.input_text.textCursor())
         self.reconnect_text_changed()
 
-    def moveEvent(self, event):
-        # 当窗口位置发生变化时，更新显示器信息
-        if not self.isMaximized() and not self.isMinimized():
-            self.update_windows_size()
-        super().moveEvent(event)
-
-    def update_windows_size(self):
-        # 获取主窗口所在的显示器索引
-        screen_number = QApplication.desktop().screenNumber(self)
-
-        if self.current_screen_number != screen_number:
-            # 获取显示器信息
-            self.current_screen_number = screen_number
-            screen = QApplication.desktop().screen(screen_number)
-            self.resize(int(screen.size().width() * 0.8), int(screen.size().height() * 0.6))
     def disconnect_text_changed(self):
         # 断开连接
         self.input_text.textChanged.disconnect(self.display_tree)
