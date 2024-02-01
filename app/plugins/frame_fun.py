@@ -107,8 +107,7 @@ def bin_to_decimal(bcd_array, decimal_places, need_delete,sign):
             is_sign = True
             new_array[len(new_array) - 1] &=0x7F
 
-    for digit in reversed(new_array):
-        int_value = int_value * 100 + digit
+    int_value = bintodecimal(new_array)
 
     # 格式化整数值为带小数位的字符串
     decimal_string = "{:.{}f}".format(int_value / (10**decimal_places),decimal_places)
@@ -204,6 +203,11 @@ def get_data_str_order(data):
     data_str = "".join([f"{b:02X}" for b in data])
     return data_str
 
+def get_data_normal(data, need_delete):
+    if need_delete:
+        return get_data_str_delete_33h_reverse(data)
+    else:
+        return get_data_str_reverser(data)
 def extract_bits(start_bit, end_bit, value):
     # Mask to extract the desired bits
     mask = ((1 << (end_bit - start_bit + 1)) - 1) << start_bit
@@ -288,6 +292,14 @@ def binary2bcd(binary):
     bcd = ((binary // 10) << 4) + (binary % 10)
     return bcd
 
+def get_frame_fe_count(frame):
+    fe_count = 0
+    for i in range(len(frame)):
+        if frame[i] == 0xFE:
+            fe_count += 1
+        if frame[i+1] != 0xFE or frame[i] != 0xFE:
+            break
+    return fe_count
 def get_sublength_caculate_base(splitlength,target_subitem_name):
     #for subitem, value in splitlength.items():
     #    if value[0] == target_subitem_name:
@@ -372,7 +384,6 @@ def calculate_measurement_points(DA):
         measurement_points_array = [mp for mp in measurement_points]
     
     return total_measurement_points, measurement_points_array
-
 def prase_DA_data(DA):
     point_str = ""
     total_measurement_points, measurement_points_array = calculate_measurement_points(DA)
@@ -440,12 +451,12 @@ def find_target_dataitem(root, target_id, target_protocol, region):
 
 globregion = None
 globalprotocol = None
-def get_config_xml(data_item_id:str, protocol:str, region:str):
+def get_config_xml(data_item_id:str, protocol:str, region:str, dir=None):
     find_protocol = protocol.upper()
     if "DLT/645" in find_protocol:
         return config_645.get_item(data_item_id, find_protocol, region)
     elif "CSG13" in find_protocol:
-        return config_csg13.get_item(data_item_id, find_protocol, region)
+        return config_csg13.get_item(data_item_id, find_protocol, region, dir)
 
 def get_template_element(template:str, protocol:str, region:str):
     find_protocol = protocol.upper()
@@ -458,7 +469,7 @@ def get_template_element(template:str, protocol:str, region:str):
 
 def parse_time_data(data_array, format_str, need_delete):
     # 定义格式字符串中的对应关系
-    correct = "CCYYMMDDhhmmss"
+    correct = "CCYYMMDDWWhhmmss"
     format_mapping = {
         'CC': '{:02X}',
         'YY': '{:02X}年',
@@ -467,6 +478,7 @@ def parse_time_data(data_array, format_str, need_delete):
         'hh': '{:02X}时',
         'mm': '{:02X}分',
         'ss': '{:02X}秒',
+        'WW': '星期:',
     }
     new_array = data_array.copy()
     # 初始化格式化后的结果
@@ -476,7 +488,7 @@ def parse_time_data(data_array, format_str, need_delete):
 
     # 将数组元素根据格式字符串逐个格式化
     pos = 0
-
+    weekday_mapping = {0: '天', 1: '一', 2: '二', 3: '三', 4: '四', 5: '五', 6: '六'}
     while pos < len(correct):
         corr = correct[pos:pos+2]
         index = 0
@@ -489,8 +501,13 @@ def parse_time_data(data_array, format_str, need_delete):
             index += 2
         if flag:
             if fmt in format_mapping:
-                index = int(index / 2)
+                index = int(index / 2)                    
                 formatted_data += format_mapping[fmt].format(new_array[index])
+                if fmt == 'WW':
+                    index = int(index / 2)
+                    # 使用星期映射字典将数字转换为星期字符串
+                    weekday = new_array[index]
+                    formatted_data += weekday_mapping.get(weekday, '未知')
         pos += 2
 
     return formatted_data

@@ -120,7 +120,13 @@ class CommunicationModule(QObject):
                                 self.tcpSocketChange.emit(self.clientSocket)
                             break
                         # 处理数据
-                        self.receive_message_process(data, client_socket)
+                        if self.connected:
+                            self.receive_message_process(data, client_socket)
+                        else:
+                            try:
+                                client_socket.close()
+                            except Exception as e:
+                                break
                     except socket.timeout:
                         logging.warning(f"{client_socket.getpeername()} 连接超时")
                         client_socket.close()
@@ -197,12 +203,24 @@ class CommunicationModule(QObject):
                             time.sleep(0.1)
                             n = self.serial.inWaiting()
                         if data:
-                            self.receive_message_process(data, self.serial_port)
-                            data = b''
+                            if self.connected:
+                                self.receive_message_process(data, self.serial_port)
+                                data = b''
+                            else:
+                                try:
+                                    self.serial.close()
+                                except:
+                                    break
 
                 elif self.communication_type == CommType.TCP_CLIENT:
-                    data = self.tcp_socket.recv(10240)  # 调整需要的缓冲区大小
-                    self.receive_message_process(data, self.tcp_ip)
+                    data = self.tcp_socket.recv(2048)  # 调整需要的缓冲区大小
+                    if self.connected:
+                        self.receive_message_process(data, self.tcp_socket)
+                    else:
+                        try: 
+                            self.tcp_socket.close()
+                        except:
+                            break
                 elif self.communication_type == CommType.TCP_SERVICE:
                     print("receive tcp client message none")
                     return None

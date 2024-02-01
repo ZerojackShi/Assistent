@@ -50,6 +50,9 @@ class ParamFrameInterface(QWidget):
         self.framearea.setPlaceholderText("报文生成区...")
         self.framearea.setFixedHeight(200)
 
+        self.sendbutton = PrimaryPushButton(self.tr('发送报文'))
+        self.sendbutton.clicked.connect(self.sendframe)
+
         self.qvlayout = QVBoxLayout(self)  # 使用垂直布局
         self.qvlayout.addLayout(self.pnlayout, 1)
         self.qvlayout.addSpacing(5)
@@ -62,6 +65,8 @@ class ParamFrameInterface(QWidget):
         self.qvlayout.addWidget(self.button)
         self.qvlayout.addSpacing(5)
         self.qvlayout.addWidget(self.framearea, 1)
+        self.qvlayout.addSpacing(5)
+        self.qvlayout.addWidget(self.sendbutton)
 
         self.qvlayout.setContentsMargins(0,0,0,5)
         self.qvlayout.setSpacing(2)
@@ -75,7 +80,9 @@ class ParamFrameInterface(QWidget):
             self.switchButton.setText(self.tr('设置'))
         else:
             self.switchButton.setText(self.tr('读取'))
-
+    def sendframe(self):
+        text = self.framearea.toPlainText()
+        signalBus.sendmessage.emit(text)
     def create_frame(self, frame):
         if self.switchButton.isChecked():
             afn = 0x04
@@ -199,6 +206,8 @@ class ReadCurInterface(QWidget):
         self.framearea = PlainTextEdit()
         self.framearea.setPlaceholderText("报文生成区...")
         self.framearea.setFixedHeight(200)
+        self.sendbutton = PrimaryPushButton(self.tr('发送报文'))
+        self.sendbutton.clicked.connect(self.sendframe)
 
         self.qvlayout = QVBoxLayout(self)  # 使用垂直布局
         self.qvlayout.addLayout(self.pnlayout, 1)
@@ -208,13 +217,17 @@ class ReadCurInterface(QWidget):
         self.qvlayout.addWidget(self.button, 1)
         self.qvlayout.addSpacing(5)
         self.qvlayout.addWidget(self.framearea, 1)
+        self.qvlayout.addSpacing(5)
+        self.qvlayout.addWidget(self.sendbutton, 1)
 
         self.qvlayout.setContentsMargins(0,0,0,5)
         StyleSheet.CUSTOM_INTERFACE.apply(self)
 
     def get_size(self):
         return self.qvlayout.sizeHint() + QSize(0, 50)
-
+    def sendframe(self):
+        text = self.framearea.toPlainText()
+        signalBus.sendmessage.emit(text)
     def create_frame(self, frame):
         afn = 0x0c
         frame_len = 0
@@ -332,7 +345,10 @@ class ReadHistoryInterface(QWidget):
         self.framearea = PlainTextEdit()
         self.framearea.setPlaceholderText("报文生成区...")
         self.framearea.setFixedHeight(200)
-        
+
+        self.sendbutton = PrimaryPushButton(self.tr('发送报文'))
+        self.sendbutton.clicked.connect(self.sendframe)
+
         self.qvlayout = QVBoxLayout(self)  # 使用垂直布局
         self.qvlayout.addLayout(self.pnlayout, 1)
         self.qvlayout.addSpacing(5)
@@ -347,6 +363,8 @@ class ReadHistoryInterface(QWidget):
         self.qvlayout.addWidget(self.button, 1)
         self.qvlayout.addSpacing(5)
         self.qvlayout.addWidget(self.framearea, 1)
+        self.qvlayout.addSpacing(5)
+        self.qvlayout.addWidget(self.sendbutton, 1)
 
         self.qvlayout.setContentsMargins(0,0,0,5)
 
@@ -355,7 +373,9 @@ class ReadHistoryInterface(QWidget):
 
     def get_size(self):
         return self.qvlayout.sizeHint() + QSize(0, 50)
-
+    def sendframe(self):
+        text = self.framearea.toPlainText()
+        signalBus.sendmessage.emit(text)
     def init_widget(self):
         # self.setFixedHeight(300)
         self.pnInput.setPlaceholderText("使用英文','或'-'拆分,如1,3,5-6")
@@ -507,6 +527,9 @@ class ReadEventAlarmInterface(QWidget):
         self.framearea.setPlaceholderText("报文生成区...")
         self.framearea.setFixedHeight(200)
 
+        self.sendbutton = PrimaryPushButton(self.tr('发送报文'))
+        self.sendbutton.clicked.connect(self.sendframe)
+
         self.qvlayout = QVBoxLayout(self)  # 使用垂直布局
         self.qvlayout.addLayout(self.pnlayout, 1)
         self.qvlayout.addSpacing(5)
@@ -521,6 +544,8 @@ class ReadEventAlarmInterface(QWidget):
         self.qvlayout.addWidget(self.button, 1)
         self.qvlayout.addSpacing(5)
         self.qvlayout.addWidget(self.framearea, 1)
+        self.qvlayout.addSpacing(5)
+        self.qvlayout.addWidget(self.sendbutton, 1)
 
         self.qvlayout.setContentsMargins(0,0,0,5)
         self.init_widget()
@@ -529,7 +554,9 @@ class ReadEventAlarmInterface(QWidget):
     def get_size(self):
         return self.qvlayout.sizeHint() + QSize(0, 50)
 
-
+    def sendframe(self):
+        text = self.framearea.toPlainText()
+        signalBus.sendmessage.emit(text)
     def init_widget(self):
         # self.setFixedHeight(300)
         self.pnInput.setPlaceholderText("使用英文','或'-'拆分,如1,3,5-6")
@@ -817,6 +844,8 @@ class MeterTaskInterface(QWidget):
         self.framearea = PlainTextEdit(self)
         self.framearea.setPlaceholderText("报文生成区...")
         self.framearea.setFixedHeight(200)
+        self.sendbutton = PrimaryPushButton(self.tr('发送报文'))
+        self.sendbutton.clicked.connect(self.sendframe)
 
         self.qvlayout = QVBoxLayout(self)  # 使用垂直布局
         self.qvlayout.addLayout(self.tasklayout)
@@ -837,6 +866,7 @@ class MeterTaskInterface(QWidget):
         self.qvlayout.addLayout(self.itemlayout)
         self.qvlayout.addWidget(self.button)
         self.qvlayout.addWidget(self.framearea)
+        self.qvlayout.addWidget(self.sendbutton)
         self.qvlayout.setContentsMargins(0,0,0,5)
 
         self.init_widget()
@@ -851,6 +881,9 @@ class MeterTaskInterface(QWidget):
         self.button.clicked.connect(self.create_frame)
         StyleSheet.CUSTOM_INTERFACE.apply(self)
 
+    def sendframe(self):
+        text = self.framearea.toPlainText()
+        signalBus.sendmessage.emit(text)
     def get_size(self):
         return self.qvlayout.sizeHint() + QSize(0, 50)
     def create_frame(self, frame):

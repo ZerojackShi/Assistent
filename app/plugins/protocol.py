@@ -183,7 +183,7 @@ def prase_type_item(data_item_elem, data_segment, index, need_delete, singal_len
             result[i] = subitem_value
     elif sub_type in ("FRAME645"):
         subitem_value = []
-        Analysis_645_fram_by_afn(data_segment, subitem_value,index)
+        FRAME_645.Analysis_645_fram_by_afn(data_segment, subitem_value,index)
         sub_length = len(data_segment)
         return subitem_value
     elif sub_type in ("CSG13"):
@@ -206,8 +206,8 @@ def prase_type_item(data_item_elem, data_segment, index, need_delete, singal_len
     else:
         template = frame_fun.get_template_element(sub_type,frame_fun.globalprotocol, frame_fun.globregion)
         if template is not None:
-            if sub_length / singal_length != 1:
-                is_singal = False
+            # if sub_length / singal_length != 1:
+            #     is_singal = False
             if sub_length % singal_length == 0:
                 while pos < sub_length:
                     splitname_elem = template.find('name')
@@ -384,6 +384,8 @@ def prase_simple_type_data(data_item_elem, data_segment,index, need_delete):
         subitem_value = frame_fun.prase_port(data_segment)
     elif data_type == "IP":
         subitem_value = frame_fun.prase_ip_str(data_segment)
+    elif data_type == "NORMAL":
+        subitem_value = frame_fun.get_data_normal(data_segment,need_delete)
     else:
         subitem_value = False
     return subitem_value
@@ -548,31 +550,6 @@ def parse_data_item(data_item_elem, data_segment, index, need_delete):
         singal_result = prase_singal_item(data_item_elem, data_segment, index, need_delete)
         result[key] = [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]
     return result
-def get_sub_length(data,sub_item_ele, target_name):
-    length = 0
-    sub_length = 0
-    all_item = sub_item_ele.findall('splitByLength')
-    for item in all_item:
-        if item.find('name') is not None:
-            if item.find('name').text == target_name:
-                sub_length = int(item.find('length').text,10)
-                value = prase_singal_item(item,data[:sub_length],0,False)
-                length = int(value,10)
-    return sub_length,length
-
-def get_relay_type(relaytype):
-    if relaytype == 0x00:
-        return "普通中继"
-    elif relaytype == 0x01:
-        return "转发主站对电能表的拉闸命令"
-    elif relaytype == 0x02:
-        return "转发主站对电能表的允许合闸命令"
-    elif relaytype == 0x03:
-        return "转发主站对电能表的保电投入命令"
-    elif relaytype == 0x04:
-        return "转发主站对电能表的保电解除命令"
-    else:
-        return "未知"
     
 class PraseFrameData():
     def parse_data_item(self,data_item_elem, data_segment, index, need_delete):
@@ -734,71 +711,105 @@ class PraseFrameData():
         length = execute_calculation(sub_element, data_segment, all_length_items)
 
         return length
+    def get_sub_length(self, data,sub_item_ele, target_name):
+        length = 0
+        sub_length = 0
+        all_item = sub_item_ele.findall('splitByLength')
+        for item in all_item:
+            if item.find('name') is not None:
+                if item.find('name').text == target_name:
+                    sub_length = int(item.find('length').text,10)
+                    value = prase_singal_item(item,data[:sub_length],0,False)
+                    length = int(value,10)
+        return sub_length,length
+    def get_relay_type(relaytype):
+        if relaytype == 0x00:
+            return "普通中继"
+        elif relaytype == 0x01:
+            return "转发主站对电能表的拉闸命令"
+        elif relaytype == 0x02:
+            return "转发主站对电能表的允许合闸命令"
+        elif relaytype == 0x03:
+            return "转发主站对电能表的保电投入命令"
+        elif relaytype == 0x04:
+            return "转发主站对电能表的保电解除命令"
+        else:
+            return "未知"
 def is_dlt645_frame(data):
     # 判断报文长度是否符合最小要求
     if len(data) < 12:
         return False
 
     # 判断起始符和结束符
-    if data[0] != 0x68 or data[-1] != 0x16 or data[7] != 0x68:
+    pos = frame_fun.get_frame_fe_count(data)
+    if data[pos] != 0x68 or data[-1] != 0x16 or data[7 + pos] != 0x68:
         return False
 
     # 判断数据长度是否合法
-    data_length = data[9]
-    if len(data) != data_length + 12:
+    data_length = data[pos + 9]
+    if len(data) != data_length + 12 + pos:
         return False
 
     #计算校验位
     return True
 
-def Analysis_645_fram_by_afn(frame, result_list, indx):
-    afn = frame[8]
-    Alalysis_head_frame(frame, result_list,indx)
+class FRAME_645():
+    def Analysis_645_fram_by_afn(frame, result_list, indx):
+        indx += Alalysis_head_frame(frame, result_list,indx)
+        afn = frame[8]
 
-    if afn == 0x11:#下行读取报文
-        Alalysis_read_frame(frame, result_list,indx)
-    elif afn in (0x91,0xB1):#读取回复正常
-        analyze_read_response_frame(frame, result_list,indx)
-    elif afn in (0xD1, 0xD2,0xD4,0xD6,0xD7,0xD9,0xDA,0xDB):#异常应答
-        analyze_read_err_frame(frame, result_list,indx)
-    elif afn == 0x12:#读取后续帧下行报文
-        Alalysis_read_subsequent_frame(frame, result_list,indx)
-    elif afn in (0x92,0xB2):#读取后续帧回复报文
-        analyze_read_subsequent_response_frame(frame, result_list,indx)
-    elif afn == 0x14:#写数据
-        Alalysis_write_frame(frame, result_list,indx)
-    elif afn == 0x93:#d读通信地址正常应答
-        Alalysis_read_adress_frame(frame, result_list,indx)
-    elif afn == 0x15:#写数据
-        Alalysis_write_adress_frame(frame, result_list,indx)
-    elif afn == 0x08:
-        Alalysis_brodcast_time_frame(frame, result_list,indx)
-    elif afn == 0x16:#冻结命令
-        Alalysis_write_frozen_time_frame(frame, result_list,indx)
-    elif afn in (0x17,0x97):#更改通信速率
-        Alalysis_write_buradet_frame(frame, result_list,indx)
-    elif afn == 0x18:#更改密码
-        Alalysis_write_password_frame(frame, result_list,indx)
-    elif afn == 0x98:#修改密码应答
-        Alalysis_write_password_response_frame(frame, result_list,indx)
-    elif afn == 0x19:#最大需量清零
-        Alalysis_maximum_demand_reset_frame(frame, result_list,indx)
-    elif afn == 0x1A:#电表清零
-        Alalysis_meter_reset_frame(frame, result_list,indx)
-    elif afn == 0x1B:#事件清零
-        Alalysis_event_reset_frame(frame, result_list,indx)
-    else:
-        Alalysis_invalid_frame(frame, result_list,indx)
-    Alalysis_end_frame(frame, result_list,indx)
+        if afn == 0x11:#下行读取报文
+            Alalysis_read_frame(frame, result_list,indx)
+        elif afn in (0x91,0xB1):#读取回复正常
+            analyze_read_response_frame(frame, result_list,indx)
+        elif afn in (0xD1, 0xD2,0xD4,0xD6,0xD7,0xD9,0xDA,0xDB):#异常应答
+            analyze_read_err_frame(frame, result_list,indx)
+        elif afn == 0x12:#读取后续帧下行报文
+            Alalysis_read_subsequent_frame(frame, result_list,indx)
+        elif afn in (0x92,0xB2):#读取后续帧回复报文
+            analyze_read_subsequent_response_frame(frame, result_list,indx)
+        elif afn == 0x14:#写数据
+            Alalysis_write_frame(frame, result_list,indx)
+        elif afn == 0x93:#d读通信地址正常应答
+            Alalysis_read_adress_frame(frame, result_list,indx)
+        elif afn == 0x15:#写数据
+            Alalysis_write_adress_frame(frame, result_list,indx)
+        elif afn == 0x08:
+            Alalysis_brodcast_time_frame(frame, result_list,indx)
+        elif afn == 0x16:#冻结命令
+            Alalysis_write_frozen_time_frame(frame, result_list,indx)
+        elif afn in (0x17,0x97):#更改通信速率
+            Alalysis_write_buradet_frame(frame, result_list,indx)
+        elif afn == 0x18:#更改密码
+            Alalysis_write_password_frame(frame, result_list,indx)
+        elif afn == 0x98:#修改密码应答
+            Alalysis_write_password_response_frame(frame, result_list,indx)
+        elif afn == 0x19:#最大需量清零
+            Alalysis_maximum_demand_reset_frame(frame, result_list,indx)
+        elif afn == 0x1A:#电表清零
+            Alalysis_meter_reset_frame(frame, result_list,indx)
+        elif afn == 0x1B:#事件清零
+            Alalysis_event_reset_frame(frame, result_list,indx)
+        else:
+            Alalysis_invalid_frame(frame, result_list,indx)
+        Alalysis_end_frame(frame, result_list,indx)
 
 
 def Alalysis_head_frame(frame, result_list,indx):
     # 解析报文
+    origin_array = frame.copy()
+    pos = frame_fun.get_frame_fe_count(frame)
+    frame.clear()
+    frame.extend(origin_array[pos:])
     data_length = frame[9]  # 数据长度
     control_code = frame[8]  # 控制码
     address = frame[1:7]  # 地址域
     address_with_spaces = frame_fun.get_data_str_with_space(address)
     address_str = frame_fun.get_data_str_reverser(address)
+
+    if pos != 0:
+        frame_fun.add_data(result_list, "唤醒符", frame_fun.get_data_str_with_space(origin_array[:pos]), "电表规约：电能表唤醒符",[indx, indx + pos])
+        indx += pos
 
     frame_fun.add_data(result_list, "帧起始符", f"{frame[0]:02X}", "电表规约：标识一帧信息的开始",[indx + 0,indx + 1])
     frame_fun.add_data(result_list, "地址域", address_with_spaces,"电表通信地址：" + address_str,[indx+1,indx+7])
@@ -852,7 +863,7 @@ def Alalysis_head_frame(frame, result_list,indx):
     afn_str = "主站请求：" if binary_array[0] == 0 else "电表返回："
     frame_fun.add_data(result_list, "控制码", f"{control_code:02X}", afn_str+func_code_str, [indx+8,indx+9],afn_data)
     frame_fun.add_data(result_list, "数据长度", f"{data_length:02X}",f"长度={data_length}, 总长度={data_length + 12}(总长度=长度+12)",[indx+9,indx+10])
-
+    return pos
 
 def Alalysis_end_frame(frame, result_list,indx):
     length = len(frame)

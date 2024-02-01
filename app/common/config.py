@@ -205,10 +205,14 @@ class QframeConfig(QObject):
                     target = find_template_element(root, template, protocol, region)
         return target
     
-    def get_item(self, item_id, protocol, region):
-        def is_vaild_data_item(data_item, target_protocol, tagrget_region):
+    def get_item(self, item_id, protocol, region, dir=None):
+        def is_vaild_data_item(data_item, target_protocol, tagrget_region, dir=None):
             attri_protocol = data_item.get('protocol')
             if attri_protocol is not None:
+                attri_dir = data_item.get('dir')
+                if attri_dir is not None and dir is not None:
+                    if int(attri_dir) != dir:
+                        return False
                 protocols = [protocol.upper() for protocol in attri_protocol.split(',')]
                 # 判断目标protocol是否在列表中
                 target_protocol = target_protocol.upper()
@@ -219,7 +223,7 @@ class QframeConfig(QObject):
                         if tagrget_region in regions:
                             return True
             return False
-        def find_target_dataitem(root, target_id, target_protocol, region):
+        def find_target_dataitem(root, target_id, target_protocol, region, dir=None):
             target_node = root.findall(".//*[@id='{}']".format(target_id,target_protocol,region))
             if target_node is None:
                 print("No node found with id {} protocol {} and region {}".format(target_id))
@@ -227,12 +231,12 @@ class QframeConfig(QObject):
             #当前标签无法找到
             print("found with id {} protocol {} and region {}".format(target_id,target_protocol,region))
             for node in target_node:
-                if is_vaild_data_item(node, target_protocol, region):
+                if is_vaild_data_item(node, target_protocol, region, dir):
                     return node
                 else:
                     parent = node.getparent()
                     while parent is not None:
-                        if is_vaild_data_item(parent, target_protocol, region):
+                        if is_vaild_data_item(parent, target_protocol, region, dir):
                             return node
                         parent = parent.getparent()
             print("No parent found with protocol {} and region {}".format(target_protocol,region))
@@ -241,17 +245,17 @@ class QframeConfig(QObject):
             return None
         root = self.config.getroot()
         protocol = protocol.lower()
-        target = find_target_dataitem(root, item_id, protocol, region)
+        target = find_target_dataitem(root, item_id, protocol, region, dir)
         if target is None:
             protocol = protocol.upper()
-            target = find_target_dataitem(root, item_id, protocol, region)
+            target = find_target_dataitem(root, item_id, protocol, region, dir)
             if target is None:
                 region = "南网"
                 protocol = protocol.lower()
-                target = find_target_dataitem(root, item_id, protocol, region)
+                target = find_target_dataitem(root, item_id, protocol, region, dir)
                 if target is None:
                     protocol = protocol.upper()
-                    target = find_target_dataitem(root, item_id, protocol, region)
+                    target = find_target_dataitem(root, item_id, protocol, region, dir)
         return target
     
 class LogConfig:

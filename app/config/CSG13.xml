@@ -12806,6 +12806,17 @@
 			<unit>分</unit>
 			<decimal>0</decimal>
 		</dataItem>
+
+		<dataItem id="04000101" protocol="csg13" region="南网">
+			<name>日期及星期</name>
+			<length>4</length>
+			<time>WWDDMMYY</time>
+		</dataItem>
+		<dataItem id="04000102" protocol="csg13" region="南网">
+			<name>时间</name>
+			<length>3</length>
+			<time>ssmmhh</time>
+		</dataItem>
 		<!--(当前)运行状态字数据块-->
 		<dataItem id="040005FF" protocol="csg13" region="南网">
 			<name>运行状态字数据块</name>
@@ -20273,6 +20284,11 @@
 		<value key="00">不带时标</value>
 		<value key="01">带时标</value>
 	</dataItem>
+	<dataItem id="E0000130" protocol="csg13" region="南网">
+		<name>终端时间</name>
+		<length>6</length>
+		<time>ssmmhhDDMMYY</time>
+	</dataItem>
 	<dataItem id="E0000140" protocol="csg13" region="南网">
 		<name>终端复位</name>
 		<length>1</length>
@@ -20375,6 +20391,96 @@
             </splitbit>
         </splitByLength>
     </dataItem>
+	<dataItem id="E1800002" protocol="csg13" region="南网">
+		<name>最大脉冲量路数</name>
+		<length>1</length>
+	</dataItem>
+	<dataItem id="E1800003" protocol="csg13" region="南网">
+		<name>串行通信端口数量</name>
+		<length>1</length>
+	</dataItem>
+	<dataItem id="E1800004" protocol="csg13" region="南网">
+		<name>支持最大测量点数</name>
+		<length>2</length>
+	</dataItem>
+	<dataItem id="E1800005" protocol="csg13" region="南网">
+		<name>测量点总数,所有有效的测量点总数</name>
+		<length>2</length>
+	</dataItem>
+	<dataItem id="E1800006" protocol="csg13" region="南网">
+		<name>终端普通用户表总数</name>
+		<length>2</length>
+	</dataItem>
+	<dataItem id="E1800007" protocol="csg13" region="南网">
+		<name>终端多功能表总数</name>
+		<length>2</length>
+	</dataItem>
+	<dataItem id="E1800008" protocol="csg13" region="南网">
+		<name>终端重点户电能表总数</name>
+		<length>2</length>
+	</dataItem>
+	<dataItem id="E1800009" protocol="csg13" region="南网">
+		<name>终端抄表状态信息</name>
+		<length>16</length>
+		<splitByLength>
+			<name>要抄电表总块数</name>
+			<length>2</length>
+		</splitByLength>
+		<splitByLength>
+			<name>抄表成功块数</name>
+			<length>2</length>
+		</splitByLength>
+		<splitByLength>
+			<name>抄表开始时间</name>
+			<length>6</length>
+			<time>ssmmhhDDMMYY</time>
+		</splitByLength>
+		<splitByLength>
+			<name>抄表结束时间</name>
+			<length>6</length>
+			<time>ssmmhhDDMMYY</time>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E1800010" protocol="csg13" region="南网">
+		<name>本日线损率</name>
+		<length>3</length>
+		<decimal>2</decimal>
+		<unit>%</unit>
+	</dataItem>
+	<dataItem id="E1800011" protocol="csg13" region="南网">
+		<name>(当前)日通信流量</name>
+		<length>2</length>
+		<unit>kB</unit>
+	</dataItem>
+	<dataItem id="E1800012" protocol="csg13" region="南网">
+		<name>(冻结)日通信流量</name>
+		<length>2</length>
+		<unit>kB</unit>
+	</dataItem>
+	<dataItem id="E1800013" protocol="csg13" region="南网">
+		<name>(当前)月通信流量</name>
+		<length>3</length>
+		<unit>kB</unit>
+	</dataItem>
+	<dataItem id="E1800014" protocol="csg13" region="南网">
+		<name>(冻结)月通信流量</name>
+		<length>3</length>
+		<unit>kB</unit>
+	</dataItem>
+	<dataItem id="E1800015" protocol="csg13" region="南网">
+		<name>信号强度(0~31)</name>
+		<length>1</length>
+	</dataItem>
+	<dataItem id="E1800016" protocol="csg13" region="南网">
+		<name>(当前)月终端复位次数</name>
+		<length>2</length>
+		<unit>次</unit>
+	</dataItem>
+	<dataItem id="E1800017" protocol="csg13" region="南网">
+		<name>(冻结)月终端复位次数</name>
+		<length>2</length>
+		<unit>次</unit>
+	</dataItem>
 	<!--(当前)终端运行状态字-->
     <dataItem id="E1800051" protocol="csg13" region="南网">
         <name>终端运行状态字</name>
@@ -35506,6 +35612,242 @@
 			<sign>yes</sign>
 		</dataItem>
 	</dataItem>
+	<dataItem id="E0010181" protocol="csg13" region="南网">
+		<name>主站请求终端安全信息</name>
+		<length>74</length>
+		<splitByLength>
+			<name>TESAM 序列号</name>
+			<length>8</length>
+		</splitByLength>
+		<splitByLength>
+			<name>TESAM 版本号</name>
+			<length>4</length>
+		</splitByLength>
+		<splitByLength>
+			<name>对称密钥版本</name>
+			<length>16</length>
+		</splitByLength>
+		<splitByLength>
+			<name>主站证书版本号（1B）+终端证书版本号（1B）</name>
+			<length>2</length>
+		</splitByLength>
+		<splitByLength>
+			<name>上报计数器</name>
+			<length>4</length>
+		</splitByLength>
+		<splitByLength>
+			<name>保留</name>
+			<length>4</length>
+		</splitByLength>
+		<splitByLength>
+			<name>离线计数器</name>
+			<length>4</length>
+		</splitByLength>
+		<splitByLength>
+			<name>终端证书序列号</name>
+			<length>16</length>
+			<type>NORMAL</type>
+		</splitByLength>
+		<splitByLength>
+			<name>主站证书序列号</name>
+			<length>16</length>
+			<type>NORMAL</type>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0010281" protocol="csg13" region="南网">
+		<name>主站请求终端证书信息(BIN)</name>
+		<length>unknown</length>
+		<splitByLength>
+			<name>终端证书长度</name>
+			<length>2</length>
+			<type>BIN</type>
+		</splitByLength>
+		<splitByLength>
+			<name>终端证书</name>
+			<length>unknown</length>
+			<lengthrule>1 * 终端证书长度</lengthrule>
+			<type>NORMAL</type>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0010381" protocol="csg13" region="南网">
+		<name>主站请求主站证书信息(BIN)</name>
+		<length>unknown</length>
+		<splitByLength>
+			<name>主站证书长度</name>
+			<length>2</length>
+			<type>BIN</type>
+		</splitByLength>
+		<splitByLength>
+			<name>主站证书</name>
+			<length>unknown</length>
+			<lengthrule>1 * 主站证书长度</lengthrule>
+			<type>NORMAL</type>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0010182" protocol="csg13" region="南网" dir="1">
+		<name>主站发起会话协商(BIN)</name>
+		<length>unknown</length>
+		<splitByLength>
+			<name>会话密文长度</name>
+			<length>2</length>
+			<type>BIN</type>
+		</splitByLength>
+		<splitByLength>
+			<name>会话密文</name>
+			<length>unknown</length>
+			<lengthrule>1 * 会话密文长度</lengthrule>
+			<type>NORMAL</type>
+		</splitByLength>
+		<splitByLength>
+			<name>签名数据</name>
+			<length>64</length>
+			<type>NORMAL</type>
+		</splitByLength>
+	</dataItem>
+	<!--下行数据-->
+	<dataItem id="E0010182" protocol="csg13" region="南网" dir="0">
+		<name>主站发起会话协商(BIN)</name>
+		<length>unknown</length>
+		<splitByLength>
+			<name>会话密文长度</name>
+			<length>2</length>
+			<type>BIN</type>
+		</splitByLength>
+		<splitByLength>
+			<name>会话密文</name>
+			<length>unknown</length>
+			<lengthrule>1 * 会话密文长度</lengthrule>
+			<type>NORMAL</type>
+		</splitByLength>
+		<splitByLength>
+			<name>签名数据</name>
+			<length>64</length>
+			<type>NORMAL</type>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0010183" protocol="csg13" region="南网">
+		<name>对称密钥更新请求(BIN)</name>
+		<length>unknown</length>
+		<splitByLength>
+			<name>数据长度</name>
+			<length>2</length>
+			<type>BIN</type>
+		</splitByLength>
+		<splitByLength>
+			<name>密钥密文(更新密钥的密文及 MAC)</name>
+			<length>unknown</length>
+			<lengthrule>1 * 数据长度</lengthrule>
+			<type>NORMAL</type>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0010184" protocol="csg13" region="南网">
+		<name>终端证书及私钥更新(BIN)</name>
+		<length>unknown</length>
+		<splitByLength>
+			<name>数据长度</name>
+			<length>2</length>
+			<type>BIN</type>
+		</splitByLength>
+		<splitByLength>
+			<name>终端证书及私钥密文</name>
+			<length>unknown</length>
+			<lengthrule>1 * 数据长度</lengthrule>
+			<type>NORMAL</type>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0010185" protocol="csg13" region="南网">
+		<name>主站证书更新(BIN)</name>
+		<length>unknown</length>
+		<splitByLength>
+			<name>数据长度</name>
+			<length>2</length>
+			<type>BIN</type>
+		</splitByLength>
+		<splitByLength>
+			<name>主站证书密文(更新证书的数据密文，含证书类型)</name>
+			<length>unknown</length>
+			<lengthrule>1 * 数据长度</lengthrule>
+			<type>NORMAL</type>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0010186" protocol="csg13" region="南网">
+		<name>置离线计数器(BIN)</name>
+		<length>20</length>
+		<splitByLength>
+			<name>数据密文(离线计数器密文及 MAC)</name>
+			<length>20</length>
+			<type>NORMAL</type>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0010187" protocol="csg13" region="南网">
+		<name>转加密授权(BIN)</name>
+		<length>28</length>
+		<splitByLength>
+			<name>转加密授权数据(转加密授权数据密文)</name>
+			<length>28</length>
+			<type>NORMAL</type>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0010188" protocol="csg13" region="南网">
+		<name>电量初始化(BIN)</name>
+		<length>9</length>
+		<splitByLength>
+			<name>数据(实际操作模式+电量初始化数量+MAC)</name>
+			<length>9</length>
+			<type>NORMAL</type>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0010189" protocol="csg13" region="南网">
+		<name>电量开户/充值(BIN)</name>
+		<length>19</length>
+		<splitByLength>
+			<name>数据(实际操作模式+购买电量+购电次数+客户编号+MAC)</name>
+			<length>19</length>
+			<type>NORMAL</type>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E001018A" protocol="csg13" region="南网">
+		<name>电量退费(BIN)</name>
+		<length>19</length>
+		<splitByLength>
+			<name>数据(实际操作模式+退换电量+购电次数+客户编号+MAC)</name>
+			<length>19</length>
+			<type>NORMAL</type>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E001018B" protocol="csg13" region="南网">
+		<name>参数信息更新(BIN)</name>
+		<length>unknown</length>
+		<splitByLength>
+			<name>数据长度</name>
+			<length>2</length>
+			<type>BIN</type>
+		</splitByLength>
+		<splitByLength>
+			<name>参数信息更新数据(数据+MAC)</name>
+			<length>unknown</length>
+			<lengthrule>1 * 数据长度</lengthrule>
+			<type>NORMAL</type>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E001018C" protocol="csg13" region="南网">
+		<name>模式切换--本地切远程(BIN)</name>
+		<length>7</length>
+		<splitByLength>
+			<name>模式状态字及 MAC</name>
+			<length>7</length>
+			<type>NORMAL</type>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E001018D" protocol="csg13" region="南网">
+		<name>会话协商确认</name>
+		<length>32</length>
+		<splitByLength>
+			<name>数据密文</name>
+			<length>32</length>
+			<type>NORMAL</type>
+		</splitByLength>
+	</dataItem>
 	<!--告警上报屏蔽字-->
 	<dataItem id="E0000150" protocol="csg13" region="南网">
 		<name>告警上报屏蔽字</name>
@@ -36889,6 +37231,34 @@
 			<length>2</length>
 			<type>BCD</type>
 		</splitByLength>
+	</dataItem>
+	<dataItem id="E1000001" protocol="csg13" region="南网">
+		<name>有功电能表起始读数</name>
+		<length>4</length>
+		<decimal>2</decimal>
+		<unit>kWh</unit>
+	</dataItem>
+	<dataItem id="E1000002" protocol="csg13" region="南网">
+		<name>无功电能表起始读数</name>
+		<length>4</length>
+		<decimal>2</decimal>
+		<unit>kWh</unit>
+	</dataItem>
+	<dataItem id="E1000003" protocol="csg13" region="南网">
+		<name>电表常数(有功)</name>
+		<length>3</length>
+		<unit>p/(kWh)</unit>
+	</dataItem>
+	<dataItem id="E1000004" protocol="csg13" region="南网">
+		<name>电表常数(无功)</name>
+		<length>3</length>
+		<unit>p/(kVarh)</unit>
+	</dataItem>
+	<dataItem id="E1000008" protocol="csg13" region="南网">
+		<name>（当前）剩余金额</name>
+		<length>4</length>
+		<decimal>2</decimal>
+		<unit>元</unit>
 	</dataItem>
 	<!--普通任务-->
 	<dataItem id="E0000300" protocol="csg13" region="南网">
@@ -40853,6 +41223,11 @@
 		<length>6</length>
 		<type>BCD</type>
 	</dataItem>
+	<dataItem id="E1800021" protocol="csg13" region="南网">
+		<name>测量点参数 MD5 校验码</name>
+		<length>16</length>
+		<type>NORMAL</type>
+	</dataItem>
 	<dataItem id="E1800023" protocol="csg13" region="南网">
 		<name>拓扑关系详细信息</name>
 		<length>unknown</length>
@@ -41482,61 +41857,446 @@
 		<name>误差自监测超限告警</name>
 		<length>unknown</length>
 		<type>ARD1</type>
+		<single>YES</single>
 	</dataItem>
 	<dataItem id="E20000EB" protocol="csg13" region="南网">
 		<name>误差自监测超限告警</name>
 		<length>unknown</length>
 		<type>ARD84</type>
+		<single>YES</single>
 	</dataItem>
 	<dataItem id="E20000E1" protocol="csg13" region="南网">
 		<name>漏电流超限告警</name>
 		<length>unknown</length>
 		<type>ARD85</type>
+		<single>YES</single>
 	</dataItem>
 	<dataItem id="E20000E8" protocol="csg13" region="南网">
 		<name>恶性负载告警</name>
 		<length>unknown</length>
 		<type>ARD86</type>
+		<single>YES</single>
 	</dataItem>
 	<dataItem id="E20000E9" protocol="csg13" region="南网">
 		<name>温度超限告警</name>
 		<length>unknown</length>
 		<type>ARD1</type>
+		<single>YES</single>
 	</dataItem>
 	<dataItem id="E20000E3" protocol="csg13" region="南网">
 		<name>电弧越限告警</name>
 		<length>unknown</length>
 		<type>ARD1</type>
+		<single>YES</single>
 	</dataItem>
 	<dataItem id="E2000029" protocol="csg13" region="南网">
 		<name>负荷过载告警</name>
 		<length>unknown</length>
 		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000001" protocol="csg13" region="南网">
+		<name>计量装置门开闭</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
 	</dataItem>
 	<dataItem id="E2000003" protocol="csg13" region="南网">
 		<name>电压逆向序告警</name>
 		<length>91</length>
 		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000004" protocol="csg13" region="南网">
+		<name>电流不平衡</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000005" protocol="csg13" region="南网">
+		<name>电压不平衡</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000006" protocol="csg13" region="南网">
+		<name>零序电流偏大</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000007" protocol="csg13" region="南网">
+		<name>A相TA二次侧短路</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000008" protocol="csg13" region="南网">
+		<name>B相TA二次侧短路</name>
+		<length>91</length>
+		<type>ARD2</type>
+	</dataItem>
+	<dataItem id="E2000009" protocol="csg13" region="南网">
+		<name>C相TA二次侧短路</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200000A" protocol="csg13" region="南网">
+		<name>A相TA二次侧开路</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200000B" protocol="csg13" region="南网">
+		<name>B相TA二次侧开路</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200000C" protocol="csg13" region="南网">
+		<name>C相TA二次侧开路</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200000D" protocol="csg13" region="南网">
+		<name>A 相潮流反向</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200000E" protocol="csg13" region="南网">
+		<name>B 相潮流反向</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200000F" protocol="csg13" region="南网">
+		<name>C 相潮流反向</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000010" protocol="csg13" region="南网">
+		<name>A 相电流过流</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000011" protocol="csg13" region="南网">
+		<name>B 相电流过流</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000012" protocol="csg13" region="南网">
+		<name>C 相电流过流</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000013" protocol="csg13" region="南网">
+		<name>A 相电流失流</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000014" protocol="csg13" region="南网">
+		<name>B 相电流失流</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000015" protocol="csg13" region="南网">
+		<name>C 相电流失流</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000016" protocol="csg13" region="南网">
+		<name>A 相电压失压</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000017" protocol="csg13" region="南网">
+		<name>B 相电压失压</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000018" protocol="csg13" region="南网">
+		<name>C 相电压失压</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000019" protocol="csg13" region="南网">
+		<name>全失压</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200001A" protocol="csg13" region="南网">
+		<name>A 相电压过压</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200001B" protocol="csg13" region="南网">
+		<name>B 相电压过压</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200001C" protocol="csg13" region="南网">
+		<name>C 相电压过压</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200001D" protocol="csg13" region="南网">
+		<name>A 相电压断相</name>
+		<length>91</length>
+		<type>ARD2</type>
+	</dataItem>
+	<dataItem id="E200001E" protocol="csg13" region="南网">
+		<name>B 相电压断相</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200001F" protocol="csg13" region="南网">
+		<name>C 相电压断相</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000020" protocol="csg13" region="南网">
+		<name>A 相电压畸变</name>
+		<length>35</length>
+		<type>ARD14</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000021" protocol="csg13" region="南网">
+		<name>B 相电压畸变</name>
+		<length>35</length>
+		<type>ARD14</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000022" protocol="csg13" region="南网">
+		<name>C 相电压畸变</name>
+		<length>35</length>
+		<type>ARD14</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000023" protocol="csg13" region="南网">
+		<name>A 相电流畸变</name>
+		<length>35</length>
+		<type>ARD14</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000024" protocol="csg13" region="南网">
+		<name>B 相电流畸变</name>
+		<length>35</length>
+		<type>ARD14</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000025" protocol="csg13" region="南网">
+		<name>C 相电流畸变</name>
+		<length>35</length>
+		<type>ARD14</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000026" protocol="csg13" region="南网">
+		<name>无功过补偿</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000027" protocol="csg13" region="南网">
+		<name>无功欠补偿</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000028" protocol="csg13" region="南网">
+		<name>功率超定值</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000029" protocol="csg13" region="南网">
+		<name>负荷过载</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200002A" protocol="csg13" region="南网">
+		<name>超合同容量用电</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200002B" protocol="csg13" region="南网">
+		<name>剩余电费不足</name>
+		<length>27</length>
+		<type>ARD4</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200002C" protocol="csg13" region="南网">
+		<name>示度下降</name>
+		<length>159</length>
+		<type>ARD3</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200002D" protocol="csg13" region="南网">
+		<name>电能表飞走</name>
+		<length>159</length>
+		<type>ARD3</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200002E" protocol="csg13" region="南网">
+		<name>电能表停走</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200002F" protocol="csg13" region="南网">
+		<name>电能表通讯失败</name>
+		<length>7</length>
+		<type>ARD1</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000030" protocol="csg13" region="南网">
+		<name>差动告警</name>
+		<length>159</length>
+		<type>ARD3</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000031" protocol="csg13" region="南网">
+		<name>最大需量手动复零</name>
+		<length>55</length>
+		<type>ARD7</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000032" protocol="csg13" region="南网">
+		<name>时钟电池电压过低</name>
+		<length>7</length>
+		<type>ARD1</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000033" protocol="csg13" region="南网">
+		<name>设备掉电</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000034" protocol="csg13" region="南网">
+		<name>设备上电</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000035" protocol="csg13" region="南网">
+		<name>电能表编程时间更改</name>
+		<length>91</length>
+		<type>ARD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000036" protocol="csg13" region="南网">
+		<name>电能表时段或费率更改</name>
+		<length>7</length>
+		<type>ARD1</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000037" protocol="csg13" region="南网">
+		<name>电能表脉冲常数更改</name>
+		<length>35</length>
+		<type>ARD6</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000038" protocol="csg13" region="南网">
+		<name>计量互感器倍率更改</name>
+		<length>31</length>
+		<type>ARD5</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000039" protocol="csg13" region="南网">
+		<name>遥信变位</name>
+		<length>37</length>
+		<type>ARD9</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200003A" protocol="csg13" region="南网">
+		<name>月通信流量越限</name>
+		<length>10</length>
+		<type>ARD10</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200003B" protocol="csg13" region="南网">
+		<name>继电器变位</name>
+		<length>9</length>
+		<type>ARD12</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200003C" protocol="csg13" region="南网">
+		<name>电能表拉合闸失败</name>
+		<length>9</length>
+		<type>ARD12</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200003D" protocol="csg13" region="南网">
+		<name>抄表失败</name>
+		<length>263</length>
+		<type>ARD28</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200003E" protocol="csg13" region="南网">
+		<name>电能表时钟异常</name>
+		<length>20</length>
+		<type>ARD13</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E200003F" protocol="csg13" region="南网">
+		<name>电能表校时失败</name>
+		<length>7</length>
+		<type>ARD1</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2000061" protocol="csg13" region="南网">
+		<name>测量点参数变更</name>
+		<length>23</length>
+		<type>ARD21</type>
+		<single>YES</single>
 	</dataItem>
 	<dataItem id="E2000058" protocol="csg13" region="南网">
 		<name>通信模块变更</name>
 		<length>unknown</length>
 		<type>ARD36</type>
+		<single>YES</single>
 	</dataItem>
 	<dataItem id="E2000058" protocol="csg13" region="广东,云南">
 		<name>通信模块变更</name>
 		<length>21</length>
 		<type>ARD36</type>
+		<single>YES</single>
 	</dataItem>
 	<dataItem id="E2000068" protocol="csg13" region="南网">
 		<name>负荷控制告警</name>
 		<length>35</length>
 		<type>ARD38</type>
+		<single>YES</single>
 	</dataItem>
 	<dataItem id="E2000073" protocol="csg13" region="深圳">
 		<name>断线检测告警</name>
 		<length>unknown</length>
 		<type>ARD39</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E20010FF" protocol="csg13" region="南网">
+		<name>所有未上报告警</name>
 	</dataItem>
 	<template id="ARD1" protocol="csg13" region="南网">
 		<splitByLength>
@@ -41574,6 +42334,305 @@
 			<item>0203FF00</item>
 			<item>0204FF00</item>
 			<item>0206FF00</item>
+		</splitByLength>
+	</template>
+	<template id="ARD3" protocol="csg13" region="南网">
+		<splitByLength>
+			<name>告警状态</name>
+			<length>1</length>
+			<value key="00">恢复</value>
+			<value key="01">发生</value>
+		</splitByLength>
+		<splitByLength>
+			<name>告警发生时间</name>
+			<length>6</length>
+			<time>ssmmhhDDMMYY</time>
+		</splitByLength>
+		<splitByLength>
+			<name>发生前数据</name>
+			<item>00010000</item>
+			<item>00020000</item>
+			<item>00030000</item>
+			<item>00040000</item>
+			<item>0201FF00</item>
+			<item>0202FF00</item>
+			<item>0203FF00</item>
+			<item>0204FF00</item>
+		</splitByLength>
+		<splitByLength>
+			<name>发生后数据</name>
+			<item>00010000</item>
+			<item>00020000</item>
+			<item>00030000</item>
+			<item>00040000</item>
+			<item>0201FF00</item>
+			<item>0202FF00</item>
+			<item>0203FF00</item>
+			<item>0204FF00</item>
+		</splitByLength>
+	</template>
+	<template id="ARD4" protocol="csg13" region="南网">
+		<splitByLength>
+			<name>告警状态</name>
+			<length>1</length>
+			<value key="00">恢复</value>
+			<value key="01">发生</value>
+		</splitByLength>
+		<splitByLength>
+			<name>告警发生时间</name>
+			<length>6</length>
+			<time>ssmmhhDDMMYY</time>
+		</splitByLength>
+		<splitByLength>
+			<name>发生前数据</name>
+			<item>00010000</item>
+			<item>00020000</item>
+			<item>00030000</item>
+			<item>00040000</item>
+			<item>E1000008</item>
+		</splitByLength>
+	</template>
+	<template id="ARD5" protocol="csg13" region="南网">
+		<splitByLength>
+			<name>告警状态</name>
+			<length>1</length>
+			<value key="00">恢复</value>
+			<value key="01">发生</value>
+		</splitByLength>
+		<splitByLength>
+			<name>告警发生时间</name>
+			<length>6</length>
+			<time>ssmmhhDDMMYY</time>
+		</splitByLength>
+		<splitByLength>
+			<name>发生前数据</name>
+			<item>00010000</item>
+			<item>00020000</item>
+			<item>00030000</item>
+			<item>00040000</item>
+			<item>E080000D</item>
+			<item>E080000C</item>
+		</splitByLength>
+		<splitByLength>
+			<name>发生后数据</name>
+			<item>E080000D</item>
+			<item>E080000C</item>
+		</splitByLength>
+	</template>
+	<template id="ARD6" protocol="csg13" region="南网">
+		<splitByLength>
+			<name>告警状态</name>
+			<length>1</length>
+			<value key="00">恢复</value>
+			<value key="01">发生</value>
+		</splitByLength>
+		<splitByLength>
+			<name>告警发生时间</name>
+			<length>6</length>
+			<time>ssmmhhDDMMYY</time>
+		</splitByLength>
+		<splitByLength>
+			<name>发生前数据</name>
+			<item>00010000</item>
+			<item>00020000</item>
+			<item>00030000</item>
+			<item>00040000</item>
+			<item>E1000003</item>
+			<item>E1000004</item>
+		</splitByLength>
+		<splitByLength>
+			<name>发生后数据</name>
+			<item>E1000003</item>
+			<item>E1000004</item>
+		</splitByLength>
+	</template>
+	<template id="ARD7" protocol="csg13" region="南网">
+		<splitByLength>
+			<name>告警状态</name>
+			<length>1</length>
+			<value key="00">恢复</value>
+			<value key="01">发生</value>
+		</splitByLength>
+		<splitByLength>
+			<name>告警发生时间</name>
+			<length>6</length>
+			<time>ssmmhhDDMMYY</time>
+		</splitByLength>
+		<splitByLength>
+			<name>发生前数据</name>
+			<item>00010000</item>
+			<item>00020000</item>
+			<item>00030000</item>
+			<item>00040000</item>
+			<item>01010000</item>
+			<item>01020000</item>
+			<item>01030000</item>
+			<item>01040000</item>
+		</splitByLength>
+	</template>
+	<template id="ARD8" protocol="csg13" region="南网">
+		<splitByLength>
+			<name>告警状态</name>
+			<length>1</length>
+			<value key="00">恢复</value>
+			<value key="01">发生</value>
+		</splitByLength>
+		<splitByLength>
+			<name>告警发生时间</name>
+			<length>6</length>
+			<time>ssmmhhDDMMYY</time>
+		</splitByLength>
+		<splitByLength>
+			<name>发生前数据</name>
+			<item>040005FF</item>
+		</splitByLength>
+		<splitByLength>
+			<name>发生后数据</name>
+			<item>040005FF</item>
+		</splitByLength>
+	</template>
+	<template id="ARD9" protocol="csg13" region="南网">
+		<splitByLength>
+			<name>告警状态</name>
+			<length>1</length>
+			<value key="00">恢复</value>
+			<value key="01">发生</value>
+		</splitByLength>
+		<splitByLength>
+			<name>告警发生时间</name>
+			<length>6</length>
+			<time>ssmmhhDDMMYY</time>
+		</splitByLength>
+		<splitByLength>
+			<name>发生前数据</name>
+			<item>E0000C1F</item>
+		</splitByLength>
+		<splitByLength>
+			<name>发生后数据</name>
+			<item>E0000C1F</item>
+		</splitByLength>
+	</template>
+	<template id="ARD10" protocol="csg13" region="南网">
+		<splitByLength>
+			<name>告警状态</name>
+			<length>1</length>
+			<value key="00">恢复</value>
+			<value key="01">发生</value>
+		</splitByLength>
+		<splitByLength>
+			<name>告警发生时间</name>
+			<length>6</length>
+			<time>ssmmhhDDMMYY</time>
+		</splitByLength>
+		<splitByLength>
+			<name>发生时数据</name>
+			<item>E1800013</item>
+		</splitByLength>
+	</template>
+	<template id="ARD11" protocol="csg13" region="南网">
+		<splitByLength>
+			<name>告警状态</name>
+			<length>1</length>
+			<value key="00">恢复</value>
+			<value key="01">发生</value>
+		</splitByLength>
+		<splitByLength>
+			<name>告警发生时间</name>
+			<length>6</length>
+			<time>ssmmhhDDMMYY</time>
+		</splitByLength>
+		<splitByLength>
+			<name>发生次数</name>
+			<length>3</length>
+		</splitByLength>
+		<splitByLength>
+			<name>发生前数据</name>
+			<item>00010000</item>
+			<item>00020000</item>
+			<item>00050000</item>
+			<item>00060000</item>
+			<item>00070000</item>
+			<item>00080000</item>
+		</splitByLength>
+		<splitByLength>
+			<name>发生后数据</name>
+			<item>00010000</item>
+			<item>00020000</item>
+			<item>00050000</item>
+			<item>00060000</item>
+			<item>00070000</item>
+			<item>00080000</item>
+		</splitByLength>
+	</template>
+	<template id="ARD12" protocol="csg13" region="南网">
+		<splitByLength>
+			<name>告警状态</name>
+			<length>1</length>
+			<value key="00">恢复</value>
+			<value key="01">发生</value>
+		</splitByLength>
+		<splitByLength>
+			<name>告警发生时间</name>
+			<length>6</length>
+			<time>ssmmhhDDMMYY</time>
+		</splitByLength>
+		<splitByLength>
+			<name>发生时数据</name>
+			<item>04000503</item>
+		</splitByLength>
+	</template>
+	<template id="ARD13" protocol="csg13" region="南网">
+		<splitByLength>
+			<name>告警状态</name>
+			<length>1</length>
+			<value key="00">恢复</value>
+			<value key="01">发生</value>
+		</splitByLength>
+		<splitByLength>
+			<name>告警发生时间</name>
+			<length>6</length>
+			<time>ssmmhhDDMMYY</time>
+		</splitByLength>
+		<splitByLength>
+			<name>发生时数据</name>
+			<item>04000101</item>
+			<item>04000102</item>
+			<item>E0000130</item>
+		</splitByLength>
+	</template>
+	<template id="ARD21" protocol="csg13" region="南网">
+		<splitByLength>
+			<name>告警状态</name>
+			<length>1</length>
+			<value key="00">恢复</value>
+			<value key="01">发生</value>
+		</splitByLength>
+		<splitByLength>
+			<name>告警发生时间</name>
+			<length>6</length>
+			<time>ssmmhhDDMMYY</time>
+		</splitByLength>
+		<splitByLength>
+			<name>发生时数据</name>
+			<item>E1800021</item>
+		</splitByLength>
+	</template>
+	<template id="ARD28" protocol="csg13" region="南网">
+		<splitByLength>
+			<name>告警状态</name>
+			<length>1</length>
+			<value key="00">恢复</value>
+			<value key="01">发生</value>
+		</splitByLength>
+		<splitByLength>
+			<name>告警发生时间</name>
+			<length>6</length>
+			<time>ssmmhhDDMMYY</time>
+		</splitByLength>
+		<splitByLength>
+			<name>失败表</name>
+			<length>256</length>
+			<type>NORMAL</type>
 		</splitByLength>
 	</template>
 	<template id="ARD36" protocol="csg13" region="南网">
@@ -41778,20 +42837,137 @@
 		<name>最大需量结算日自动复零</name>
 		<length>6</length>
 		<type>ERD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2010003" protocol="csg13" region="南网">
+		<name>最大需量手动复零</name>
+		<length>6</length>
+		<type>ERD2</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2010004" protocol="csg13" region="南网">
+		<name>A 相失压记录</name>
+		<length>24</length>
+		<type>ERD3</type>
+		<single>YES</single>
+	</dataItem>	
+	<dataItem id="E2010005" protocol="csg13" region="南网">
+		<name>B 相失压记录</name>
+		<length>24</length>
+		<type>ERD3</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2010006" protocol="csg13" region="南网">
+		<name>C 相失压记录</name>
+		<length>24</length>
+		<type>ERD3</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2010007" protocol="csg13" region="南网">
+		<name>A 相失流记录</name>
+		<length>24</length>
+		<type>ERD3</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2010008" protocol="csg13" region="南网">
+		<name>B 相失流记录</name>
+		<length>24</length>
+		<type>ERD3</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E2010009" protocol="csg13" region="南网">
+		<name>C 相失流记录</name>
+		<length>24</length>
+		<type>ERD3</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E201000A" protocol="csg13" region="南网">
+		<name>掉电/上电记录</name>
+		<length>12</length>
+		<type>ERD4</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E201000B" protocol="csg13" region="南网">
+		<name>A 相断相记录</name>
+		<length>24</length>
+		<type>ERD3</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E201000C" protocol="csg13" region="南网">
+		<name>B 相断相记录</name>
+		<length>24</length>
+		<type>ERD3</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E201000D" protocol="csg13" region="南网">
+		<name>C 相断相记录</name>
+		<length>24</length>
+		<type>ERD3</type>
+		<single>YES</single>
 	</dataItem>
 	<dataItem id="E201000E" protocol="csg13" region="南网">
 		<name>控制事件记录</name>
 		<length>15</length>
 		<type>ERD6</type>
+		<single>YES</single>
 	</dataItem>
 	<dataItem id="E2010019" protocol="csg13" region="南网">
 		<name>电能表广播校时记录</name>
 		<length>6</length>
 		<type>ERD13</type>
+		<single>YES</single>
 	</dataItem>
 	<template id="ERD2" protocol="csg13" region="南网">
 		<splitByLength>
 			<name>最大需量清零时间</name>
+			<length>6</length>
+			<time>ssmmhhDDMMYY</time>
+		</splitByLength>
+	</template>
+	<template id="ERD3" protocol="csg13" region="南网">
+		<splitByLength>
+			<name>开始时间</name>
+			<length>6</length>
+			<time>ssmmhhDDMMYY</time>
+		</splitByLength>
+		<splitByLength>
+			<name>结束时间</name>
+			<length>6</length>
+			<time>ssmmhhDDMMYY</time>
+		</splitByLength>
+		<splitByLength>
+			<name>正向有功总电能量(DI3DI2DI1DI0=00010000)增量</name>
+			<length>4</length>
+			<unit>kWh</unit>
+			<decimal>2</decimal>
+		</splitByLength>
+		<splitByLength>
+			<name>反向有功总电能量(DI3DI2DI1DI0=00020000)增量</name>
+			<length>4</length>
+			<unit>kWh</unit>
+			<decimal>2</decimal>
+		</splitByLength>
+		<splitByLength>
+			<name>组合无功1总电能量(DI3DI2DI1DI0=00030000)增量</name>
+			<length>4</length>
+			<unit>kVarh</unit>
+			<decimal>2</decimal>
+		</splitByLength>
+		<splitByLength>
+			<name>组合无功2总电能量(DI3DI2DI1DI0=00040000)增量</name>
+			<length>4</length>
+			<unit>kVarh</unit>
+			<decimal>2</decimal>
+		</splitByLength>
+	</template>	
+	<template id="ERD4" protocol="csg13" region="南网">
+		<splitByLength>
+			<name>停电时刻</name>
+			<length>6</length>
+			<time>ssmmhhDDMMYY</time>
+		</splitByLength>
+		<splitByLength>
+			<name>复电时刻</name>
 			<length>6</length>
 			<time>ssmmhhDDMMYY</time>
 		</splitByLength>
@@ -43089,6 +44265,397 @@
 			<length>1</length>
 			<unit>分</unit>
 		</splitByLength>
+	</dataItem>
+	<dataItem id="E0000C0F" protocol="csg13" region="南网">
+		<name>开关接点类型</name>
+		<length>15</length>
+		<dataItem id="E0000C00">
+			<name>开关编号0 开关接点类型</name>
+			<length>1</length>
+			<value key="00">常开</value>
+			<value key="01">常闭</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C01">
+			<name>开关编号1 开关接点类型</name>
+			<length>1</length>
+			<value key="00">常开</value>
+			<value key="01">常闭</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C02">
+			<name>开关编号2 开关接点类型</name>
+			<length>1</length>
+			<value key="00">常开</value>
+			<value key="01">常闭</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C03">
+			<name>开关编号3 开关接点类型</name>
+			<length>1</length>
+			<value key="00">常开</value>
+			<value key="01">常闭</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C04">
+			<name>开关编号4 开关接点类型</name>
+			<length>1</length>
+			<value key="00">常开</value>
+			<value key="01">常闭</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C05">
+			<name>开关编号5 开关接点类型</name>
+			<length>1</length>
+			<value key="00">常开</value>
+			<value key="01">常闭</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C06">
+			<name>开关编号6 开关接点类型</name>
+			<length>1</length>
+			<value key="00">常开</value>
+			<value key="01">常闭</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C07">
+			<name>开关编号7 开关接点类型</name>
+			<length>1</length>
+			<value key="00">常开</value>
+			<value key="01">常闭</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C08">
+			<name>开关编号8 开关接点类型</name>
+			<length>1</length>
+			<value key="00">常开</value>
+			<value key="01">常闭</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C09">
+			<name>开关编号9 开关接点类型</name>
+			<length>1</length>
+			<value key="00">常开</value>
+			<value key="01">常闭</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C0A">
+			<name>开关编号10 开关接点类型</name>
+			<length>1</length>
+			<value key="00">常开</value>
+			<value key="01">常闭</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C0B">
+			<name>开关编号11 开关接点类型</name>
+			<length>1</length>
+			<value key="00">常开</value>
+			<value key="01">常闭</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C0C">
+			<name>开关编号12 开关接点类型</name>
+			<length>1</length>
+			<value key="00">常开</value>
+			<value key="01">常闭</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C0D">
+			<name>开关编号13 开关接点类型</name>
+			<length>1</length>
+			<value key="00">常开</value>
+			<value key="01">常闭</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C0E">
+			<name>开关编号14 开关接点类型</name>
+			<length>1</length>
+			<value key="00">常开</value>
+			<value key="01">常闭</value>
+			<value key="other">未知</value>
+		</dataItem>
+	</dataItem>
+	<dataItem id="E0000C1F" protocol="csg13" region="南网">
+		<name>输入开关状态</name>
+		<length>15</length>
+		<dataItem id="E0000C10">
+			<name>开关编号0 开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C11">
+			<name>开关编号1 开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C12">
+			<name>开关编号2 开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C13">
+			<name>开关编号3 开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C14">
+			<name>开关编号4 开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C15">
+			<name>开关编号5 开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C16">
+			<name>开关编号6 开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C17">
+			<name>开关编号7 开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C18">
+			<name>开关编号8 开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C19">
+			<name>开关编号9 开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C1A">
+			<name>开关编号10 开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C1B">
+			<name>开关编号11 开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C1C">
+			<name>开关编号12 开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C1D">
+			<name>开关编号13 开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C1E">
+			<name>开关编号14 开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+	</dataItem>
+	<dataItem id="E0000C2F" protocol="csg13" region="南网">
+		<name>输出开关状态</name>
+		<length>15</length>
+		<dataItem id="E0000C20">
+			<name>开关编号0 输出开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C21">
+			<name>开关编号1 输出开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C22">
+			<name>开关编号2 输出开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C23">
+			<name>开关编号3 输出开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C24">
+			<name>开关编号4 输出开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C25">
+			<name>开关编号5 输出开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C26">
+			<name>开关编号6 输出开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C27">
+			<name>开关编号7 输出开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C28">
+			<name>开关编号8 输出开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C29">
+			<name>开关编号9 输出开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C2A">
+			<name>开关编号10 输出开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C2B">
+			<name>开关编号11 输出开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C2C">
+			<name>开关编号12 输出开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C2D">
+			<name>开关编号13 输出开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+		<dataItem id="E0000C2E">
+			<name>开关编号14 输出开关状态</name>
+			<length>1</length>
+			<value key="00">合</value>
+			<value key="01">分</value>
+			<value key="other">未知</value>
+		</dataItem>
+	</dataItem>
+	<dataItem id="E0000C3F" protocol="csg13" region="南网">
+		<name>输出开关轮次</name>
+		<length>15</length>
+		<dataItem id="E0000C30">
+			<name>开关编号0 轮次号</name>
+			<length>1</length>
+		</dataItem>
+		<dataItem id="E0000C31">
+			<name>开关编号1 轮次号</name>
+			<length>1</length>
+		</dataItem>
+		<dataItem id="E0000C32">
+			<name>开关编号2 轮次号</name>
+			<length>1</length>
+		</dataItem>
+		<dataItem id="E0000C33">
+			<name>开关编号3 轮次号</name>
+			<length>1</length>
+		</dataItem>
+		<dataItem id="E0000C34">
+			<name>开关编号4 轮次号</name>
+			<length>1</length>
+		</dataItem>
+		<dataItem id="E0000C35">
+			<name>开关编号5 轮次号</name>
+			<length>1</length>
+		</dataItem>
+		<dataItem id="E0000C36">
+			<name>开关编号6 轮次号</name>
+			<length>1</length>
+		</dataItem>
+		<dataItem id="E0000C37">
+			<name>开关编号7 轮次号</name>
+			<length>1</length>
+		</dataItem>
+		<dataItem id="E0000C38">
+			<name>开关编号8 轮次号</name>
+			<length>1</length>
+		</dataItem>
+		<dataItem id="E0000C39">
+			<name>开关编号9 轮次号</name>
+			<length>1</length>
+		</dataItem>
+		<dataItem id="E0000C3A">
+			<name>开关编号10 轮次号</name>
+			<length>1</length>
+		</dataItem>
+		<dataItem id="E0000C3B">
+			<name>开关编号11 轮次号</name>
+			<length>1</length>
+		</dataItem>
+		<dataItem id="E0000C3C">
+			<name>开关编号12 轮次号</name>
+			<length>1</length>
+		</dataItem>
+		<dataItem id="E0000C3D">
+			<name>开关编号13 轮次号</name>
+			<length>1</length>
+		</dataItem>
+		<dataItem id="E0000C3E">
+			<name>开关编号14 轮次号</name>
+			<length>1</length>
+		</dataItem>
 	</dataItem>
 	<dataItem id="E0000C68" protocol="csg13" region="南网">
 		<name>拉闸命令告警延时</name>
@@ -44673,5 +46240,201 @@
 			<name>TV 变比</name>
 			<length>2</length>
 		</dataItem>
+	</dataItem>
+	<dataItem id="E1008020" protocol="csg13" region="南网">
+		<name>日 电流不平衡度合格率统计数据</name>
+		<length>16</length>
+		<splitByLength>
+			<name>最高电流不平衡度</name>
+			<length>2</length>
+			<decimal>1</decimal>
+			<unit>%</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>最高电流不平衡度出现时间</name>
+			<length>4</length>
+			<time>mmhhDDMM</time>
+		</splitByLength>
+		<splitByLength>
+			<name>最低电流不平衡度</name>
+			<length>2</length>
+			<decimal>1</decimal>
+			<unit>%</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>最低电流不平衡度出现时间</name>
+			<length>4</length>
+			<time>mmhhDDMM</time>
+		</splitByLength>
+		<splitByLength>
+			<name>电流不平衡度平均值</name>
+			<length>2</length>
+			<decimal>1</decimal>
+			<unit>%</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>电流不平衡度95%值</name>
+			<length>2</length>
+			<decimal>1</decimal>
+			<unit>%</unit>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E1008021" protocol="csg13" region="南网">
+		<name>日 电压不平衡度合格率统计数据</name>
+		<length>26</length>
+		<splitByLength>
+			<name>电压不平衡度监测时间</name>
+			<length>2</length>
+			<unit>分</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>电压不平衡度合格率</name>
+			<length>3</length>
+			<decimal>1</decimal>
+			<unit>%</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>电压不平衡度超限率</name>
+			<length>3</length>
+			<decimal>1</decimal>
+			<unit>%</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>电压不平衡度超上限时间</name>
+			<length>2</length>
+			<unit>分</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>最高电压不平衡度</name>
+			<length>2</length>
+			<decimal>1</decimal>
+			<unit>%</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>最高电压不平衡度出现时间</name>
+			<length>4</length>
+			<time>mmhhDDMM</time>
+		</splitByLength>
+		<splitByLength>
+			<name>最低电压不平衡度</name>
+			<length>2</length>
+			<decimal>1</decimal>
+			<unit>%</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>最低电压不平衡度出现时间</name>
+			<length>4</length>
+			<time>mmhhDDMM</time>
+		</splitByLength>
+		<splitByLength>
+			<name>电压不平衡度平均值</name>
+			<length>2</length>
+			<decimal>1</decimal>
+			<unit>%</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>电压不平衡度95%值</name>
+			<length>2</length>
+			<decimal>1</decimal>
+			<unit>%</unit>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E100C020" protocol="csg13" region="南网">
+		<name>月 电流不平衡度合格率统计数据</name>
+		<length>16</length>
+		<splitByLength>
+			<name>最高电流不平衡度</name>
+			<length>2</length>
+			<decimal>1</decimal>
+			<unit>%</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>最高电流不平衡度出现时间</name>
+			<length>4</length>
+			<time>mmhhDDMM</time>
+		</splitByLength>
+		<splitByLength>
+			<name>最低电流不平衡度</name>
+			<length>2</length>
+			<decimal>1</decimal>
+			<unit>%</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>最低电流不平衡度出现时间</name>
+			<length>4</length>
+			<time>mmhhDDMM</time>
+		</splitByLength>
+		<splitByLength>
+			<name>电流不平衡度平均值</name>
+			<length>2</length>
+			<decimal>1</decimal>
+			<unit>%</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>电流不平衡度95%值</name>
+			<length>2</length>
+			<decimal>1</decimal>
+			<unit>%</unit>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E100C021" protocol="csg13" region="南网">
+		<name>月 电压不平衡度合格率统计数据</name>
+		<length>28</length>
+		<splitByLength>
+			<name>电压不平衡度监测时间</name>
+			<length>3</length>
+			<unit>分</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>电压不平衡度合格率</name>
+			<length>3</length>
+			<decimal>1</decimal>
+			<unit>%</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>电压不平衡度超限率</name>
+			<length>3</length>
+			<decimal>1</decimal>
+			<unit>%</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>电压不平衡度超上限时间</name>
+			<length>3</length>
+			<unit>分</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>最高电压不平衡度</name>
+			<length>2</length>
+			<decimal>1</decimal>
+			<unit>%</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>最高电压不平衡度出现时间</name>
+			<length>4</length>
+			<time>mmhhDDMM</time>
+		</splitByLength>
+		<splitByLength>
+			<name>最低电压不平衡度</name>
+			<length>2</length>
+			<decimal>1</decimal>
+			<unit>%</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>最低电压不平衡度出现时间</name>
+			<length>4</length>
+			<time>mmhhDDMM</time>
+		</splitByLength>
+		<splitByLength>
+			<name>电压不平衡度平均值</name>
+			<length>2</length>
+			<decimal>1</decimal>
+			<unit>%</unit>
+		</splitByLength>
+		<splitByLength>
+			<name>电压不平衡度95%值</name>
+			<length>2</length>
+			<decimal>1</decimal>
+			<unit>%</unit>
+		</splitByLength>
 	</dataItem>
 </config>

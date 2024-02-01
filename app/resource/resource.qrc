@@ -155,6 +155,7 @@
         <file>qss/dark/custom_tree.qss</file>
         <file>qss/dark/setting_card.qss</file>
         <file>qss/dark/state_tool_tip.qss</file>
+        <file>qss/dark/custom_frame.qss</file>
 
         <file>qss/light/gallery_interface.qss</file>
         <file>qss/light/home_interface.qss</file>
@@ -167,6 +168,7 @@
         <file>qss/light/custom_tree.qss</file>
         <file>qss/light/setting_card.qss</file>
         <file>qss/light/state_tool_tip.qss</file>
+        <file>qss/light/custom_frame.qss</file>
 
         <file>i18n/gallery.zh_CN.qm</file>
         <file>i18n/gallery.zh_HK.qm</file>

@@ -1,0 +1,40 @@
+QLabel {
+    color: black;
+    background-color: transparent;
+    font-family: 'Courier New', 'PingFang SC';
+    font-size: 13px;
+}
+QHeaderView {
+    background-color: transparent;
+    border: 1px solid transparent;
+    font-size: 13px;
+}
+QTreeWidget {
+    font-size: 13px;
+    font-family: 'Courier New', 'PingFang SC';
+
+    border-radius: 5px; /* 设置圆角半径 */
+    background-color: transparent; /* 设置背景颜色 */
+    border: 1px solid rgba(0, 0, 0, 13);
+}
+QHeaderView::section { 
+    background-color: transparent;
+    border-top: 1px solid transparent;
+    color: black;
+
+    border-top-left-radius: 5px; /* 左上角圆角半径 */
+    border-top-right-radius: 5px; /* 右上角圆角半径 */
+    border-bottom-left-radius: 0px; /* 左下角圆角半径，设置为0以保持直角 */
+    border-bottom-right-radius: 0px; /* 右下角圆角半径，设置为0以保持直角 */
+}
+QHeaderView {
+    background-color: transparent;
+    border: 1px solid transparent;
+}
+ScrollArea {
+    border: none;
+    background-color: transparent;
+}
+MessageConfig {
+    background-color: transparent;
+}

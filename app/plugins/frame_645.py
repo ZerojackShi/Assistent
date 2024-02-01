@@ -1,4 +1,4 @@
-import frame_fun
+from ..plugins import frame_fun
 
 def is_dlt645_frame(data):
     # 判断报文长度是否符合最小要求

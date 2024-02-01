@@ -220,7 +220,7 @@ class Alalysic(QWidget):
 
             if protocol.is_dlt645_frame(frame):
                 protocol.frame_fun.globalprotocol = "DLT/645-2007"
-                protocol.Analysis_645_fram_by_afn(frame, show_data,0)
+                protocol.FRAME_645.Analysis_645_fram_by_afn(frame, show_data,0)
             elif framedis.is_csg_frame(frame):
                 protocol.frame_fun.globalprotocol = "CSG13"
                 framedis.Analysis_csg_frame_by_afn(frame,show_data,0)

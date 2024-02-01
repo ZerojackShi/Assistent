@@ -1,7 +1,7 @@
 from asyncio.windows_events import ERROR_CONNECTION_ABORTED
 from xml.dom.expatbuilder import FragmentBuilder
 from ..plugins import frame_fun
-from ..plugins.protocol import PraseFrameData
+from ..plugins.protocol import PraseFrameData, FRAME_645
 from PyQt5.QtWidgets import QMessageBox
 import re
 from datetime import datetime, timedelta
@@ -950,11 +950,71 @@ def Analysic_csg_security_frame(frame, dir, prm,result_list,start_pos):
     else:
         pw_data = valid_data_segment[-16:]
         pw_pos = [-18,-2]
+    pw =False
 
-    pw  = judge_is_exit_pw(pw_data)
-    if pw:
-        length -= 16
     data_segment = valid_data_segment[:length]
+    prase_data = PraseFrameData()
+    while pos < length:
+        DA = data_segment[pos:pos + 2]
+        item = data_segment[pos + 2: pos + 6]
+
+        point_str = prase_DA_data(DA)
+
+        data_item = frame_fun.get_data_str_reverser(item)
+
+        frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
+        pos += 2
+
+        data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
+        item_data = []
+        if data_item == "E0010182":
+            dir = 1
+            prm = 0
+        if data_item_elem is not None:
+            if dir == 1 and prm == 0:#上行回复
+                sub_length_cont = data_item_elem.find('length').text
+                if sub_length_cont.upper() in "UNKNOWN":
+                    sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
+                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                    new_datament = sub_datament
+                else:
+                    sub_length = int(sub_length_cont)
+                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                    sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
+
+                alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
+                frame_fun.prase_data_with_config(alalysic_result, False,item_data)
+            else:
+                sub_length = 0#下行读取报文
+            name = data_item_elem.find('name').text
+            dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
+        else:
+            if dir == 1 and prm == 0:
+                pw = guest_is_exit_pw(length,data_segment)
+                frame_fun.CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                break
+            else:
+                sub_length = 0
+            dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
+
+        frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
+        if dir == 1 and prm == 0:
+            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据内容",frame_fun.get_data_str_with_space(sub_datament),point_str[len("Pn="):] + "-" + dis_data_identifier[len("数据标识编码："):],[index + pos + 4, index + pos + 4 + sub_length], item_data)
+        pos += (sub_length + 4)
+        num += 1
+
+        if length - pos == 16:
+            pw  = guest_is_exit_pw(length, pw_data)
+            if pw:
+                length -= 16
+
+    if pw:
+        pw_str = "PW由16个字节组成，是由主站按系统约定的认证算法产生，并在主站发送的报文中下发给终端，由终端进行校验认证。"
+        frame_fun.add_data(sub_result, f"消息验证码Pw",frame_fun.get_data_str_with_space(pw_data),pw_str,pw_pos)
+    if tpv:
+        tpv_str = prase_tpv_data(tpv_data)
+        frame_fun.add_data(sub_result, f"时间标签Tp",frame_fun.get_data_str_with_space(tpv_data),tpv_str,[-7, -2])
+    frame_fun.add_data(result_list, "信息体", frame_fun.get_data_str_with_space(frame[16:-2]), "", [16,-2],sub_result)
 
 
 def Analysic_csg_read_cur_frame(frame, dir, prm,result_list,start_pos):
@@ -1568,11 +1628,21 @@ def Analysic_csg_relay_frame(frame, dir, prm,result_list,start_pos):
         if data_item_elem is not None:
             if dir == 1 and prm == 0:#上行回复
                 frame_result = []
+                sub_length_cont = data_item_elem.find('length').text
+                if sub_length_cont.upper() in "UNKNOWN":
+                    sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
+                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                    new_datament = sub_datament
+                else:
+                    sub_length = int(sub_length_cont)
+                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                    sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
+
                 sub_length, frame_len = prase_data.get_sub_length(data_segment[pos+5:],data_item_elem,"中继报文长度")
                 replay_type = prase_data.get_relay_type(data_segment[pos +4])
                 frame_fun.add_data(item_data, "中继类型",frame_fun.get_data_str_with_space(data_segment[pos +4:pos + 5]), f"中继类型:{replay_type}", [index +pos +4,index+pos + 5])
                 frame_fun.add_data(item_data, "中继应答长度",frame_fun.get_data_str_with_space(data_segment[pos +5:pos + 5 +sub_length]), f"中继应答长度{frame_len}", [index +pos +5,index+pos + 5 +sub_length])
-                prase_data.Analysis_645_fram_by_afn(data_segment[pos + 5 + sub_length:pos + 5 + frame_len + sub_length],frame_result,pos + 5 + sub_length  + index)
+                FRAME_645.Analysis_645_fram_by_afn(data_segment[pos + 5 + sub_length:pos + 5 + frame_len + sub_length],frame_result,pos + 5 + sub_length  + index)
                 frame_fun.add_data(item_data, "中继应答内容",frame_fun.get_data_str_with_space(data_segment[pos + 5 + sub_length:pos + 5 + frame_len]), f"中继应答内容", [index + pos + 5 + sub_length,index+pos + 5 + frame_len],frame_result)
                 sub_length += frame_len
                 sub_length+=1
