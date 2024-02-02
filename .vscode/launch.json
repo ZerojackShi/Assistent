@@ -11,6 +11,13 @@
             "program": "Assistent.py",
             "console": "integratedTerminal",
             "preLaunchTask": "Run pyrcc5", // 这里引用了上面定义的任务
+        },
+        {
+            "name": "Python: 编译",
+            "type": "python",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "preLaunchTask": "Run pyinstaller", // 这里引用了上面定义的任务
         }
     ]
 }

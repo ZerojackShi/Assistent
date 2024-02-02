@@ -35,6 +35,29 @@
                 "reveal": "silent",
                 "panel": "new"
             }
+        },
+        {
+            "label": "Run pyinstaller",
+            "type": "shell",
+            "command": "pyinstaller",
+            "args": [
+                "--windowed",
+                "--add-data",
+                "'D:/ProjectWorkPlace/FrameAnalysic-V1.0/Assistent/app/config;./app/config'",
+                "--add-data",
+                "'D:/ProjectWorkPlace/FrameAnalysic-V1.0/Assistent/app/assets;./app/assets'",
+                "--icon='D:/ProjectWorkPlace/FrameAnalysic-V1.0/Assistent/app/resource/images/logo.png'",
+                "--distpath='D:/ProjectWorkPlace/FrameAnalysic-V1.0/build'",
+                "Assistent.py"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "silent",
+                "panel": "new"
+            }
         }
 
     ]
