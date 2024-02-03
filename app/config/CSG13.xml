@@ -39824,6 +39824,255 @@
 		<type>RELAYTASK</type>
 	</dataItem>
 
+	<dataItem id="E0000B00" protocol="csg13" region="南网">
+		<name>规约版本号</name>
+		<length>2</length>
+		<type>NORMAL</type>
+	</dataItem>
+	<dataItem id="E0000B01" protocol="csg13" region="南网">
+		<name>终端软件版本号</name>
+		<length>6</length>
+		<splitByLength>
+			<name>厂商编码</name>
+			<length>2</length>
+			<type>BIN</type>
+		</splitByLength>
+		<splitByLength>
+			<name>终端类型</name>
+			<length>1</length>
+			<value key="01">厂站</value>
+			<value key="02">专变</value>
+			<value key="03">公变</value>
+			<value key="04">集中器</value>
+			<value key="05">智能量测终端</value>
+		</splitByLength>
+		<splitByLength>
+			<name>发布日期</name>
+			<length>3</length>
+			<time>DDMMYY</time>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0000B02" protocol="csg13" region="南网">
+		<name>终端硬件版本号</name>
+		<length>2</length>
+		<type>NORMAL</type>
+	</dataItem>
+	<dataItem id="E0000B03" protocol="csg13" region="南网">
+		<name>终端资产编号</name>
+		<length>24</length>
+		<type>ASCII</type>
+	</dataItem>
+	<dataItem id="E0000B04" protocol="csg13" region="南网">
+		<name>终端厂家信息</name>
+		<length>7</length>
+		<splitByLength>
+			<name>厂商代号</name>
+			<length>4</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>生产日期</name>
+			<length>3</length>
+			<time>DDMMYY</time>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0000B05" protocol="csg13" region="南网">
+		<name>远程模块信息</name>
+		<length>32</length>
+		<splitByLength>
+			<name>厂商代号</name>
+			<length>4</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>模块型号</name>
+			<length>8</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>软件版本号</name>
+			<length>4</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>软件发布日期</name>
+			<length>6</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>硬件版本号</name>
+			<length>4</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>硬件发布日期</name>
+			<length>6</length>
+			<type>ASCII</type>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0000B07" protocol="csg13" region="南网">
+		<name>是否具备安全模块</name>
+		<length>1</length>
+		<value key="00">不具备</value>
+		<value key="01">具备</value>
+		<value key="other">未知</value>
+	</dataItem>
+	<dataItem id="E0000B08" protocol="csg13" region="南网">
+		<name>功能模块信息</name>
+		<length>unknown</length>
+		<lengthrule>63 * 5</lengthrule>
+		<type>MOUDLEINFO</type>
+	</dataItem>
+	<template id="MOUDLEINFO" protocol="csg13" region="南网">
+		<name>模块信息</name>
+		<splitByLength>
+			<name>厂商代号</name>
+			<length>4</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>资产编号</name>
+			<length>32</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>模块型号</name>
+			<length>7</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>软件版本号</name>
+			<length>4</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>软件发布日期</name>
+			<length>6</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>硬件版本号</name>
+			<length>4</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>硬件发布日期</name>
+			<length>6</length>
+			<type>ASCII</type>
+		</splitByLength>
+	</template>
+	<dataItem id="E0000B09" protocol="csg13" region="南网">
+		<name>终端以太网MAC地址</name>
+		<length>unknown</length>
+		<splitByLength>
+			<name>以太网接口数量</name>
+			<length>1</length>
+		</splitByLength>
+		<splitByLength>
+			<name>以太网接口MAC地址</name>
+			<length>unknown</length>
+			<lengthrule>6 * 以太网接口数量</lengthrule>
+			<type>ETHMAC</type>
+		</splitByLength>
+	</dataItem>
+	<template id="ETHMAC" protocol="csg13" region="南网">
+		<name>以太网接口MAC地址</name>
+		<length>6</length>
+		<type>NORMAL</type>
+	</template>
+	<dataItem id="E0000B10" protocol="csg13" region="南网">
+		<name>终端远程模块IMEI及SIM卡号</name>
+		<length>40</length>
+		<splitByLength>
+			<name>模块IMEI号</name>
+			<length>20</length>
+			<type>ASCII</type>
+		</splitByLength>
+		<splitByLength>
+			<name>安装SIM卡ICCID号</name>
+			<length>20</length>
+			<type>ASCII</type>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0000B11" protocol="csg13" region="南网">
+		<name>终端本地模块出厂MAC地址</name>
+		<length>6</length>
+		<type>NORMAL</type>
+	</dataItem>
+	<dataItem id="E0000B12" protocol="csg13" region="南网">
+		<name>终端坐标信息</name>
+		<length>14</length>
+		<splitByLength>
+			<name>经度</name>
+			<length>5</length>
+			<splitByLength>
+				<name>秒</name>
+				<length>2</length>
+				<unit>"</unit>
+				<decimal>2</decimal>
+				<type>BCD</type>
+			</splitByLength>
+			<splitByLength>
+				<name>分</name>
+				<length>1</length>
+				<unit>'</unit>
+				<type>BCD</type>
+			</splitByLength>
+			<splitByLength>
+				<name>度</name>
+				<length>1</length>
+				<unit>°</unit>
+				<type>BCD</type>
+			</splitByLength>
+			<splitByLength>
+				<name>方向</name>
+				<length>1</length>
+				<value key="00">东经</value>
+				<value key="01">西经</value>
+			</splitByLength>
+		</splitByLength>
+		<splitByLength>
+			<name>纬度</name>
+			<length>5</length>
+			<splitByLength>
+				<name>秒</name>
+				<length>2</length>
+				<unit>"</unit>
+				<decimal>2</decimal>
+				<type>BCD</type>
+			</splitByLength>
+			<splitByLength>
+				<name>分</name>
+				<length>1</length>
+				<unit>'</unit>
+				<type>BCD</type>
+			</splitByLength>
+			<splitByLength>
+				<name>度</name>
+				<length>1</length>
+				<unit>°</unit>
+				<type>BCD</type>
+			</splitByLength>
+			<splitByLength>
+				<name>方向</name>
+				<length>1</length>
+				<value key="00">东经</value>
+				<value key="01">西经</value>
+			</splitByLength>
+		</splitByLength>
+		<splitByLength>	
+			<name>海拔</name>
+			<length>4</length>
+			<unit>千米</unit>
+			<decimal>2</decimal>
+			<sign>YES</sign>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0000B13" protocol="csg13" region="南网">
+		<name>终端型号</name>
+		<length>16</length>
+		<type>ASCII</type>
+	</dataItem>
 	<!--表端任务-->
 	<dataItem id="E0001501" protocol="csg13" region="南网">
 		<name>表端任务</name>
@@ -42909,6 +43158,12 @@
 		<name>控制事件记录</name>
 		<length>15</length>
 		<type>ERD6</type>
+		<single>YES</single>
+	</dataItem>
+	<dataItem id="E201000F" protocol="csg13" region="南网">
+		<name>电量清零记录</name>
+		<length>28</length>
+		<type>ERD3</type>
 		<single>YES</single>
 	</dataItem>
 	<dataItem id="E2010019" protocol="csg13" region="南网">

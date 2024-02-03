@@ -202,7 +202,7 @@ class Alalysic(QWidget):
             self.frame_len = len(frame)
             self.tree_widget.last_item = None
             formatted_frame = ''
-            hex_str = input_text.replace(' ', '')
+            hex_str = input_text.replace(' ', '').replace('\n', '')
             for i in range(0, len(hex_str), 2):
                 formatted_frame += hex_str[i:i + 2] + ' '
             self.disconnect_text_changed()
@@ -214,9 +214,8 @@ class Alalysic(QWidget):
             # print(self.input_text.toPlainText())
             # 将字符串拆分为每两个字符
             # 去除换行符和空格
-            cleaned_string = hex_str.replace(' ', '').replace('\n', '')
             # 将每两个字符转换为一个十六进制数
-            frame = [int(cleaned_string[i:i + 2], 16) for i in range(0, len(cleaned_string), 2)]
+            frame = [int(hex_str[i:i + 2], 16) for i in range(0, len(hex_str), 2)]
 
             if protocol.is_dlt645_frame(frame):
                 protocol.frame_fun.globalprotocol = "DLT/645-2007"

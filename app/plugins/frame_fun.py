@@ -330,19 +330,22 @@ def get_subitem_length(data_subitem_elem, splitlength, key):
         operator_part = components[1]
         text_part = components[2]
         operator = operator_mapping.get(operator_part)
-        vaule = get_sublength_caculate_base(splitlength, text_part)
-                # 使用正则表达式提取前面的数字
-        match = re.match(r"(\d+)", vaule)
-
-        if match:
-            extracted_number = int(match.group(1))
-            print(f"提取到的数字为: {extracted_number}")
+        if text_part.isdigit():
+            vaule = int(text_part)
         else:
-            extracted_number = int(vaule, 10)
-            print("未找到数字")
+            vaule = get_sublength_caculate_base(splitlength, text_part)
+            # 使用正则表达式提取前面的数字
+            match = re.match(r"(\d+)", vaule)
+            if match:
+                extracted_number = int(match.group(1))
+                print(f"提取到的数字为: {extracted_number}")
+            else:
+                extracted_number = int(vaule, 10)
+                print("未找到数字")
+            
+            vaule = extracted_number
         try:
             decimal_number = int(number_part, 10)
-            vaule = extracted_number
         except ValueError:
             print("无法转换为整数:", number_part)
 

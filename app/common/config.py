@@ -297,14 +297,14 @@ class LogConfig:
         self.logger.critical(message,exc_info=exc_info)
 
 YEAR = 2023
-AUTHOR = "zhiyiYo"
+AUTHOR = "ZeroJack"
 VERSION = __version__
-HELP_URL = "https://qfluentwidgets.com"
-REPO_URL = "https://github.com/zhiyiYo/PyQt-Fluent-Widgets"
-EXAMPLE_URL = "https://github.com/zhiyiYo/PyQt-Fluent-Widgets/tree/master/examples"
-FEEDBACK_URL = "https://github.com/zhiyiYo/PyQt-Fluent-Widgets/issues"
-RELEASE_URL = "https://github.com/zhiyiYo/PyQt-Fluent-Widgets/releases/latest"
-SUPPORT_URL = "https://afdian.net/a/zhiyiYo"
+HELP_URL = "https://gitee.com/zerokit/assistent"
+REPO_URL = "https://gitee.com/zerokit/assistent"
+EXAMPLE_URL = "https://gitee.com/zerokit/assistent"
+FEEDBACK_URL = "https://gitee.com/zerokit/assistent/issues"
+RELEASE_URL = "https://gitee.com/zerokit/assistent/releases"
+SUPPORT_URL = "https://gitee.com/zerokit/assistent"
 
 
 cfg = Config()

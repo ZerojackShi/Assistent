@@ -19,25 +19,31 @@ def caculate_unknown_length(data_subitem_elem, data_segment, length_maap):
         operator_part = components[1]
         text_part = components[2]
         operator = operator_mapping.get(operator_part)
-        vaule = length_maap[text_part]
-        vaule_data = data_segment[vaule[0] - vaule[1] : vaule[0]]
-        value_element = vaule[2]
-        result = parse_data_item(value_element, vaule_data, 0, False)
-        sub_value = frame_fun.get_sublength_caculate_base(result,text_part)
-        # 使用正则表达式提取前面的数字
-        match = re.match(r"(\d+)", sub_value)
-
-        if match:
-            extracted_number = int(match.group(1))
-            print(f"提取到的数字为: {extracted_number}")
+        if text_part.isdigit():
+            sub_value = int(text_part)
         else:
-            extracted_number = int(sub_value, 10)
-            print("未找到数字")
+            vaule = length_maap[text_part]
+            vaule_data = data_segment[vaule[0] - vaule[1] : vaule[0]]
+            value_element = vaule[2]
+            result = parse_data_item(value_element, vaule_data, 0, False)
+            sub_value = frame_fun.get_sublength_caculate_base(result,text_part)
+            # 使用正则表达式提取前面的数字
+            match = re.match(r"(\d+)", sub_value)
+
+            if match:
+                extracted_number = int(match.group(1))
+                print(f"提取到的数字为: {extracted_number}")
+            else:
+                extracted_number = int(sub_value, 10)
+                print("未找到数字")
+            
+            sub_value = extracted_number
+
         try:
             decimal_number = int(number_part, 10)
-            sub_value = extracted_number
         except ValueError:
             print("无法转换为整数:", number_part)
+
         if operator == '+':
             sub_length = decimal_number + sub_value
         elif operator == '-':
@@ -304,6 +310,8 @@ def parse_splitByLength_data(data_item_elem, data_segment,index, need_delete):
             sub_item_ele = data_subitem_elem.find('item')
             if sub_item_ele is not None:
                 subitem_length = frame_fun.caculate_item_box_length(data_subitem_elem)
+            else:
+                subitem_length = len(sub_data_segment)
 
         subitem_content = sub_data_segment[:subitem_length]
         if subitem_length > len(subitem_content):
@@ -536,7 +544,22 @@ def parse_data_item(data_item_elem, data_segment, index, need_delete):
         if length_elem is not None:
             result = parse_data_item(length_elem, data_segment, index, need_delete)
     elif data_item_elem.find('type') is not None:
-        singal_result = prase_type_item(data_item_elem, data_segment, index,  need_delete, len(data_segment))
+        sub_length_ele = data_item_elem.find('length')
+        if sub_length_ele is not None:
+            sub_length_content = sub_length_ele.text
+            if sub_length_content in ("unknown"):
+                singal_length, subitem_length = frame_fun.get_subitem_length(data_item_elem, None, 0)
+            else:
+                subitem_length = int(sub_length_content)
+                singal_length = subitem_length
+        else:
+            sub_item_ele = data_item_elem.find('item')
+            if sub_item_ele is not None:
+                subitem_length = frame_fun.caculate_item_box_length(data_item_elem) 
+            else:
+                singal_length = len(data_segment)
+
+        singal_result = prase_type_item(data_item_elem, data_segment, index,  need_delete, singal_length)
         if data_item_id:
             key = data_item_id
         else:
@@ -550,7 +573,16 @@ def parse_data_item(data_item_elem, data_segment, index, need_delete):
         singal_result = prase_singal_item(data_item_elem, data_segment, index, need_delete)
         result[key] = [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]
     return result
-    
+def is_valid_expression(s):
+    # 定义正则表达式模式
+    pattern = re.compile(r'^\s*\d+\s*[\+\-\*/]\s*\d+\s*$')
+
+    # 使用正则表达式进行匹配
+    match = pattern.match(s)
+
+    # 返回匹配结果
+    return bool(match)
+
 class PraseFrameData():
     def parse_data_item(self,data_item_elem, data_segment, index, need_delete):
         # 解析单个dataItem数据段
@@ -685,16 +717,21 @@ class PraseFrameData():
             else:
                 all_items = items
             template_element = element.find('type')
+            relues = element.find('lengthrule')
 
             if len(all_items) == 0:
                 if template_element is not None:
-                    data_type = template_element.text.upper()
-                    if data_type not in ("BCD", "BIN", "ASCII"):
-                        template = frame_fun.get_template_element(data_type, frame_fun.globalprotocol, frame_fun.globregion)
-                        if template is not None:
-                            # 递归调用子函数
-                            template_items = template.findall('splitByLength')
-                            return execute_calculation(template, data, template_items)
+
+                    if relues is not None and is_valid_expression(relues.text):
+                        return caculate_unknown_length(element, data, length_maap)
+                    else:
+                        data_type = template_element.text.upper()
+                        if data_type not in ("BCD", "BIN", "ASCII"):
+                            template = frame_fun.get_template_element(data_type, frame_fun.globalprotocol, frame_fun.globregion)
+                            if template is not None:
+                                # 递归调用子函数
+                                template_items = template.findall('splitByLength')
+                                return execute_calculation(template, data, template_items)
             else:
                 for data_subitem_elem in all_items:
                     subitem_name = data_subitem_elem.find('name').text

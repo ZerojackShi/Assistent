@@ -22,3 +22,5 @@ class Translator(QObject):
         self.sendreceive = self.tr('发送和接收')
         self.param      = self.tr('参数设置')
         self.customframe      = self.tr('自定义报文')
+        self.dataBaseView      = self.tr('数据库解析')
+        self.appmessage        = self.tr('APP消息接口')

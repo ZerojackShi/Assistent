@@ -96,9 +96,9 @@ class MainWindow(FluentWindow):
         # self.addSubInterface(self.viewInterface, Icon.GRID, t.view, pos)
         self.addSubInterface(self.analysicView, Icon.FRAME_ALALYSIC, t.frameanalysic,pos)
         self.addSubInterface(self.sendreceive, FIF.SEND, t.sendreceive, pos)
-        self.addSubInterface(self.customFrame, FIF.SCROLL, t.param, pos)
-        self.addSubInterface(self.dataBaseView, FIF.ZOOM, t.param, pos)
-        self.addSubInterface(self.appmessage, FIF.MESSAGE, t.param, pos)
+        self.addSubInterface(self.customFrame, FIF.SCROLL, t.customframe, pos)
+        self.addSubInterface(self.dataBaseView, FIF.ZOOM, t.dataBaseView, pos)
+        self.addSubInterface(self.appmessage, FIF.MESSAGE, t.appmessage, pos)
         # self.addSubInterface(self.param_interface, FIF.SCROLL, t.param, pos) 
 
         # add custom widget to bottom
