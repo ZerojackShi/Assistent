@@ -499,11 +499,12 @@ def toDA(iVal):
     da2 = ret >> 8
     return da1, da2
 
-def judge_is_exit_pw(data_segment, item_element=None, data_time=None):
+def judge_is_exit_pw(data_segment, item_element=None, data_time=None,with_time=False):
     if item_element is not None:
         if guest_next_data_is_cur_item_data(item_element, data_segment, data_time):
             return False
-        return True
+        else:
+            return judge_is_exit_pw(data_segment, None, None, with_time)
     total_len = len(data_segment)
     pos = 0
     while total_len > pos:
@@ -519,21 +520,23 @@ def judge_is_exit_pw(data_segment, item_element=None, data_time=None):
                 else:
                     sub_length = int(sub_length_cont)
                 pos += sub_length + 6
+                if with_time:
+                    pos += 6
             else:
                 return False
         else:
             return True
     return False
-def guest_is_exit_pw(length,data_segment, data_item_elem=None, data_time=None):
+def guest_is_exit_pw(length,data_segment, data_item_elem=None, data_time=None,with_time=False):
     if length < 16:
         return False
     if frame_fun.is_array_all_zeros(data_segment[-16:]):
         return True
     else:
-        return judge_is_exit_pw(data_segment[-16:], data_item_elem, data_time)
+        return judge_is_exit_pw(data_segment[-16:], data_item_elem, data_time, with_time)
 
 def guest_next_data_is_cur_item_data(item_element, data_segment, data_time):
-    if item_element:
+    if item_element is not None:
         length, new_data = recaculate_sub_length(item_element, data_segment)
         if is_valid_bcd_time(data_segment[length:length+6]):
             if data_time is not None:
@@ -747,7 +750,7 @@ def Analysic_csg_ack_frame(frame, dir, prm, result_list,start_pos):
         pos += (sub_length + 4)
         num += 1
         if length - pos == 16:
-            pw  = guest_is_exit_pw(length, pw_data)
+            pw  = guest_is_exit_pw(length, pw_data,None, None, False)
             if pw:
                 length -= 16
 
@@ -837,7 +840,7 @@ def Analysic_csg_link_frame(frame,dir, prm,result_list,start_pos):
         pos += (sub_length + 4)
         num += 1
         if length - pos == 16:
-            pw  = guest_is_exit_pw(length, pw_data)
+            pw  = guest_is_exit_pw(length, pw_data, None, None, False)
             if pw:
                 length -= 16
 
@@ -1151,7 +1154,7 @@ def Analysic_csg_read_history_frame(frame, dir, prm,result_list,start_pos):
         else:
             if dir == 1 and prm == 0:
                 sub_length = len(data_segment)
-                pw = guest_is_exit_pw(length,data_segment, data_item_elem, data_time)
+                pw = guest_is_exit_pw(length,data_segment, data_item_elem, data_time, True)
                 frame_fun.CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
                 break
             else:
@@ -1178,7 +1181,7 @@ def Analysic_csg_read_history_frame(frame, dir, prm,result_list,start_pos):
         num += 1
 
         if length - pos == 16:
-            pw  = guest_is_exit_pw(length, pw_data, data_item_elem, data_time)
+            pw  = guest_is_exit_pw(length, pw_data, data_item_elem, data_time, True)
             if pw:
                 length -= 16
 
@@ -1388,7 +1391,7 @@ def Analysic_csg_read_task_frame(frame, dir, prm,result_list,start_pos):
         num += 1
 
         if length - pos == 16:
-            pw  = guest_is_exit_pw(length, pw_data, data_item_elem, data_time)
+            pw  = guest_is_exit_pw(length, pw_data, data_item_elem, data_time, True)
             if pw:
                 length -= 16
 

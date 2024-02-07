@@ -23,21 +23,6 @@ class CustomTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         super(CustomTreeWidgetItem, self).__init__(parent, text_list)
         self.setFlags(self.flags() | QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEditable)
 
-def create_tree(parent_item, data, item_positions):
-    for item_data in data:
-        frame = item_data.get("帧域", "")
-        data_value = item_data.get("数据", "")
-        description = item_data.get("说明", "")
-        position = item_data.get("位置")
-        column_texts = [frame, data_value, description]
-
-        item = CustomTreeWidgetItem(parent_item, column_texts)
-        item_positions[id(item)] = position
-        parent_item.addChild(item)
-        child_items = item_data.get("子项", [])
-        if child_items:
-           create_tree(item, child_items,item_positions)
-
 class CustomDelegate(QtWidgets.QStyledItemDelegate):
     def __init__(self, parent=None):
         super(CustomDelegate, self).__init__(parent)
@@ -94,7 +79,22 @@ class CustomTreeWidget(QtWidgets.QTreeWidget):
     def mousePressEvent(self, event):
     # 在这里处理CustomTreeWidget的鼠标事件
         super().mousePressEvent(event)  
+    def create_tree(self,parent_item, data, item_positions):
+        if parent_item is None:
+            parent_item = self.invisibleRootItem()
+        for item_data in data:
+            frame = item_data.get("帧域", "")
+            data_value = item_data.get("数据", "")
+            description = item_data.get("说明", "")
+            position = item_data.get("位置")
+            column_texts = [frame, data_value, description]
 
+            item = CustomTreeWidgetItem(parent_item, column_texts)
+            item_positions[id(item)] = position
+            parent_item.addChild(item)
+            child_items = item_data.get("子项", [])
+            if child_items:
+                self.create_tree(item, child_items,item_positions)
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -213,7 +213,7 @@ class MainWindow(QtWidgets.QMainWindow):
             elif frame_csg.is_csg_frame(frame):
                 frame_csg.Analysis_csg_frame_by_afn(frame,show_data)
                 print("is csg frame")
-            create_tree(self.tree_widget.invisibleRootItem(), show_data, self.item_position)
+            self.tree_widget.create_tree(None, show_data, self.item_position)
 
             self.tree_widget.expandAll()
             self.input_text.textChanged.connect(self.display_tree)

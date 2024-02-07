@@ -8,7 +8,7 @@ from ..common.translator import Translator
 from ..common.style_sheet import StyleSheet
 from ..plugins.frame_csg import FramePos
 from ..plugins import frame_fun,protocol
-from .analysic_interface import CustomTreeWidgetItem,CustomTreeWidget,create_tree
+from .analysic_interface import CustomTreeWidgetItem,CustomTreeWidget
 from ..common.config import cfg
 from ..common.signal_bus import signalBus
 
@@ -74,7 +74,7 @@ class ParamTaskParam(QWidget):
         template_element = frame_fun.get_template_element("BASETASK", frame_fun.globalprotocol,frame_fun.globregion)
         show_data = protocol.parse_splitByLength_data(template_element, data_content, 0, 0)
         frame_fun.prase_data_with_config(show_data, False, alalysic_result)
-        create_tree(self.tree_widget.invisibleRootItem(), alalysic_result, self.item_position)
+        self.tree_widget.create_tree(None, alalysic_result, self.item_position)
         self.tree_widget.expandAll()
 
 

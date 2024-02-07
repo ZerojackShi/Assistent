@@ -1,0 +1,32 @@
+QHeaderView::section { 
+    background-color: transparent;
+    border: none;
+    color: black;
+
+    border-top-left-radius: 5px; /* 左上角圆角半径 */
+    border-top-right-radius: 5px; /* 右上角圆角半径 */
+    border-bottom-left-radius: 0px; /* 左下角圆角半径，设置为0以保持直角 */
+    border-bottom-right-radius: 0px; /* 右下角圆角半径，设置为0以保持直角 */
+}
+QHeaderView {
+    background-color: transparent;
+    border: none;
+}
+QTreeWidget {
+    background-color: transparent;
+}
+CustomTreeWidget {
+    border-radius: 5px; /* 设置圆角半径 */
+    background-color: transparent; /* 设置背景颜色 */
+    border: none;
+    color: black;
+} 
+QTreeWidget::item {
+    color: black;
+}
+
+#QTreeWidget::item:selected {
+    background: red; /* 设置选中项的背景颜色为红色 */
+    color: black; /* 设置选中项的文字颜色为白色 */
+}
+    

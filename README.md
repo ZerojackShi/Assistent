@@ -111,12 +111,13 @@ python Assistant.py
 - `<unit>`: 数据项单位。
 - `<decimal>`: 数据项的小数位，没有小数位时可以不增加该字段。
 - `<sign>`: 指定数据可以具有符号（正(yes)/负(no)），无符号时可以不增加该字段。
-- `<type>`: 指定数据项的数据类型，内置支持`BIN`,`BCD`,`ASCII`,`PN`,`IPWITHPORT``FRAME645`,`ITEM`,`CSG13`。其中`PN`代表测量点，`IPWITHPORT`代表IP地址+端口`FRAME645`代表645协议报文，`ITEM`代表自定义数据项，`CSG13`代表南网13协议报文。其他模类型需要自定义，并配合`<template>`使用
+- `<type>`: 指定数据项的数据类型，内置支持`BIN`,`BCD`,`ASCII`,`NORMAL`,`PN`,`IPWITHPORT``FRAME645`,`ITEM`,`CSG13`。其中`NORMAL`代表直接将内容格式为字符串,`PN`代表测量点，`IPWITHPORT`代表IP地址+端口`FRAME645`代表645协议报文，`ITEM`代表自定义数据项，`CSG13`代表南网13协议报文。其他模类型需要自定义，并配合`<template>`使用
+- `<single>`: 表示按照模板解析但是只有一组内容，不存在重复的内容，使用`YES`表示，不配置代表存在重复内容。并配合`<type>`使用。
 - `<splitByLength>`: 表示数据项内容按照长度拆分。
   - **必含子元素**
     - `<name>`: 描述数据项的名称。
     - `<length>`: 指定数据项的长度。
-- `<time>` :表示数据的时间格式，支持`CC`-世纪,`YY`-年,`MM`-月,`DD`-日,`HH`-时,`mm`分,`ss`-秒，按照报文内的顺序组合使用。
+- `<time>` :表示数据的时间格式，支持`CC`-世纪,`YY`-年,`MM`-月,`DD`-日,`WW`-周,`HH`-时,`mm`分,`ss`-秒，按照报文内的顺序组合使用。
 - `<lengthrule>`: 指定数据项的长度规则，当数据项为变长时，填写长度计算规则，如`<lengthrule>7 * 应答的台区节点总数量</lengthrule>`
   ```xml
   <splitByLength>
