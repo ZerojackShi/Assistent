@@ -83,6 +83,8 @@ class CustomTreeWidget(QtWidgets.QTreeWidget):
         super().mousePressEvent(event)  
 
     def create_tree(self, parent_item, data, item_positions):
+        if data is None or item_positions is None:
+            return
         if parent_item is None:
             parent_item = self.invisibleRootItem()
             self.total_height = 0
@@ -133,7 +135,6 @@ class CustomTreeWidget(QtWidgets.QTreeWidget):
                     parent=self
                 )
                     return
-            
             tree_widget = CustomTreeWidget()
             viewport_size = self.viewport().size()
 
