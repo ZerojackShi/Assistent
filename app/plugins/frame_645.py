@@ -1,4 +1,4 @@
-from ..plugins import frame_fun
+from ..plugins.frame_fun import FrameFun as frame_fun
 
 def is_dlt645_frame(data):
     # 判断报文长度是否符合最小要求
@@ -312,7 +312,7 @@ def Alalysis_write_adress_frame(frame, result_list):
 def Alalysis_brodcast_time_frame(frame, result_list):
     time = frame[10:16]
     data_list = []
-    form_time = time[:6][::-1]
+    form_time = time[:6]
     frame_fun.add_data(data_list, "数据内容",frame_fun.get_data_str_with_space(time), "校时时间："+ frame_fun.parse_time_data(form_time, "ssmmhhDDMMYY",True),[10,16])
     frame_fun.add_data(result_list, "数据域", "", "数据域传输时按字节进行加33H处理，接收后应按字节减33H处理", [10,16],data_list)
 

@@ -6,7 +6,9 @@ import config
 import os
 from PyQt5.QtGui import QIcon
 import protocol
-import frame_fun,frame_csg, subsocket
+import frame_csg, subsocket
+from ..plugins.frame_fun import FrameFun as frame_fun
+from ..plugins.frame_fun import CustomMessageBox
 from screeninfo import get_monitors
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtCore import QRegExp
@@ -218,7 +220,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.tree_widget.expandAll()
             self.input_text.textChanged.connect(self.display_tree)
         except ValueError:
-            frame_fun.CustomMessageBox("告警",'输入的字符中包含非十六进制字符！')
+            CustomMessageBox("告警",'输入的字符中包含非十六进制字符！')
             self.input_text.textChanged.disconnect(self.display_tree)
                 # 保存当前文本内容
             temp_text = self.input_text.toPlainText()

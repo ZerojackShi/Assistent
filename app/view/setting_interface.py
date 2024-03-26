@@ -6,23 +6,24 @@ from qfluentwidgets import (SettingCardGroup, SwitchSettingCard, FolderListSetti
                             setTheme, setThemeColor, RangeSettingCard, isDarkTheme,Pivot,qrouter,IndicatorPosition,FluentIconBase,
                             qconfig,LineEdit,ComboBox,PrimaryPushButton,SwitchButton,ConfigItem, SettingCard,PlainTextEdit,IconWidget)
 from qfluentwidgets import FluentIcon as FIF
-from qfluentwidgets import InfoBar
-from PyQt5.QtCore import Qt, pyqtSignal, QUrl, QStandardPaths,QRegExp
-from PyQt5.QtGui import QDesktopServices,QIcon,QPainter,QColor,QRegExpValidator,QFont
+from qfluentwidgets import InfoBar,ProgressBar, FluentWindow, MessageBox
+from PyQt5.QtCore import Qt, pyqtSignal, QUrl, QStandardPaths,QRegExp,QMetaObject
+from PyQt5.QtGui import QDesktopServices,QIcon,QPainter,QColor,QRegExpValidator,QFont, QResizeEvent
 from PyQt5.QtWidgets import QWidget, QLabel, QFileDialog,QPushButton
 from typing import Union
-from ..common.config import cfg, HELP_URL, FEEDBACK_URL, AUTHOR, VERSION, YEAR, isWin11
+from ..common.config import cfg, HELP_URL, FEEDBACK_URL, AUTHOR, VERSION, YEAR, isWin11,REPO_OWNER,REPO_NAME
 from ..common.signal_bus import signalBus
 from ..common.style_sheet import StyleSheet
+from ..plugins.update import UpdateThread
 from PyQt5.QtWidgets import QWidget, QStackedWidget, QVBoxLayout, QLabel, QHBoxLayout, QFrame, QSizePolicy
 import serial.tools.list_ports
-from ..plugins.signalCommunication import CommunicationModule
+from ..plugins.signalCommunication import SerialPortThread,TcpServer,TcpClient,MQTTClientThread
 from ..common.commodule import CommType,commmbus
 from ..components.state_tools import CustomStateToolTip
 from ..common.icon import Icon
-import serial
-from PyQt5.QtCore import QObject
-
+import serial,os,gc
+from PyQt5.QtNetwork import QAbstractSocket
+from PyQt5.QtSerialPort import QSerialPort
 class CustomVBoxLayout(QVBoxLayout):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -41,7 +42,10 @@ class Tcpconfig(QWidget):
     def __init__(self, type, label1, label2, parent=None):
         super().__init__(parent=parent)
         self.type = type
-        self.setFixedSize(300, 100)
+        self.Thread = None
+        self.stateTooltip = None
+        self.tcp_server = None
+        self.setFixedSize(300, 150)
         ip_validator = QRegExpValidator(QRegExp(r"\b(?:\d{1,3}\.){3}\d{1,3}\b"))
         self.iplayout = QHBoxLayout()  # 使用水平布局
         self.iplabel = QLabel(label1)
@@ -68,9 +72,11 @@ class Tcpconfig(QWidget):
         self.qvlayout = CustomVBoxLayout(self)  # 使用垂直布局
         self.qvlayout.addLayout(self.iplayout)
         self.qvlayout.addLayout(self.portlayout)
-
+        self.qvlayout.addSpacing(5)
+        self.connectButon = PrimaryPushButton('连接')
+        self.connectButon.setFixedWidth(95)
         self.qvlayout.setContentsMargins(0,0,0,0)
-        self.qvlayout.setSpacing(2)
+        self.qvlayout.addWidget(self.connectButon)
         self.init_widget()
 
     def init_widget(self):
@@ -82,6 +88,9 @@ class Tcpconfig(QWidget):
             port = cfg.get(cfg.tcpServerPort)
         self.ipNumberInput.setText(ip)
         self.portNumberInput.setText(str(port))
+        self.connectButon.setCheckable(True)
+        self.connectButon.setProperty('is_reconnectable', True)
+        self.connectButon.clicked.connect(self.connectProcess)
 
     def setAlignment(self, a0: Union[Qt.Alignment, Qt.AlignmentFlag]):
         self.qvlayout.setAlignment(a0)
@@ -95,11 +104,179 @@ class Tcpconfig(QWidget):
         self.ipNumberInput.setEnabled(enable)
         self.portNumberInput.setEnabled(enable)
     
+    def connectProcess(self):
+        self.config_save()
+        self.set_edit_enable(False)
+        self.connectButon.setEnabled(False)
+        is_reconnectable = self.connectButon.property('is_reconnectable')
+        if is_reconnectable:
+            # 按钮按下，尝试连接
+            params = self.get_tcp_connect_param()
+            if '' not in params:
+                ipaddr, port = params
+                # if self.tcp_server is not None:
+                #     self.tcp_server.stopsingal.emit()
+                #     self.tcp_server.deleteLater()
+                #     self.tcp_server = None
+                #     gc.collect()
+                self.link_err_process(25)
+                try:
+                    if self.type == CommType.TCP_SERVICE:
+                        self.tcp_server = TcpServer(ipaddr, port)
+                        self.tcp_server.err_event.connect(self.link_err_process)
+                        self.tcp_server.run()
+                    elif self.type == CommType.TCP_CLIENT:
+                        self.tcp_server = TcpClient(ipaddr, port)
+                        self.tcp_server.err_event.connect(self.link_err_process)
+                        # self.tcp_server.try_connect.emit()
+                        self.tcp_server.start()
+                except Exception as e:
+                    print(f"creat error {e}")
+        else:
+            # 按钮未按下，断开连接
+            if self.tcp_server is not None:
+                if self.type == CommType.TCP_CLIENT:
+                    signalBus.channel_disconnected.emit(self.type, self.tcp_server)
+                else:
+                    client_dic = self.tcp_server.get_socket_dic()
+                    for worker in client_dic.values():
+                        signalBus.channel_disconnected.emit(self.type, worker)
+                
+                self.tcp_server.stopsingal.emit()
+                self.tcp_server.deleteLater()
+                self.tcp_server = None
+                gc.collect()
+            
+            self.set_edit_enable(True)
+            
+    def config_save(self):
+        self.update_connect_param()
+    def link_err_process(self, errcode):
+        if errcode == 25:
+            self.stateTooltip = CustomStateToolTip(FIF.SYNC, self.tr('正在连接...'), self.window())
+            self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+            self.stateTooltip.show()
+        elif errcode == 255:
+            if self.stateTooltip:
+                self.stateTooltip.setTitle(self.tr("连接成功"))
+                self.stateTooltip.seticon(FIF.COMPLETED)
+                self.stateTooltip.setState(True)
+                self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+                self.stateTooltip = None
+            else:
+                self.stateTooltip = CustomStateToolTip(FIF.COMPLETED, self.tr('连接成功'), self.window())
+                self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+                self.stateTooltip.show()
+                self.stateTooltip.setState(True)
+                self.stateTooltip = None
+            
+            self.connectButon.setProperty('is_reconnectable', False)
+            self.connectButon.setText(self.tr('断开'))
+        elif errcode == 404:
+            if self.stateTooltip:
+                self.stateTooltip.setTitle(self.tr("断开成功"))
+                self.stateTooltip.seticon(FIF.COMPLETED)
+                self.stateTooltip.setState(True)
+                self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+                self.stateTooltip = None
+            else:
+                self.stateTooltip = CustomStateToolTip(FIF.COMPLETED, self.tr('断开成功'), self.window())
+                self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+                self.stateTooltip.show()
+                self.stateTooltip.setState(True)
+                self.stateTooltip = None
+            self.connectButon.setProperty('is_reconnectable', True)
+            self.connectButon.setText(self.tr('连接'))
+        else:
+            error_messages = {
+                QAbstractSocket.SocketError.ConnectionRefusedError: '连接被远程主机拒绝',
+                QAbstractSocket.SocketError.RemoteHostClosedError: '远程主机关闭了连接',
+                QAbstractSocket.SocketError.HostNotFoundError: '未找到主机（主机名无效或无法解析）',
+                QAbstractSocket.SocketError.SocketAccessError: '尝试访问套接字的操作被拒绝',
+                QAbstractSocket.SocketError.SocketResourceError: '分配套接字资源失败',
+                QAbstractSocket.SocketError.SocketTimeoutError: '操作在套接字上超时',
+                QAbstractSocket.SocketError.DatagramTooLargeError: '尝试发送的数据报太大',
+                QAbstractSocket.SocketError.NetworkError: '通用的网络错误，无法指定具体的错误',
+                QAbstractSocket.SocketError.AddressInUseError: '地址已在使用中',
+                QAbstractSocket.SocketError.SocketAddressNotAvailableError: '尝试绑定或连接到不可用的地址',
+                QAbstractSocket.SocketError.UnsupportedSocketOperationError: '不支持的套接字操作',
+                QAbstractSocket.SocketError.UnfinishedSocketOperationError: '套接字操作未完成',
+                QAbstractSocket.SocketError.ProxyAuthenticationRequiredError: '代理要求身份验证',
+                QAbstractSocket.SocketError.SslHandshakeFailedError: 'SSL 握手失败',
+                QAbstractSocket.SocketError.ProxyConnectionRefusedError: '代理服务器拒绝连接',
+                QAbstractSocket.SocketError.ProxyConnectionClosedError: '代理服务器关闭了连接',
+                QAbstractSocket.SocketError.ProxyConnectionTimeoutError: '代理连接超时',
+                QAbstractSocket.SocketError.ProxyNotFoundError: '代理服务器未找到',
+                QAbstractSocket.SocketError.ProxyProtocolError: '代理协议错误',
+                QAbstractSocket.SocketError.OperationError: '操作失败',
+                QAbstractSocket.SocketError.SslInternalError: 'SSL 内部错误',
+                QAbstractSocket.SocketError.SslInvalidUserDataError: 'SSL 无效用户数据错误',
+                QAbstractSocket.SocketError.TemporaryError: '暂时性错误，可以尝试再次执行操作',
+                QAbstractSocket.SocketError.UnknownSocketError: '未知的套接字错误，无法指定具体的错误',
+                # 添加其他可能的错误代码和对应的描述信息
+            }
+            error_message = error_messages.get(errcode, f'Socket Error: {errcode} 😞')
+            if self.stateTooltip is None:
+                self.stateTooltip = CustomStateToolTip(Icon.ERROR, self.tr(error_message), self.window())
+                self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+                self.stateTooltip.show()
+            else:
+                self.stateTooltip.seticon(Icon.ERROR)
+                self.stateTooltip.setTitle(error_message)
+                self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+            
+            self.stateTooltip.setState(True)
+            self.stateTooltip = None
+            self.connectButon.setProperty('is_reconnectable', True)
+            self.connectButon.setText(self.tr('连接'))
+            self.stateTooltip = None
+
+        if errcode != 25:
+            self.connectButon.setEnabled(True)
+        if errcode not in (25, 255):
+            self.set_edit_enable(True)
+    def update_connect_param(self):
+        # 设置串口配置
+        if self.type == CommType.TCP_CLIENT:
+            params = self.get_tcp_connect_param()
+            ip, port = params
+            cfg.set(cfg.tcpClientIP, ip)
+            cfg.set(cfg.tcpClientPort, port)
+        else:
+            params = self.get_tcp_connect_param()
+            ip, port = params
+            cfg.set(cfg.tcpServerIP, ip)
+            cfg.set(cfg.tcpServerPort, port)
+    def get_connect_result(self, status):
+        self.connectStatus = status
+        self.onStateButtonClicked()
+        commmbus.link_port = self.commnectModule
+        if self.connecttype == CommType.SERIAL:
+            commmbus.channel = self.commnectModule.serial
+        elif self.connecttype == CommType.TCP_CLIENT:
+            commmbus.channel = self.commnectModule.tcp_socket
+        elif self.connecttype == CommType.TCP_SERVICE:
+            commmbus.channel = self.commnectModule.clientSocket
+        commmbus.link_status = status
+        if status:
+            self.Conconfig.set_edit_enable(self.connecttype, False)
+            self.connectButon.setEnabled(True)
+        else:
+            self.connectButon.setEnabled(True)
+            self.Conconfig.set_edit_enable(self.connecttype, True)
+
+    def tcp_socket_change_process(self,socket_list):
+        commmbus.tcpSocket = socket_list
+        signalBus.tcpSocketChange.emit(socket_list)
+        
+    
 class SerialConfig(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
-        self.setFixedSize(300, 200)
+        self.serial_manager = None
+        self.stateTooltip = None
+        self.setFixedSize(300, 250)
         self.serialPortlayout = QHBoxLayout()  # 使用水平布局
         self.serialPortlabel = QLabel('串口号')
         self.serialPortlabel.setAlignment(Qt.AlignLeft)
@@ -136,6 +313,8 @@ class SerialConfig(QWidget):
         self.StopBitlayout.addWidget(self.StopBitlabel)
         self.StopBitlayout.addWidget(self.StopBitComBox)
 
+        self.connectButon = PrimaryPushButton('连接')
+        self.connectButon.setFixedWidth(85)
 
         self.qvlayout = CustomVBoxLayout(self)  # 使用垂直布局
         self.qvlayout.addLayout(self.serialPortlayout)
@@ -143,6 +322,9 @@ class SerialConfig(QWidget):
         self.qvlayout.addLayout(self.Checklayout)
         self.qvlayout.addLayout(self.DataBitlayout)
         self.qvlayout.addLayout(self.StopBitlayout)
+        self.qvlayout.addSpacing(5)
+        self.qvlayout.addWidget(self.connectButon)
+        self.qvlayout.setContentsMargins(0,0,0,0)
 
         self._init_Widgets()
 
@@ -156,7 +338,7 @@ class SerialConfig(QWidget):
         self.DataBitComBox.addItems(self.databit)
         self.stopbit = ['1','1.5','2']
         self.StopBitComBox.addItems(self.stopbit)
-
+        self.connectButon.setProperty('is_reconnectable', True)
         # 读取串口配置
         baud_rate = cfg.get(cfg.serial_BaudRate)
         parity = cfg.get(cfg.serial_parity)
@@ -184,6 +366,7 @@ class SerialConfig(QWidget):
 
         self.qvlayout.setContentsMargins(0,0,0,0)
         self.qvlayout.setSpacing(2)
+        self.connectButon.clicked.connect(self.connect_serial)
 
     def setAlignment(self, a0: Union[Qt.Alignment, Qt.AlignmentFlag]):
         self.qvlayout.setAlignment(a0)
@@ -202,37 +385,37 @@ class SerialConfig(QWidget):
     
     def get_serial_check(self):
         if self.CheckComBox.currentIndex() == 0:
-            check = serial.PARITY_ODD
+            check = QSerialPort.Parity.OddParity
         elif self.CheckComBox.currentIndex() == 1:
-            check = serial.PARITY_EVEN
+            check = QSerialPort.Parity.EvenParity
         elif self.CheckComBox.currentIndex() == 2:
-            check = serial.PARITY_NONE
+            check = QSerialPort.Parity.NoParity
         else:
-            check = serial.PARITY_NONE
+            check = QSerialPort.Parity.NoParity
         return check
     
     def get_serial_datait(self):
         if self.DataBitComBox.currentIndex() == 0:
-            databit = serial.FIVEBITS
+            databit = QSerialPort.DataBits.Data5
         elif self.DataBitComBox.currentIndex() == 1:
-            databit = serial.SIXBITS
+            databit = QSerialPort.DataBits.Data6
         elif self.DataBitComBox.currentIndex == 2:
-            databit = serial.SEVENBITS
+            databit = QSerialPort.DataBits.Data7
         elif self.DataBitComBox.currentIndex() == 3:
-            databit = serial.EIGHTBITS
+            databit = QSerialPort.DataBits.Data8
         else:
-            databit = serial.EIGHTBITS
+            databit = QSerialPort.DataBits.Data8
         return databit
     
     def get_serial_stopbit(self):
         if self.StopBitComBox.currentIndex() == 0:
-            stopbit = serial.STOPBITS_ONE
+            stopbit = QSerialPort.StopBits.OneStop
         elif self.StopBitComBox.currentIndex() == 1:
-            stopbit = serial.STOPBITS_ONE_POINT_FIVE
+            stopbit = QSerialPort.StopBits.OneAndHalfStop
         elif self.StopBitComBox.currentIndex() == 2:
-            stopbit = serial.STOPBITS_TWO
+            stopbit = QSerialPort.StopBits.TwoStop
         else:
-            stopbit = serial.STOPBITS_ONE
+            stopbit = QSerialPort.StopBits.OneStop
         return stopbit
     
     def set_edit_enable(self, enable=True):
@@ -241,15 +424,116 @@ class SerialConfig(QWidget):
         self.CheckComBox.setEnabled(enable)
         self.DataBitComBox.setEnabled(enable)
         self.StopBitComBox.setEnabled(enable)
+    def update_connect_param(self):
+        # 设置串口配置
+        comname,budrate,check,databit,stopbit = self.get_serial_connect_param()
+        cfg.set(cfg.serial_BaudRate, budrate)
+        cfg.set(cfg.serial_parity, check)
+        cfg.set(cfg.serial_databit, databit)
+        cfg.set(cfg.serial_stopbit, stopbit)
+    def connect_serial(self):
+        self.set_edit_enable(False)
+        self.connectButon.setEnabled(False)
+        self.update_connect_param()
+        is_reconnectable = self.connectButon.property('is_reconnectable')
+        if is_reconnectable:
+            self.link_err_process(25)
+            try:
+                comname,budrate,check,databit,stopbit = self.get_serial_connect_param()
+                self.serial_manager = SerialPortThread(comname,budrate,check,databit,stopbit)
+                self.serial_manager.err_event.connect(self.link_err_process)
+                self.serial_manager.start()
+            except Exception as e:
+                pass
+        else:
+            self.set_edit_enable(True)
+            self.serial_manager.stopsingal.emit()
+            signalBus.channel_disconnected.emit(CommType.SERIAL, self.serial_manager)
+    def link_err_process(self, errcode):
+        if errcode == 25:
+            self.stateTooltip = CustomStateToolTip(FIF.SYNC, self.tr('正在连接...'), self.window())
+            self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+            self.stateTooltip.show()
+        elif errcode == 255:
+            if self.stateTooltip:
+                self.stateTooltip.setTitle(self.tr("连接成功"))
+                self.stateTooltip.seticon(FIF.COMPLETED)
+                self.stateTooltip.setState(True)
+                self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+                self.stateTooltip = None
+            else:
+                self.stateTooltip = CustomStateToolTip(FIF.COMPLETED, self.tr('连接成功'), self.window())
+                self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+                self.stateTooltip.show()
+                self.stateTooltip.setState(True)
+                self.stateTooltip = None
+            
+            self.connectButon.setProperty('is_reconnectable', False)
+            self.connectButon.setText(self.tr('断开'))
+        elif errcode == 404:
+            if self.stateTooltip:
+                self.stateTooltip.setTitle(self.tr("断开成功"))
+                self.stateTooltip.seticon(FIF.COMPLETED)
+                self.stateTooltip.setState(True)
+                self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+                self.stateTooltip = None
+            else:
+                self.stateTooltip = CustomStateToolTip(FIF.COMPLETED, self.tr('断开成功'), self.window())
+                self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+                self.stateTooltip.show()
+                self.stateTooltip.setState(True)
+                self.stateTooltip = None
+            self.connectButon.setProperty('is_reconnectable', True)
+            self.connectButon.setText(self.tr('连接'))
+        else:
+            error_messages = {
+                QSerialPort.SerialPortError.NoError: '串口操作成功',
+                QSerialPort.SerialPortError.DeviceNotFoundError: '未找到指定的串口设备',
+                QSerialPort.SerialPortError.PermissionError: '没有权限访问串口设备',
+                QSerialPort.SerialPortError.OpenError: '打开串口设备时发生错误',
+                QSerialPort.SerialPortError.ParityError: '串口通信中的奇偶校验错误',
+                QSerialPort.SerialPortError.FramingError: '帧错误，即接收到的数据无法解析成有效的帧',
+                QSerialPort.SerialPortError.BreakConditionError: '接收到了中断信号',
+                QSerialPort.SerialPortError.WriteError: '写入串口设备时发生错误',
+                QSerialPort.SerialPortError.ReadError: '读取串口设备时发生错误',
+                QSerialPort.SerialPortError.ResourceError: '资源错误',
+                QSerialPort.SerialPortError.UnsupportedOperationError: '不支持的操作错误',
+                QSerialPort.SerialPortError.TimeoutError: '串口操作超时',
+                QSerialPort.SerialPortError.NotOpenError: '串口没有打开',
+                QSerialPort.SerialPortError.UnknownError: '未知错误',
+                # 添加其他可能的错误代码和对应的描述信息
+            }
+            error_message = error_messages.get(errcode, f'Socket Error: {errcode} 😞')
+            if self.stateTooltip is None:
+                self.stateTooltip = CustomStateToolTip(Icon.ERROR, self.tr(error_message), self.window())
+                self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+                self.stateTooltip.show()
+            else:
+                self.stateTooltip.seticon(Icon.ERROR)
+                self.stateTooltip.setTitle(error_message)
+                self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+            
+            self.stateTooltip.setState(True)
+            self.stateTooltip = None
+            self.connectButon.setProperty('is_reconnectable', True)
+            self.connectButon.setText(self.tr('连接'))
+            self.stateTooltip = None
+
+        if errcode != 25:
+            self.connectButon.setEnabled(True)  
+        if errcode not in (25, 255):
+            self.set_edit_enable(True) 
 
 class MqttConfig(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.type = type
-        self.setFixedSize(300, 100)
+        self.type = CommType.MQTT
+        self.stateTooltip = None
+        self.mqtt_thread = None
+        self.setFixedSize(300, 250)
         ip_validator = QRegExpValidator(QRegExp(r"\b(?:\d{1,3}\.){3}\d{1,3}\b"))
         self.iplayout = QHBoxLayout()  # 使用水平布局
-        self.iplabel = QLabel("主机IP")
+        self.iplabel = QLabel("远程地址")
         self.iplabel.setFont(QFont("Courier New", 12))
         self.iplabel.setAlignment(Qt.AlignLeft)
         self.ipNumberInput = LineEdit()
@@ -270,35 +554,168 @@ class MqttConfig(QWidget):
         self.portlayout.addWidget(self.portlabel, 1)
         self.portlayout.addWidget(self.portNumberInput)
 
+        self.usernamelayout = QHBoxLayout()  # 使用水平布局
+        self.usernamelabel = QLabel()
+        self.usernamelabel.setText("用户名")
+        self.usernamelabel.setFont(QFont("Courier New", 12))
+        self.usernamelabel.setAlignment(Qt.AlignLeft)
+        self.usernameNumberInput = LineEdit()
+        self.usernameNumberInput.setMaximumWidth(200)
+        self.usernameNumberInput.setAlignment(Qt.AlignRight)
+        self.usernamelayout.addWidget(self.usernamelabel, 1)
+        self.usernamelayout.addWidget(self.usernameNumberInput)
+
+        self.passwdlayout = QHBoxLayout()  # 使用水平布局
+        self.passwdlabel = QLabel()
+        self.passwdlabel.setText("密码")
+        self.passwdlabel.setFont(QFont("Courier New", 12))
+        self.passwdlabel.setAlignment(Qt.AlignLeft)
+        self.passwdNumberInput = LineEdit()
+        self.passwdNumberInput.setMaximumWidth(200)
+        self.passwdNumberInput.setAlignment(Qt.AlignRight)
+        self.passwdlayout.addWidget(self.passwdlabel, 1)
+        self.passwdlayout.addWidget(self.passwdNumberInput)
+
         self.qvlayout = CustomVBoxLayout(self)  # 使用垂直布局
         self.qvlayout.addLayout(self.iplayout)
         self.qvlayout.addLayout(self.portlayout)
-
+        self.qvlayout.addLayout(self.usernamelayout)
+        self.qvlayout.addLayout(self.passwdlayout)
+        self.qvlayout.addSpacing(5)
+        self.connectButon = PrimaryPushButton('连接')
+        self.connectButon.setFixedWidth(95)
         self.qvlayout.setContentsMargins(0,0,0,0)
-        self.qvlayout.setSpacing(2)
+        self.qvlayout.addWidget(self.connectButon)
         self.init_widget()
 
     def init_widget(self):
-        if self.type == CommType.TCP_CLIENT:
-            ip = cfg.get(cfg.tcpClientIP)
-            port = cfg.get(cfg.tcpClientPort)
-        else:
-            ip = cfg.get(cfg.tcpServerIP)
-            port = cfg.get(cfg.tcpServerPort)
+        ip = cfg.get(cfg.mqttip)
+        port = cfg.get(cfg.mqttport)
+        user = cfg.get(cfg.mqttuser)
+        passwd = cfg.get(cfg.mqttpasswd)
         self.ipNumberInput.setText(ip)
         self.portNumberInput.setText(str(port))
+        self.usernameNumberInput.setText(str(user))
+        self.passwdNumberInput.setText(str(passwd))
+        self.connectButon.setCheckable(True)
+        self.connectButon.setProperty('is_reconnectable', True)
+        self.connectButon.clicked.connect(self.connect_mqtt)
 
     def setAlignment(self, a0: Union[Qt.Alignment, Qt.AlignmentFlag]):
         self.qvlayout.setAlignment(a0)
 
-    def get_tcp_connect_param(self):
+    def get_connect_param(self):
         port = self.portNumberInput.text()
-        ipaddr = self.ipNumberInput.text()    
-        return ipaddr,int(port)
+        ipaddr = self.ipNumberInput.text()   
+        name = self.usernameNumberInput.text()
+        passwd = self.passwdNumberInput.text() 
+        return ipaddr,int(port), name, passwd
     
     def set_edit_enable(self, enable=True):
         self.ipNumberInput.setEnabled(enable)
         self.portNumberInput.setEnabled(enable)
+        self.usernameNumberInput.setEnabled(enable)
+        self.passwdNumberInput.setEnabled(enable)
+
+    def update_connect_param(self):
+        # 设置串口配置
+        ip, port, name, passwd = self.get_connect_param()
+        cfg.set(cfg.mqttip, ip)
+        cfg.set(cfg.mqttport, port)
+        cfg.set(cfg.mqttuser, name)
+        cfg.set(cfg.mqttpasswd, passwd)
+    def connect_mqtt(self):
+        self.set_edit_enable(False)
+        self.connectButon.setEnabled(False)
+        self.update_connect_param()
+        is_reconnectable = self.connectButon.property('is_reconnectable')
+        if is_reconnectable:
+            self.link_err_process(25)
+            try:
+                ip, port, name, passwd = self.get_connect_param()
+                self.mqtt_thread = MQTTClientThread(ip, port, name, passwd)
+                self.mqtt_thread.err_event.connect(self.link_err_process)
+                self.mqtt_thread.start()
+            except Exception as e:
+                pass
+        else:
+            self.set_edit_enable(True)
+            self.mqtt_thread.stopsingal.emit()
+            signalBus.channel_disconnected.emit(CommType.MQTT, self.mqtt_thread)
+    def link_err_process(self, errcode):
+        if errcode == 25:
+            self.stateTooltip = CustomStateToolTip(FIF.SYNC, self.tr('正在连接...'), self.window())
+            self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+            self.stateTooltip.show()
+        elif errcode == 255:
+            if self.stateTooltip:
+                self.stateTooltip.setTitle(self.tr("连接成功"))
+                self.stateTooltip.seticon(FIF.COMPLETED)
+                self.stateTooltip.setState(True)
+                self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+                self.stateTooltip = None
+            else:
+                self.stateTooltip = CustomStateToolTip(FIF.COMPLETED, self.tr('连接成功'), self.window())
+                self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+                self.stateTooltip.show()
+                self.stateTooltip.setState(True)
+                self.stateTooltip = None
+            
+            self.connectButon.setProperty('is_reconnectable', False)
+            self.connectButon.setText(self.tr('断开'))
+        elif errcode == 404:
+            if self.stateTooltip:
+                self.stateTooltip.setTitle(self.tr("断开成功"))
+                self.stateTooltip.seticon(FIF.COMPLETED)
+                self.stateTooltip.setState(True)
+                self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+                self.stateTooltip = None
+            else:
+                self.stateTooltip = CustomStateToolTip(FIF.COMPLETED, self.tr('断开成功'), self.window())
+                self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+                self.stateTooltip.show()
+                self.stateTooltip.setState(True)
+                self.stateTooltip = None
+            self.connectButon.setProperty('is_reconnectable', True)
+            self.connectButon.setText(self.tr('连接'))
+        else:
+            error_messages = {
+                QSerialPort.SerialPortError.NoError: '串口操作成功',
+                QSerialPort.SerialPortError.DeviceNotFoundError: '未找到指定的串口设备',
+                QSerialPort.SerialPortError.PermissionError: '没有权限访问串口设备',
+                QSerialPort.SerialPortError.OpenError: '打开串口设备时发生错误',
+                QSerialPort.SerialPortError.ParityError: '串口通信中的奇偶校验错误',
+                QSerialPort.SerialPortError.FramingError: '帧错误，即接收到的数据无法解析成有效的帧',
+                QSerialPort.SerialPortError.BreakConditionError: '接收到了中断信号',
+                QSerialPort.SerialPortError.WriteError: '写入串口设备时发生错误',
+                QSerialPort.SerialPortError.ReadError: '读取串口设备时发生错误',
+                QSerialPort.SerialPortError.ResourceError: '资源错误',
+                QSerialPort.SerialPortError.UnsupportedOperationError: '不支持的操作错误',
+                QSerialPort.SerialPortError.TimeoutError: '串口操作超时',
+                QSerialPort.SerialPortError.NotOpenError: '串口没有打开',
+                QSerialPort.SerialPortError.UnknownError: '未知错误',
+                # 添加其他可能的错误代码和对应的描述信息
+            }
+            error_message = error_messages.get(errcode, 'MQTT 连接失败 😞')
+            if self.stateTooltip is None:
+                self.stateTooltip = CustomStateToolTip(Icon.ERROR, self.tr(error_message), self.window())
+                self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+                self.stateTooltip.show()
+            else:
+                self.stateTooltip.seticon(Icon.ERROR)
+                self.stateTooltip.setTitle(error_message)
+                self.stateTooltip.move(self.stateTooltip.getSuitablePos())
+            
+            self.stateTooltip.setState(True)
+            self.stateTooltip = None
+            self.connectButon.setProperty('is_reconnectable', True)
+            self.connectButon.setText(self.tr('连接'))
+            self.stateTooltip = None
+
+        if errcode != 25:
+            self.connectButon.setEnabled(True)  
+        if errcode not in (25, 255):
+            self.set_edit_enable(True) 
 
 class ConnectConfig(QWidget):
     """ Pivot interface """
@@ -311,24 +728,24 @@ class ConnectConfig(QWidget):
         self.pivot = self.Nav(self)
         self.stackedWidget = QStackedWidget(self)
         self.vBoxLayout = QVBoxLayout(self)
-        self.setFixedSize(300, 140)
-        text = "<font>端&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;口</font>"
+        self.setFixedSize(300, 200)
+        text = "<font>端&nbsp;&nbsp;&nbsp;口</font>"
         self.tcpclientInterface = Tcpconfig(CommType.TCP_CLIENT, '远程地址',text,self)
         self.tcpserverInterface = Tcpconfig(CommType.TCP_SERVICE, '本地地址',text, self)
         self.serialInterface = SerialConfig(self)
-        # self.mqttInterface = MqttConfig(self)
+        self.mqttInterface = MqttConfig(self)
         # add items to pivot
         self.addSubInterface(self.tcpclientInterface, 'tcpclientInterface', self.tr('TCP客户端'))
         self.addSubInterface(self.tcpserverInterface, 'tcpserverInterface', self.tr('TCP服务器'))
         self.addSubInterface(self.serialInterface, 'serialInterface', self.tr('串口'))
-        # self.addSubInterface(self.mqttInterface, 'mqttInterface', self.tr('MQTT'))
-
+        self.addSubInterface(self.mqttInterface, 'mqttInterface', self.tr('MQTT'))
         self.vBoxLayout.addWidget(self.pivot, 0, Qt.AlignLeft)
         self.vBoxLayout.addWidget(self.stackedWidget)
         self.vBoxLayout.setContentsMargins(0, 0, 0, 0)
         StyleSheet.NAVIGATION_VIEW_INTERFACE.apply(self)
 
         self.stackedWidget.currentChanged.connect(self.onCurrentIndexChanged)
+        self.onCurrentIndexChanged(0)
         self.stackedWidget.setCurrentWidget(self.tcpclientInterface)
         self.pivot.setCurrentItem(self.tcpclientInterface.objectName())
 
@@ -362,6 +779,7 @@ class ConnectConfig(QWidget):
         # 在这里执行你想要的操作
         # 发射自定义信号以通知大小变化
         self.sizeChanged.emit()
+        return super().resizeEvent(event)
 
     def get_connect_type(self)->CommType:
         return self.connectType
@@ -392,19 +810,17 @@ class ConnectCard(QFrame):
         self.setObjectName('setting_card')
         self.hBoxLayout = QHBoxLayout(self)
         self.Conconfig = ConnectConfig()
-        self.connectButon = PrimaryPushButton('连接', self)
-        self.connectButon.setFixedWidth(95)
-        self.hBoxLayout.addSpacing(16)
+        self.Conconfig.resizeEvent = self.resizeEvent
         self.hBoxLayout.addWidget(self.Conconfig,0, Qt.AlignLeft)
-        self.hBoxLayout.addStretch(1)  # 伸缩空间，将后续的控件推到右边
-        self.hBoxLayout.addWidget(self.connectButon, 0, Qt.AlignRight)
         self.hBoxLayout.addSpacing(16)
-        self.setFixedHeight(self.Conconfig.height() + 15)
         StyleSheet.SET_CARD.apply(self)
-        self.Conconfig.sizeChanged.connect(self.update_size)
-        self.connectButon.clicked.connect(self.connectProcess)
         self.commnectModule = None
         self.connecttype = None
+        self.update_size()
+    
+    def resizeEvent(self, a0: QResizeEvent | None) -> None:
+        self.update_size()
+        return super().resizeEvent(a0)
     def update_size(self):
         self.setFixedHeight(self.Conconfig.height() + 15)
     
@@ -420,67 +836,6 @@ class ConnectCard(QFrame):
             painter.setPen(QColor(0, 0, 0, 19))
 
         painter.drawRoundedRect(self.rect().adjusted(1, 1, -1, -1), 6, 6)
-
-    def connectProcess(self):
-        if self.connectStatus and self.commnectModule is not None:
-            self.commnectModule.connection_result.connect(self.get_connect_result)
-            self.commnectModule.tcpSocketChange.connect(self.tcp_socket_change_process)
-            self.commnectModule.close()
-            self.Conconfig.set_edit_enable(self.connecttype, True)
-        else:
-            self.connectButon.setEnabled(False)
-            self.onStateButtonClicked()
-            self.connecttype = self.Conconfig.get_connect_type()
-            if self.connecttype == CommType.SERIAL:
-                params = self.Conconfig.get_serial_connect_param()
-                if None not in params:
-                    comname, budrate, check, data, stop = params
-                    self.update_connect_param(params)
-                    # 所有参数都不为空
-                    # 执行你的代码
-                    self.commnectModule = CommunicationModule(
-                    self.connecttype, 
-                    serial_port=comname, 
-                    baudrate=budrate,
-                    databit=data,
-                    checktype=check,
-                    stopbit=stop
-                    )
-            elif self.connecttype == CommType.TCP_CLIENT:
-                params = self.Conconfig.get_tcp_connect_param()
-                if '' not in params:
-                    ipaddr, port = params
-                    self.update_connect_param(params)
-                    # 所有参数都不为空
-                    # 执行你的代码
-                    self.commnectModule = CommunicationModule(
-                    self.connecttype, 
-                    tcp_ip = ipaddr,
-                    tcp_port = port
-                    )
-
-            elif self.connecttype == CommType.TCP_SERVICE:
-                params = self.Conconfig.get_tcp_connect_param()
-                if '' not in params:
-                    ipaddr, port = params
-                    self.update_connect_param(params)
-                    # 所有参数都不为空
-                    # 执行你的代码
-                    self.commnectModule = CommunicationModule(
-                    self.connecttype, 
-                    tcp_ip = ipaddr,
-                    tcp_port = port
-                    )
-
-            if self.commnectModule:
-                self.commnectModule.connection_result.connect(self.get_connect_result)
-                self.commnectModule.tcpSocketChange.connect(self.tcp_socket_change_process)
-                self.commnectModule.connect()
-            else:
-                self.connectStatus = False
-                self.onStateButtonClicked()
-                self.connectButon.setEnabled(True)
-                self.connectButon.setText('连接')
 
     def get_connect_result(self, status):
         self.connectStatus = status
@@ -709,6 +1064,89 @@ class MultiReportSetingCard(QFrame):
 
         painter.drawRoundedRect(self.rect().adjusted(1, 1, -1, -1), 6, 6)   
 
+class CheckUpgradeCard(SettingCard):
+    """ Push setting card with primary color """
+
+    def __init__(self, text, icon, title, content=None, parent=None):
+        super().__init__(icon, title, content, parent)
+        self.widget = QWidget(self)
+        self.hBoxLayout.addWidget(self.widget, 0, Qt.AlignRight)
+        self.hBoxLayout.addSpacing(16)
+        self.button = QPushButton(text)
+        self.button.setObjectName('primaryButton')
+        self.update_thread = None
+        self.ring = ProgressBar()
+        # self.ring.setFixedWidth(self.widget.width())
+        self.ring.setTextVisible(True)
+        # self.ring.setVisible(False)
+        self.ring.setRange(0, 100)
+        self.button.setFixedWidth(82)
+        self.process = QLabel()
+        self.downlabel = QLabel()
+        self.downlayout = QHBoxLayout()
+        self.downlayout.addWidget(self.process)
+        self.downlayout.addSpacing(10)
+        self.downlayout.addWidget(self.ring)
+        self.downlayout.addSpacing(10)
+        self.downlayout.addWidget(self.downlabel)
+        self.wqvBoxLayout = QVBoxLayout(self.widget)
+        self.wqvBoxLayout.addWidget(self.button, 0, Qt.AlignRight)
+        self.wqvBoxLayout.setContentsMargins(0,0,0,0)
+        # self.wqvBoxLayout.addWidget(self.ring)
+        self.button.clicked.connect(self.__onAboutCardClicked)
+        signalBus.upgrade.connect(self.__onAboutCardClicked)
+    def __onAboutCardClicked(self):
+        if self.update_thread is not None and self.update_thread.isRunning():
+            return
+        # 创建工作线程实例
+        self.update_thread = UpdateThread()
+        # 连接信号和槽
+        self.update_thread.update_signal.connect(self.update_ui)
+        self.update_thread.process_info.connect(self.update_process_info)
+        self.update_thread.update_info.connect(self.update_info)
+        self.update_thread.start()
+    
+    def update_ui(self, result, msg, status):
+        if result:
+            InfoBar.success(
+                msg,
+                status,
+                duration=1500,
+                parent=self.window()
+            )
+        else:
+            InfoBar.warning(
+                msg,
+                status,
+                duration=1500,
+                parent=self.window()
+            )
+        # signalBus.infopopup.emit(result, msg, status)
+        if result is False:
+            self.wqvBoxLayout.removeWidget(self.ring)
+            self.update_thread.stop()
+    def update_process_info(self, down, total, speed):
+        if self.wqvBoxLayout.indexOf(self.downlayout) == -1:
+            # downlayout尚未添加到wqvBoxLayout中
+            self.wqvBoxLayout.addLayout(self.downlayout)
+        self.ring.setVisible(True)
+        progress_percentage = (down / total) * 100
+        down = down / (1024 * 1024)
+        total = total / (1024 * 1024)
+        speed = speed / 1000.0
+        self.process.setText(f"{progress_percentage:.2f}%")
+        self.downlabel.setText(f"{down:.2f}M/{total:.2f}M  {speed:.2f}KB/s")
+        self.ring.setValue(int(progress_percentage))
+    
+    def update_info(self, info, description):
+        w = MessageBox(info, description, self.window())
+        if w.exec():
+            self.update_thread.update_enable.emit(True)
+            print('Yes button is pressed')
+        else:
+            self.update_thread.update_enable.emit(False)
+            print('Cancel button is pressed')
+
 class SettingInterface(ScrollArea):
     """ Setting interface """
 
@@ -811,15 +1249,15 @@ class SettingInterface(ScrollArea):
         )
 
         # material
-        self.materialGroup = SettingCardGroup(
-            self.tr('Material'), self.scrollWidget)
-        self.blurRadiusCard = RangeSettingCard(
-            cfg.blurRadius,
-            FIF.ALBUM,
-            self.tr('Acrylic blur radius'),
-            self.tr('The greater the radius, the more blurred the image'),
-            self.materialGroup
-        )
+        # self.materialGroup = SettingCardGroup(
+        #     self.tr('Material'), self.scrollWidget)
+        # self.blurRadiusCard = RangeSettingCard(
+        #     cfg.blurRadius,
+        #     FIF.ALBUM,
+        #     self.tr('Acrylic blur radius'),
+        #     self.tr('The greater the radius, the more blurred the image'),
+        #     self.materialGroup
+        # )
 
         # update software
         self.updateSoftwareGroup = SettingCardGroup(
@@ -850,7 +1288,7 @@ class SettingInterface(ScrollArea):
             self.tr('Help us improve PyQt-Fluent-Widgets by providing feedback'),
             self.aboutGroup
         )
-        self.aboutCard = PrimaryPushSettingCard(
+        self.aboutCard = CheckUpgradeCard(
             self.tr('Check update'),
             FIF.INFO,
             self.tr('About'),
@@ -875,14 +1313,12 @@ class SettingInterface(ScrollArea):
         StyleSheet.SETTING_INTERFACE.apply(self)
 
         self.micaCard.setEnabled(isWin11())
-
         # initialize layout
         self.__initLayout()
         self.__connectSignalToSlot()
 
     def __initLayout(self):
         self.settingLabel.move(36, 30)
-
         # add cards to group
         self.connectPCGroup.addSettingCard(self.connectCard)
         self.basicsetgroup.addSettingCard(self.logFolderCard)
@@ -896,7 +1332,7 @@ class SettingInterface(ScrollArea):
         self.personalGroup.addSettingCard(self.zoomCard)
         self.personalGroup.addSettingCard(self.languageCard)
 
-        self.materialGroup.addSettingCard(self.blurRadiusCard)
+        # self.materialGroup.addSettingCard(self.blurRadiusCard)
 
         self.updateSoftwareGroup.addSettingCard(self.updateOnStartUpCard)
 
@@ -910,7 +1346,7 @@ class SettingInterface(ScrollArea):
         self.expandLayout.addWidget(self.connectPCGroup)
         self.expandLayout.addWidget(self.basicsetgroup)
         self.expandLayout.addWidget(self.personalGroup)
-        self.expandLayout.addWidget(self.materialGroup)
+        # self.expandLayout.addWidget(self.materialGroup)
         self.expandLayout.addWidget(self.updateSoftwareGroup)
         self.expandLayout.addWidget(self.aboutGroup)
 

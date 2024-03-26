@@ -7,7 +7,8 @@ from .gallery_interface import GalleryInterface
 from ..common.translator import Translator
 from ..common.style_sheet import StyleSheet
 from ..plugins.frame_csg import FramePos
-from ..plugins import frame_fun,frame_csg
+from ..plugins import frame_csg
+from ..plugins.frame_fun import FrameFun as frame_fun
 from ..common.signal_bus import signalBus
 from ..components.state_tools import DateTimePicker
 
@@ -1284,6 +1285,7 @@ class CustomFrame(GalleryInterface):
             parent=parent
         )
         self.setObjectName('custominterface')
-
-        self.customframe = CustomFrameInterface(self)
+        self.qhlayout = QHBoxLayout(self)
+        self.customframe = CustomFrameInterface()
+        self.qhlayout.addWidget(self.customframe)
         self.vBoxLayout.addWidget(self.customframe)

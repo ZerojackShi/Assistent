@@ -122,6 +122,7 @@ class CustomStateToolTip(QWidget):
         self.title = title
         self.titleLabel.setText(title)
         self.titleLabel.adjustSize()
+        self.__initLayout()
 
     def setContent(self, content: str):
         """ set the content of tooltip """

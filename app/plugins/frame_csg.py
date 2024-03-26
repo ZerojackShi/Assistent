@@ -1,6 +1,7 @@
 from asyncio.windows_events import ERROR_CONNECTION_ABORTED
 from xml.dom.expatbuilder import FragmentBuilder
-from ..plugins import frame_fun
+from ..plugins.frame_fun import FrameFun as frame_fun
+from ..plugins.frame_fun import CustomMessageBox
 from ..plugins.protocol import PraseFrameData, FRAME_645
 from PyQt5.QtWidgets import QMessageBox
 import re
@@ -538,6 +539,9 @@ def guest_is_exit_pw(length,data_segment, data_item_elem=None, data_time=None,wi
 def guest_next_data_is_cur_item_data(item_element, data_segment, data_time):
     if item_element is not None:
         length, new_data = recaculate_sub_length(item_element, data_segment)
+        next_item = frame_fun.get_data_str_reverser(data_segment[2:6])
+        if next_item == item_element.get('id'):
+            return False
         if is_valid_bcd_time(data_segment[length:length+6]):
             if data_time is not None:
                 return is_within_one_month(data_segment[length:length+6], data_time)
@@ -823,7 +827,7 @@ def Analysic_csg_link_frame(frame,dir, prm,result_list,start_pos):
                 sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
                 err_str = prase_err_code_result(sub_datament[0]);
             else:
-                frame_fun.CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
                 break
             dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
         if dir == 1 and prm == 0:
@@ -907,7 +911,7 @@ def Analysic_csg_write_frame(frame, dir, prm,result_list,start_pos):
                 sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
                 err_str = prase_err_code_result(sub_datament[0]);
             else:
-                frame_fun.CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
                 break
             dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
         if dir == 1 and prm == 0:
@@ -994,7 +998,7 @@ def Analysic_csg_security_frame(frame, dir, prm,result_list,start_pos):
         else:
             if dir == 1 and prm == 0:
                 pw = guest_is_exit_pw(length,data_segment)
-                frame_fun.CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
                 break
             else:
                 sub_length = 0
@@ -1074,7 +1078,7 @@ def Analysic_csg_read_cur_frame(frame, dir, prm,result_list,start_pos):
         else:
             if dir == 1 and prm == 0:
                 pw = guest_is_exit_pw(length,data_segment)
-                frame_fun.CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
                 break
             else:
                 sub_length = 0
@@ -1155,7 +1159,7 @@ def Analysic_csg_read_history_frame(frame, dir, prm,result_list,start_pos):
             if dir == 1 and prm == 0:
                 sub_length = len(data_segment)
                 pw = guest_is_exit_pw(length,data_segment, data_item_elem, data_time, True)
-                frame_fun.CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
                 break
             else:
                 sub_length = 0
@@ -1249,7 +1253,7 @@ def Analysic_csg_read_param_frame(frame, dir, prm,result_list,start_pos):
         else:
             if dir == 1 and prm == 0:
                 pw = guest_is_exit_pw(length,data_segment)
-                frame_fun.CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
                 break
             else:
                 sub_length = 0
@@ -1367,7 +1371,7 @@ def Analysic_csg_read_task_frame(frame, dir, prm,result_list,start_pos):
             else:
                 sub_length = 0#下行读取报文
         else:
-            frame_fun.CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+            CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
             break
 
         if dir == 1:
@@ -1471,7 +1475,7 @@ def Analysic_csg_read_alarm_frame(frame, dir, prm,result_list,start_pos):
         else:
             if dir == 1:
                 pw = guest_is_exit_pw(length,data_segment)
-                frame_fun.CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
                 break
             else:
                 sub_length = 0
@@ -1560,7 +1564,7 @@ def Analysic_csg_read_event_frame(frame, dir, prm,result_list,start_pos):
         else:
             if dir == 1 and prm == 0:
                 pw = guest_is_exit_pw(length,data_segment)
-                frame_fun.CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
                 break
             else:
                 sub_length = 0
@@ -1667,7 +1671,7 @@ def Analysic_csg_relay_frame(frame, dir, prm,result_list,start_pos):
             dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
         else:
             pw = guest_is_exit_pw(length,data_segment)
-            frame_fun.CustomMessageBox("警告",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+            CustomMessageBox("警告",'未查找到数据标识：'+ data_item + '请检查配置文件！')
             break
 
         frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
@@ -1743,7 +1747,7 @@ def Analysic_csg_topo_frame(frame, dir, prm,result_list,start_pos):
         else:
             if dir == 1 and prm == 0:
                 pw = guest_is_exit_pw(length,data_segment)
-                frame_fun.CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
                 break
             else:
                 sub_length = 0

@@ -1,9 +1,9 @@
 from token import STAR
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QApplication,QVBoxLayout,QVBoxLayout,QStyleOptionViewItem
+from PyQt5.QtWidgets import QApplication,QVBoxLayout,QVBoxLayout,QHBoxLayout
 from PyQt5.QtGui import QImage,QPainter,QRegion,QPixmap,QFont
 # coding:utf-8
-from PyQt5.QtWidgets import QWidget, QVBoxLayout,QTreeWidgetItemIterator
+from PyQt5.QtWidgets import QWidget, QVBoxLayout,QSizePolicy
 from qfluentwidgets import ScrollArea, isDarkTheme, FluentIcon,LineEdit,PlainTextEdit,SmoothScrollDelegate,RoundMenu,Action,InfoBar,InfoBarPosition
 from ..common.config import cfg, log_config
 from ..common.style_sheet import StyleSheet
@@ -78,9 +78,12 @@ class CustomTreeWidget(QtWidgets.QTreeWidget):
         self.last_column = column
         self.custom_signal.emit(item)
 
-    def mousePressEvent(self, event):
-    # 在这里处理CustomTreeWidget的鼠标事件
-        super().mousePressEvent(event)  
+    def resizeEvent(self, event):
+        self.update_tree_widget(self.size())
+    def update_tree_widget(self, size: QtCore.QSize):
+        w, h = size.width(), size.height()
+        self.header().resizeSection(0,int(w * 0.35))
+        self.header().resizeSection(1,int(w * 0.25))  
 
     def create_tree(self, parent_item, data, item_positions):
         if data is None or item_positions is None:
@@ -223,7 +226,9 @@ class Alalysic(QWidget):
         self.vBoxLayout.setSpacing(5)
         self.vBoxLayout.addWidget(self.input_text, 3)
         self.vBoxLayout.addWidget(self.tree_widget, 7)
-        
+        size_policy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.input_text.setSizePolicy(size_policy)
+        self.tree_widget.setSizePolicy(size_policy)
         self.tree_widget.header().resizeSection(0,int(720 * 0.35))
         self.tree_widget.header().resizeSection(1,int(720 * 0.25))   
 
@@ -234,14 +239,6 @@ class Alalysic(QWidget):
         StyleSheet.HOME_INTERFACE.apply(self)
         self.reconnect_text_changed()
         self.tree_widget.custom_signal.connect(self.highlight_text)
-        signalBus.windowschange.connect(self.update_size)
-    def update_size(self, size: QtCore.QSize):
-        self.setFixedSize(size + QtCore.QSize(50, 50))
-        self.update_tree_widget(self.size())
-    def update_tree_widget(self, size: QtCore.QSize):
-        w, h = size.width(), size.height()
-        self.tree_widget.header().resizeSection(0,int(w * 0.35))
-        self.tree_widget.header().resizeSection(1,int(w * 0.25))  
 
     def highlight_text(self, item):
         self.disconnect_text_changed()
@@ -355,10 +352,6 @@ class Alalysic(QWidget):
                 traceback.print_exception(exc_type, exc_value, exc_traceback)
                 self.reconnect_text_changed()
 
-
-        
-
-
 class ViewAnalysic(GalleryInterface):
     """ Icon interface """
 
@@ -370,6 +363,6 @@ class ViewAnalysic(GalleryInterface):
             parent=parent
         )
         self.setObjectName('frameanalysic')
-
-        self.analysicView = Alalysic(self)
-        self.vBoxLayout.addWidget(self.analysicView)
+        self.qhlayout = QHBoxLayout(self)
+        self.analysicView = Alalysic()
+        self.qhlayout.addWidget(self.analysicView)

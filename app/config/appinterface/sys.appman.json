@@ -1,0 +1,445 @@
+{
+    "name": "应用管理器",
+    "description": "应用管理器app具有管理各项app的功能",
+    "version": "1.0.0",
+    "date": "2023-11-10T08:18:28",
+    "service_name": "sys.appman.main",
+    "interface": [
+        {
+            "name": "上线通知",
+            "description": "应用管理上线通知",
+            "type": "active",
+            "input": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "mqtt_message": {
+                        "topic": "/sys.appman/sys.base/S-appmanager/F-ControlApp",
+                        "payload": {
+                            "token": "368705",
+                            "time": "2023-11-17T15:20:22.588+0800",
+                            "data": {
+                                "srcAppSign": "key-sequence",
+                                "destAppName": "sys.dbc",
+                                "operate": "enable"
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": 1,
+                    "type": "wait",
+                    "time_s": 5
+                },
+                {
+                    "id": 2,
+                    "type": "updatePID"
+                }
+            ],
+            "output": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": {
+                        "topic": "/sys.base/sys.appman/S-appmanager/F-ControlApp",
+                        "payload": {
+                            "token": "368705",
+                            "time": "#",
+                            "ack": "true",
+                            "errmsg": "success"
+                        }
+                    }
+                },
+                {
+                    "id": 1,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": {
+                        "topic": "/sys.brd/sys.dbc/S-datacenter/F-Online",
+                        "payload": {
+                            "token": "#",
+                            "time": "#",
+                            "data": {
+                                "version": "V#.#.#"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "查询版本信息",
+            "description": "查询版本信息",
+            "type": "inactive",
+            "input": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": {
+                        "topic": "/sys.msgdpt/sys.test/S-distributor/F-GetVersion",
+                        "payload": {
+                            "token": "2",
+                            "time": "2021-05-10T08:18:28.666+0800"
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "mqtt_message": {
+                        "topic": "/sys.test/sys.msgdpt/S-distributor/F-GetVersion/csg13",
+                        "payload": {
+                            "token": "2",
+                            "time": "#",
+                            "data": {
+                                "version": "V#.#.#"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "文件校验",
+            "description": "文件校验",
+            "type": "inactive",
+            "input": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "mqtt_message": {
+                        "topic": "/sys.appman/sys.base/S-appmanager/F-VerifyFile",
+                        "payload": {
+                            "token": "123",
+                            "time": "2021-05-08T09:30:08.230+0800",
+                            "data": {
+                                "srcAppSign": "key-sequence",
+                                "appFilePath": "/notexist/text.txt"
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": {
+                        "topic": "/sys.base/sys.appman/S-appmanager/F-VerifyFile",
+                        "payload": {
+                            "token": "#",
+                            "time":"#",
+                            "ack":"true",
+                            "errmsg":"FileNotExist"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "应用保活",
+            "description": "应用保活",
+            "type": "inactive",
+            "input": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "mqtt_message": {
+                        "topic": "/sys.dbc/sys.appman/S-appmanager/F-KeepAlive",
+                        "payload": {
+                            "token": "123",
+                            "time": "2021-05-08T09:30:08.230+0800"
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": {
+                        "topic": "/sys.appman/sys.dbc/S-appmanager/F-KeepAlive",
+                        "payload": {
+                            "token": "123",
+                            "time": "#",
+                            "ack": "true",
+                            "errmsg":"success"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "系统紧急事件通知",
+            "description": "系统紧急事件通知",
+            "type": "inactive",
+            "input": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "mqtt_message": {
+                        "topic": "/sys.appman/sys.base/S-appmanager/F-Emergency",
+                        "payload": {
+                            "token": "123",
+                            "time": "2021-05-08T09:30:08.230+0800",
+                            "data": {
+                                "eventname": "poweroff", 
+                                "happentime": "2021-05-08T09:30:08.230+0800", 
+                                "relativedata": "poweroff"
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": {
+                        "topic": "/sys.base/sys.appman/S-appmanager/F-Emergency",
+                        "payload": {
+                            "token": "123",
+                            "time": "#",
+                            "ack": "true",
+                            "errmsg":"success"
+                        }
+                    }
+                },
+                {
+                    "id": 1,
+                    "type": "mqtt",
+                    "mqtt_message": {
+                        "topic": "/sys.brd/sys.appman/S-appmanager/F-ProxyEmergency",
+                        "payload": {
+                            "token": "#",
+                            "time": "#",
+                            "data": {
+                                "eventname": "poweroff", 
+                                "happentime": "2021-05-08T09:30:08.230+0800", 
+                                "relativedata": "poweroff"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "请求证书库版本(暂定)",
+            "description": "请求证书库版本",
+            "type": "inactive",
+            "input": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "mqtt_message": {
+                        "topic": "/sys.appman/sys.msgdpt/S-appmanager/F-GetCertLibVer",
+                        "payload": {
+                            "token": "123",
+                            "time": "2021-05-08T09:30:08.230+0800"
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": {
+                        "topic": "/sys.msgdpt/sys.appman/S-appmanager/F-GetCertLibVer",
+                        "payload": {
+                            "token": "123",
+                            "time": "#",
+                            "ack": "true",
+                            "errmsg":"success",
+                            "data": {
+                                "CertLibVersion":"#", 
+                                "CertLibRelease":"#", 
+                                "LibUpdateDate":"#" 
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "应用列表(暂定)",
+            "description": "应用列表",
+            "type": "inactive",
+            "input": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "mqtt_message": {
+                        "topic": "/sys.appman/sys.base/S-appmanager/F-GetAppList",
+                        "payload": {
+                            "token": "123",
+                            "time": "2021-05-08T09:30:08.230+0800"
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": {
+                        "topic": "/sys.base/sys.appman/S-appmanager/F-GetAppList",
+                        "payload": {
+                            "token": "123",
+                            "time": "#",
+                            "ack": "true",
+                            "errmsg":"success",
+                            "data": {
+                                "applist": [
+                                                {
+                                                    "appname":"ascii-string", 
+                                                    "appid":"ascii-string", 
+                                                    "appversion":"ascii-string", 
+                                                    "appverdate":"ascii-string" 
+                                                }, 
+                                                {
+                                                    "appname":"ascii-string", 
+                                                    "appid":"ascii-string", 
+                                                    "appversion":"ascii-string",
+                                                    "appverdate":"ascii-string" 
+                                                }
+                                            ]
+                                    }
+                                 }
+                }
+            }
+            ]
+        },
+        {
+            "name": "文件更新(暂定)",
+            "description": "文件更新",
+            "type": "inactive",
+            "input": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "mqtt_message": {
+                        "topic": "/sys.msgdpt/sys.appman/S-appmanager/F-UpdateFile",
+                        "payload": {
+                            "token": "123",
+                            "time": "2021-05-08T09:30:08.230+0800",
+                            "data": {
+                                "srcAppSign":"key-sequence", 
+                                "appFilePath":"/notexist/File"
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": {
+                        "topic": "/sys.appman/sys.msgdpt/S-appmanager/F-UpdateFile",
+                        "payload": {
+                            "token": "123",
+                            "time": "#",
+                            "ack": "true",
+                            "errmsg":"FileNotExist"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "系统命令请求(暂定)",
+            "description": "系统命令请求",
+            "type": "inactive",
+            "input": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "mqtt_message": {
+                        "topic": "/sys.appman/sys.base/S-appmanager/F-ExecuteSys",
+                        "payload": {
+                            "token": "123",
+                            "time": "2021-05-08T09:30:08.230+0800",
+                            "data": {
+                                "srcAppSign":"key-sequence", 
+                                "systemcmd":"echo '12345'",
+                                "needcmdprint ":"true"
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": {
+                        "topic": "/sys.base/sys.appman/S-appmanager/F-ExecuteSys",
+                        "payload": {
+                            "token": "123",
+                            "time": "#",
+                            "ack": "true",
+                            "errmsg":"success",
+                            "data": {
+                                "systemret":"12345" 
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "代理系统命令请求(暂定)",
+            "description": "代理系统命令请求",
+            "type": "inactive",
+            "input": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "mqtt_message": {
+                        "topic": "/sys.base/sys.appman/S-appmanager/F-ProxyExecuteSys",
+                        "payload": {
+                            "token": "123",
+                            "time": "2021-05-08T09:30:08.230+0800",
+                            "data": {
+                                "srcAppSign":"key-sequence", 
+                                "systemcmd":"echo '12345'",
+                                "needcmdprint ":"true"
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": {
+                        "topic": "/sys.appman/sys.base/S-appmanager/F-ProxyExecuteSys",
+                        "payload": {
+                            "token": "123",
+                            "time": "#",
+                            "ack": "true",
+                            "errmsg":"success",
+                            "data": {
+                                "systemret":"12345" 
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -148,16 +148,16 @@ class MessageConfig(QWidget):
         self.init_widget()
         # 设置样式表
         StyleSheet.CUSTOM_INTERFACE.apply(self)
-        signalBus.windowschange.connect(self.update_size)
+        # signalBus.windowschange.connect(self.update_size)
         
         # 设置固定大小 
-    def resizeEvent(self, e):
-        super().resizeEvent(e)
-        # self.toolBar.resize(self.width(), self.toolBar.height())
-        self.update_size(self.size())
-    def update_size(self, size:QSize):
-        if size.height() > self.size().height():
-            self.setFixedHeight(size.height())
+    # def resizeEvent(self, e):
+    #     super().resizeEvent(e)
+    #     # self.toolBar.resize(self.width(), self.toolBar.height())
+    #     self.update_size(self.size())
+    # def update_size(self, size:QSize):
+    #     if size.height() > self.size().height():
+    #         self.setFixedHeight(size.height())
     def init_widget(self):
         initial_pos = 50
         self.splitter.setSizes([initial_pos, self.splitter.width() - initial_pos])
@@ -356,6 +356,6 @@ class AppMessageInterface(GalleryInterface):
             parent=parent
         )
         self.setObjectName('AppMessageInterface')
-
-        self.customframe = MessageConfig(self)
-        self.vBoxLayout.addWidget(self.customframe)
+        self.qhlayout = QHBoxLayout(self)
+        self.customframe = MessageConfig()
+        self.qhlayout.addWidget(self.customframe)

@@ -1,4 +1,4 @@
-from ..plugins import frame_fun
+from ..plugins.frame_fun import FrameFun as frame_fun
 import re
 def caculate_unknown_length(data_subitem_elem, data_segment, length_maap):
     relues = data_subitem_elem.find('lengthrule').text
@@ -302,7 +302,7 @@ def parse_splitByLength_data(data_item_elem, data_segment,index, need_delete):
         if sub_length_ele is not None:
             sub_length_content = sub_length_ele.text
             if sub_length_content in ("unknown"):
-                singal_length, subitem_length = frame_fun.get_subitem_length(data_subitem_elem, splitlength, i - 1)
+                singal_length, subitem_length = frame_fun.get_subitem_length(data_subitem_elem, splitlength, i - 1, data_segment)
             else:
                 subitem_length = int(sub_length_content)
                 singal_length = subitem_length
@@ -548,7 +548,7 @@ def parse_data_item(data_item_elem, data_segment, index, need_delete):
         if sub_length_ele is not None:
             sub_length_content = sub_length_ele.text
             if sub_length_content in ("unknown"):
-                singal_length, subitem_length = frame_fun.get_subitem_length(data_item_elem, None, 0)
+                singal_length, subitem_length = frame_fun.get_subitem_length(data_item_elem, None, 0, data_segment)
             else:
                 subitem_length = int(sub_length_content)
                 singal_length = subitem_length
@@ -1103,7 +1103,7 @@ def Alalysis_write_adress_frame(frame, result_list,indx):
 def Alalysis_brodcast_time_frame(frame, result_list,indx):
     time = frame[10:16]
     data_list = []
-    form_time = time[:6][::-1]
+    form_time = time[:6]
     frame_fun.add_data(data_list, "数据内容",frame_fun.get_data_str_with_space(time), "校时时间："+ frame_fun.parse_time_data(form_time, "ssmmhhDDMMYY",True),[indx+10,indx+16])
     frame_fun.add_data(result_list, "数据域", "", "数据域传输时按字节进行加33H处理，接收后应按字节减33H处理", [indx+10,indx+16],data_list)
 

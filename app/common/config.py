@@ -123,12 +123,18 @@ class Config(QConfig):
     tcpServerIP = ConfigItem("TcpServer", "IP", "127.0.0.1", StringValidator(regex_pattern=r'^(\d{1,3}\.){3}\d{1,3}$'))
     tcpServerPort = ConfigItem("TcpServer", "Port", 1002)
 
+    mqttip = ConfigItem("Mqtt", "IP", "127.0.0.1", StringValidator(regex_pattern=r'^(\d{1,3}\.){3}\d{1,3}$'))
+    mqttport = ConfigItem("Mqtt", "Port", 1883)
+    mqttuser = ConfigItem("Mqtt", "user", "None", validator=None)
+    mqttpasswd = ConfigItem("Mqtt", "passwd", "None", validator=None)
+    
     ReportReplay = ConfigItem("BasicSeting", "ReportReplay", True, BoolValidator())
 
     Region = OptionsConfigItem("BasicSeting", "region", "南网", OptionsValidator(["南网","云南","广东","深圳","广西","贵州","海南","topo"]), restart=False)
 
     Multireport = ConfigItem("BasicSeting", "Multireport", False, BoolValidator())
     MultireportAdress = ConfigItem("BasicSeting", "MultireportAdress", [], validator=None)
+    node_id = ConfigItem("Version", "node_id", "None", validator=None)
 
 class QframeConfig(QObject):
     """ Config of app """
@@ -298,14 +304,21 @@ class LogConfig:
 
 YEAR = 2023
 AUTHOR = "ZeroJack"
-VERSION = __version__
+REPO_OWNER = "ZerojackShi"
+REPO_NAME = "Assistent"
+APP_NAME = "Assistent"
+VERSION = "1.0.0"
 HELP_URL = "https://gitee.com/zerokit/assistent"
 REPO_URL = "https://gitee.com/zerokit/assistent"
 EXAMPLE_URL = "https://gitee.com/zerokit/assistent"
 FEEDBACK_URL = "https://gitee.com/zerokit/assistent/issues"
 RELEASE_URL = "https://gitee.com/zerokit/assistent/releases"
 SUPPORT_URL = "https://gitee.com/zerokit/assistent"
-
+CONFIG_DIR = 'app/config'
+Authorization = "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"
+UPDATE_FILE = './upgrade.zip'
+UPDATE_DIR = 'upgrade'
+APP_EXEC = "Assistent.exe"
 
 cfg = Config()
 cfg.themeMode.value = Theme.AUTO

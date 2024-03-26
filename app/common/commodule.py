@@ -8,10 +8,10 @@ class CommType(Enum):
     MQTT = 3,
 
 class SendAndReceive(QObject):
-    connecttype = None
+    connecttype = []
     link_port = None
     link_status = None
     tcpSocket = []
-    channel = None
+    channel = []
 
 commmbus = SendAndReceive()

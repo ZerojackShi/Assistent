@@ -2,36 +2,45 @@
     "BasicSeting": {
         "Multireport": true,
         "MultireportAdress": [
-            "040123456789",
-            "610300000012"
+            "6621313D0A59"
         ],
-        "region": "广东",
+        "region": "南网",
         "ReportReplay": true
     },
     "Material": {
-        "AcrylicBlurRadius": 15
+        "AcrylicBlurRadius": 9
     },
     "Update": {
-        "CheckUpdateAtStartUp": true
+        "CheckUpdateAtStartUp": false
     },
     "MainWindow": {
         "DpiScale": "Auto",
         "Language": "Auto",
-        "MicaEnabled": true
+        "MicaEnabled": false
     },
     "Folders": {
         "Log": "D:/ProjectWorkPlace/FrameAnalysic-V1.0/Assistent/app/log",
+        "AppInterface": "D:/ProjectWorkPlace/FrameAnalysic-V1.0/Assistent/app/config/appinterface",
         "LocalMusic": []
     },
+    "Mqtt": {
+        "IP": "192.168.2.11",
+        "passwd": "None",
+        "Port": 1883,
+        "user": "None"
+    },
+    "Version": {
+        "node_id": "RE_kwDOKEVIvs4IW6UI"
+    },
     "Serial": {
-        "BaudRate": 115200,
+        "BaudRate": 9600,
         "DataBits": 8,
-        "Parity": "偶校验",
+        "Parity": "无校验",
         "StopBits": 1
     },
     "TcpClient": {
         "IP": "192.168.2.11",
-        "Port": 8001
+        "Port": 9999
     },
     "TcpServer": {
         "IP": "192.168.2.16",
@@ -39,6 +48,6 @@
     },
     "QFluentWidgets": {
         "ThemeColor": "#ff09aa51",
-        "ThemeMode": "Auto"
+        "ThemeMode": "Light"
     }
 }

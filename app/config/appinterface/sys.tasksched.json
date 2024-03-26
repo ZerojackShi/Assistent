@@ -1,0 +1,1209 @@
+{
+    "name": "抄表调度",
+    "description": "基础业务APP或扩展业务APP通过抄表调度管理APP实现载波通道、RS485通道等抄表业务",
+    "version": "1.0.0",
+    "date": "2023-11-10T08:18:28",
+    "service_name": "sys.tasksched.main",
+    "interface": [
+        {
+            "name": "上线通知",
+            "description": "抄表调度上线通知",
+            "type": "active",
+            "input": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "mqtt_message":
+                    {
+                        "topic": "/sys.appman/sys.base/S-appmanager/F-ControlApp",
+                        "payload": {
+                            "token":  "368705",
+                            "time": "2023-11-17T15:20:22.588+0800",
+                            "data":
+                            {
+                                "srcAppSign":"key-sequence",
+                                "destAppName":"sys.tasksched",
+                                "operate":"enable"
+                            }
+                        }
+                    }
+                },
+                {
+                    "id":1,
+                    "type": "wait",
+                    "time_s": 5
+                },
+                {
+                    "id": 2,
+                    "type": "updatePID"
+                }
+            ],
+            "output": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.base/sys.appman/S-appmanager/F-ControlApp",
+                        "payload": 
+                        {
+                            "token": "368705",
+                            "time":"#",
+                            "ack":"true",
+                            "errmsg":"success"
+                        }
+                    }
+                },
+                {
+                    "id": 1,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.brd/sys.tasksched/S-meter/F-Online",
+                        "payload": 
+                        {
+                            "token": "#",
+                            "time":"#",
+                            "data":
+                            {
+                                "version":"V#.#.#"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "查询版本信息",
+            "description": "查询版本信息",
+            "type": "inactive",
+            "input": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "mqtt_message": {
+                        "topic": "/sys.tasksched/sys.test/S-meter/F-GetVersion",
+                        "payload": {
+                            "token":"2",
+                            "time":"2021-05-08T09:30:08.230+0800"
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.test/sys.tasksched/S-meter/F-GetVersion",
+                        "payload": {
+                            "token": "2",
+                            "time":"#",
+                            "data":
+                            {
+                                "version":"V#.#.#"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "添加抄表任务",
+            "description": "添加抄表任务",
+            "type": "inactive",
+            "input":[
+                {
+                    "id": 3,
+                    "type": "wait",
+                    "time_s": 5
+                },
+                {
+                    
+                    "id": 0,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.tasksched/sys.test/S-meter/F-AddNormTask",
+                        "payload": 
+                        {
+                            "token":"123",
+                            "time":"2021-05-08T09:30:08.230+0800",
+                            "data":
+                            {
+                                "taskInfo":[
+                                    {
+                                        "port":"00",
+                                        "taskID":"1",
+                                        "taskPatternWord":"80",
+                                        "portParam":"2400-8-E-1-500-1000",
+                                        "dstAddr":"180503811628",
+                                        "protocol":"01",
+                                        "timeout":"20",
+                                        "frame":"68281681030518681104343439389D16"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+                
+            ],
+            "output":[
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.test/sys.tasksched/S-meter/F-AddNormTask",
+                        "payload": 
+                        {
+                            "token":"123",
+                            "time":"#",
+                            "data":
+                            {
+                                "taskInfo":[
+                                    {
+                                        "port":"00",
+                                        "taskID":"1",
+                                        "ack":"true",
+                                        "errmsg":"ok"
+                                    }
+                                ],
+                                "portInfo":[
+                                    {
+                                        "port":"00",
+                                        "spareNum":"#"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": 1,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.test/sys.tasksched/S-meter/F-ReportData",
+                        "payload": 
+                        {
+                            "token":"#",
+                            "time":"#",
+                            "data":
+                            {
+                                "port":"00",
+                                "taskID":"1",
+                                "frame":"68281681030518689118343439387533333333333333333333337533333333333333B116"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "删除抄表任务",
+            "description": "删除抄表任务",
+            "type": "inactive",
+            "input": [
+                {
+                    "id": 0,
+                    "type": "linux",
+                    "linux_command": "systemctl stop sys.dncomm.main"
+                },
+                {
+                    "id": 1,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": {
+                        "topic": "/sys.tasksched/sys.test/S-meter/F-AddNormTask",
+                        "payload": {
+                            "token":"123",
+                            "time":"2021-05-08T09:30:08.230+0800",
+                            "data":{
+                                "taskInfo":[
+                                    {
+                                        "port":"1F",
+                                        "taskID":"1",
+                                        "taskPatternWord":"80",
+                                        "portParam":"1200-8-E-1-500-1000",
+                                        "dstAddr":"060000004402",
+                                        "protocol":"01",
+                                        "timeout":"10",
+                                        "frame":"68024400000006681104343339380916"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": 2,
+                    "type": "mqtt",
+                    "mqtt_message": {
+                        "topic": "/sys.tasksched/sys.test/S-meter/F-DelTask",
+                        "payload": {
+                            "token":"124",
+                            "time":"2021-05-08T09:30:08.230+0800",
+                            "data":
+                            {
+                                "delAllTasks": "TRUE",
+                                "delTaskInfo":[]
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": 3,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": {
+                        "topic": "/sys.tasksched/sys.test/S-meter/F-AddNormTask",
+                        "payload": {
+                            "token":"125",
+                            "time":"2021-05-08T09:30:08.230+0800",
+                            "data":{
+                                "taskInfo":[
+                                    {
+                                        "port":"1F",
+                                        "taskID":"2",
+                                        "taskPatternWord":"80",
+                                        "portParam":"1200-8-E-1-500-1000",
+                                        "dstAddr":"060000004402",
+                                        "protocol":"01",
+                                        "timeout":"10",
+                                        "frame":"68024400000006681104343339380916"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": 2,
+                    "type": "mqtt",
+                    "mqtt_message": {
+                        "topic": "/sys.tasksched/sys.test/S-meter/F-DelTask",
+                        "payload": {
+                            "token":"126",
+                            "time":"2021-05-08T09:30:08.230+0800",
+                            "data":
+                            {
+                                "delAllTasks": "false",
+                                "delTaskInfo":[
+                                    {
+                                        "port": "1F",
+                                        "taskID": "2"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": 3,
+                    "type": "linux",
+                    "linux_command": "systemctl start sys.dncomm.main"
+                }
+            ],
+            "output": [
+                {
+                    "id": 1,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": {
+                        "topic": "/sys.test/sys.tasksched/S-meter/F-AddNormTask",
+                        "payload": {
+                            "token":"123",
+                            "time":"#",
+                            "data":{
+                                "taskInfo":[
+                                    {
+                                        "port":"1F",
+                                        "taskID":"1",
+                                        "ack":"true",
+                                        "errmsg":"ok"
+                                    }
+                                ],
+                                "portInfo":[
+                                    {
+                                        "port":"1F",
+                                        "spareNum":"#"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": 2,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": {
+                        "topic": "/sys.test/sys.tasksched/S-meter/F-DelTask",
+                        "payload": {
+                            "token":"124",
+                            "time":"#",
+                            "ack":"true"
+                        }
+                    }
+                },
+                {
+                    "id": 1,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": {
+                        "topic": "/sys.test/sys.tasksched/S-meter/F-AddNormTask",
+                        "payload": {
+                            "token":"125",
+                            "time":"#",
+                            "data":{
+                                "taskInfo":[
+                                    {
+                                        "port":"1F",
+                                        "taskID":"1",
+                                        "ack":"true",
+                                        "errmsg":"ok"
+                                    }
+                                ],
+                                "portInfo":[
+                                    {
+                                        "port":"1F",
+                                        "spareNum":"#"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": 2,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": {
+                        "topic": "/sys.test/sys.tasksched/S-meter/F-DelTask",
+                        "payload": {
+                            "token":"126",
+                            "time":"#",
+                            "ack":"true"
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "实时点抄任务+上报任务数据",
+            "description": "实时点抄任务+上报任务数据",
+            "type": "inactive",
+            "input":[
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.tasksched/sys.test/S-meter/F-AddRealTask",
+                        "payload":
+                         {
+                            "token":"127",
+                            "time":"2021-05-08T09:30:08.230+0800",
+                            "data":
+                            {
+                                "port":"0",
+                                "taskID":"13",
+                                "taskPatternWord":"80",
+                                "portParam":"2400-8-E-1-500-1000",
+                                "dstAddr":"180503811628",
+                                "protocol":"01",
+                                "timeout":"10",
+                                "frame":"68281681030518681104343439389D16"
+                            }
+                        }
+                    }
+                }
+            ],
+            "output":[
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.test/sys.tasksched/S-meter/F-AddRealTask",
+                        "payload": 
+                        {
+                            "token":"127",
+                            "time":"#",
+                            "data":
+                            {
+                                "port":"0",
+                                "taskID":"13",
+                                "ack":"true",
+                                "errmsg":"ok"
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": 1,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.test/sys.tasksched/S-meter/F-ReportData",
+                        "payload": 
+                        {
+                            "token":"#",
+                            "time":"#",
+                            "data":
+                            {
+                                "port":"0",
+                                "taskID":"13",
+                                "frame":"68281681030518689118343439387533333333333333333333337533333333333333B116"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "查询指定端口任务状态统计",
+            "description": "查询指定端口任务状态统计",
+            "type": "inactive",
+            "input": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "mqtt_message": {
+                        "topic": "/sys.tasksched/sys.test/S-meter/F-GetPortTaskState",
+                        "payload": {
+                            "token":"2",
+                            "time":"2021-05-08T09:30:08.230+0800",
+                            "data":
+                            {
+                                "portInfo": [
+                                   {"port":"00"},
+                                   {"port":"1F"}
+                                ]
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.test/sys.tasksched/S-meter/F-GetPortTaskState",
+                        "payload": {
+                            "token": "2",
+                            "time":"#",
+                            "data":
+                            {
+                                "portInfo": [
+                                    {
+                                        "port":"00",
+                                        "spareNum":"#",
+                                        "curWaitNum":"#",
+                                        "curExecNum":"#"
+                                    },
+                                    {
+                                        "port":"1F",
+                                        "spareNum":"#",
+                                        "curWaitNum":"#",
+                                        "curExecNum":"#"
+                                    }
+                               ]
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "查询指定端口任务列表",
+            "description": "查询指定端口任务列表",
+            "type": "inactive",
+            "input": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.tasksched/sys.test/S-meter/F-AddNormTask",
+                        "payload": 
+                        {
+                            "token":"128",
+                            "time":"2021-05-08T09:30:08.230+0800",
+                            "data":
+                            {
+                                "taskInfo":[
+                                    {
+                                        "port":"1F",
+                                        "taskID":"1",
+                                        "taskPatternWord":"80",
+                                        "portParam":"1200-8-E-1-500-1000",
+                                        "dstAddr":"180503811628",
+                                        "protocol":"01",
+                                        "timeout":"10",
+                                        "frame":"68281681030518681104343439389D16"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": 1,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.tasksched/sys.test/S-meter/F-AddNormTask",
+                        "payload": 
+                        {
+                            "token":"129",
+                            "time":"2021-05-08T09:30:08.230+0800",
+                            "data":
+                            {
+                                "taskInfo":[
+                                    {
+                                        "port":"1F",
+                                        "taskID":"2",
+                                        "taskPatternWord":"80",
+                                        "portParam":"1200-8-E-1-500-1000",
+                                        "dstAddr":"180503811628",
+                                        "protocol":"01",
+                                        "timeout":"10",
+                                        "frame":"68281681030518681104343439389D16"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": 2,
+                    "type": "mqtt",
+                    "mqtt_message": {
+                        "topic": "/sys.tasksched/sys.test/S-meter/F-GetPortTaskList",
+                        "payload": {
+                            "token":"130",
+                            "time":"2021-05-08T09:30:08.230+0800",
+                            "data":
+                            {
+                                "port":"1F",
+                                "startId":"1",
+                                "count":"20"
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.test/sys.tasksched/S-meter/F-AddNormTask",
+                        "payload": 
+                        {
+                            "token":"128",
+                            "time":"#",
+                            "data":
+                            {
+                                "taskInfo":[
+                                    {
+                                        "port":"1F",
+                                        "taskID":"1",
+                                        "ack":"true",
+                                        "errmsg":"ok"
+                                    }
+                                ],
+                                "portInfo":[
+                                    {
+                                        "port":"1F",
+                                        "spareNum":"#"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": 1,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.test/sys.tasksched/S-meter/F-AddNormTask",
+                        "payload": 
+                        {
+                            "token":"129",
+                            "time":"#",
+                            "data":
+                            {
+                                "taskInfo":[
+                                    {
+                                        "port":"1F",
+                                        "taskID":"2",
+                                        "ack":"true",
+                                        "errmsg":"ok"
+                                    }
+                                ],
+                                "portInfo":[
+                                    {
+                                        "port":"1F",
+                                        "spareNum":"#"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": 2,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.test/sys.tasksched/S-meter/F-GetPortTaskList",
+                        "payload": {
+                            "token": "130",
+                            "time":"#",
+                            "data":
+                            {
+                                "taskInfo": [
+                                    {
+                                        "taskID":"1",
+                                        "state":"waiting"
+                                    },
+                                    {
+                                        "taskID":"2",
+                                        "state":"waiting"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "查询当前运行状态",
+            "description": "查询当前运行状态",
+            "type": "inactive",
+            "input": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "mqtt_message": {
+                        "topic": "/sys.tasksched/sys.test/S-meter/F-GetCurRunState",
+                        "payload": {
+                            "token":"2",
+                            "time":"2021-05-08T09:30:08.230+0800"
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "id": 0,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.test/sys.tasksched/S-meter/F-GetCurRunState",
+                        "payload": {
+                            "token": "2",
+                            "time":"#",
+                            "data":
+                            {
+                                "totalExecRate":"#",
+                                "curAppExecRate":"#",
+                                "curAppTaskProp":"#",
+                                "curAppTotalTasks":"#",
+                                "totalSuccRate":"#",
+                                "curAppSuccRate":"#"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "主动上报",
+            "description": "主动上报",
+            "type": "active",
+            "input": [
+                {
+                    "id": 0,
+                    "type": "linux",
+                    "linux_command": "systemctl stop sys.dncomm.main"
+                },
+                {
+                    "id": 1,
+                    "type": "mqtt",
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.tasksched/sys.dncomm/S-dnlink/F-ReportEvent",
+                        "payload": 
+                        {
+                            "token":"123",
+                            "time":"2021-05-08T09:30:09.123+0800",
+                            "data":
+                            {
+                                "port":"1F",
+                                "srcAddr":"010203040506",
+                                "DI":"E8050502",
+                                "frame":"6802440000000668910833323433373839386116"
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "id": 1,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.brd/sys.tasksched/S-meter/F-ReportEvent",
+                        "payload": {
+                            "token": "#",
+                            "time":"#",
+                            "data":
+                            {
+                                "port":"1F",
+                                "srcAddr":"010203040506",
+                                "DI":"E8050502",
+                                "frame":"6802440000000668910833323433373839386116"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "查询全部端口摘要信息",
+            "description": "查询全部端口摘要信息",
+            "type": "inactive",
+            "input": [
+                {
+                    "id": 0,
+                    "type": "linux",
+                    "linux_command": "systemctl restart sys.dncomm.main"
+                },
+                {
+                    "id": 1,
+                    "type": "wait",
+                    "time_s": 5
+                },
+                {
+                    "id": 2,
+                    "type": "mqtt",
+                    "mqtt_message": {
+                        "topic": "/sys.tasksched/sys.test/S-meter/F-GetPortSumInfo",
+                        "payload": {
+                            "token":"234",
+                            "time":"2021-05-08T09:30:08.230+0800"
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "id": 2,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "comment": "注意!!!data这里可能还会上报其他端口,无法列举",
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.test/sys.tasksched/S-meter/F-GetPortSumInfo",
+                        "payload": {
+                            "token": "234",
+                            "time":"#",
+                            "ack":"true",
+                            "errmsg":"ok",
+                            "data":
+                            {	
+                                "portInfo":[
+                                    {
+                                        "port":"00",
+                                        "state":"online",
+                                        "func":"RS485"
+                                    },
+                                    {
+                                        "port":"00",
+                                        "state":"online",
+                                        "func":"RS485"
+                                    }
+    
+                                ]
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "查询端口详细信息",
+            "description": "查询端口详细信息",
+            "type": "inactive",
+            "input": [
+                {
+                    "id": 0,
+                    "type": "linux",
+                    "linux_command": "systemctl start sys.dncomm.main"
+                },
+                {
+                    "id": 1,
+                    "type": "wait",
+                    "time_s": 15
+                },
+                {
+                    "id": 2,
+                    "type": "mqtt",
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.tasksched/sys.test/S-meter/F-GetPortDetailInfo",
+                        "payload": 
+                        {
+                            "token":"2",
+                            "time":"2021-05-08T09:30:08.230+0800",
+                            "data":
+                            {
+                                "portInfo": [
+                                   {"port":"00"}
+                                ]
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "id": 2,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.test/sys.tasksched/S-meter/F-GetPortDetailInfo",
+                        "payload": 
+                        {
+                            "token": "2",
+                            "time":"#",
+                            "ack":"true",
+                            "errmsg":"ok",
+                            "data":
+                            {
+                                "portInfo":[
+                                    {
+                                        "port": "00",
+                                        "port_func": "RS485",
+                                        "port_devname": "#",
+                                        "port_halname": "#",
+                                        "channel_idx": "#",
+                                        "related_port": "#",
+                                        "mod_slot": "#",
+                                        "mod_pid": "#",
+                                        "mod_vid": "#",
+                                        "mod_verdate": "#",
+                                        "mod_ver": "#",
+                                        "mod_vendorid": "#",
+                                        "mod_chipid": "#",
+                                        "mod_type": "#",
+                                        "mod_id": "#"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "上报端口变更信息",
+            "description": "上报端口变更信息",
+            "type": "active",
+            "input": [
+                {
+                    "id": 0,
+                    "type": "linux",
+                    "linux_command": "systemctl stop sys.dncomm.main"
+                },
+                {
+                    "id": 1,
+                    "type": "mqtt",
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.tasksched/sys.dncomm/S-dnlink/F-ReportPortChg",
+                        "payload": 
+                        {
+                            "token":"2",
+                            "time":"2021-05-08T09:30:08.230+0800",
+                            "data":
+                            {
+                                "portInfo": [
+                                    {
+                                        "port":"1F",
+                                        "state":"online",
+                                        "func":"BPLC"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "id": 1,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.brd/sys.tasksched/S-meter/F-ReportPortChg",
+                        "payload": 
+                        {
+                            "token": "#",
+                            "time":"#",
+                            "data":
+                            {
+                                "portInfo":[
+                                    {
+                                        "port":"1F",
+                                        "state":"online",
+                                        "func":"BPLC"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "端口通信状态通知",
+            "description": "端口通信状态通知",
+            "type": "inactive",
+            "input": [
+                {
+                    "id": 0,
+                    "type": "linux",
+                    "linux_command": "systemctl stop sys.dncomm.main"
+                },
+                {
+                    "id": 1,
+                    "type": "mqtt",
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.tasksched/sys.test/S-meter/F-PortCommState",
+                        "payload": 
+                        {
+                            "token":"2",
+                            "time":"2021-05-08T09:30:08.230+0800",
+                            "data":
+                            {
+                                "port":"1F",
+                                "notice":"commAbnormalCheck"
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": 2,
+                    "type": "mqtt",
+                    "comment": "注意!!!这里的token是output id 1的token",
+                    "dependencies": {
+                        "token_id": 1
+                    },
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.tasksched/sys.dncomm/S-dnlink/F-PortCommState",
+                        "payload": 
+                        {
+                            "token":"#",
+                            "time":"2021-05-08T09:30:08.230+0800",
+                            "data":
+                            {
+                                "port":"1F",
+                                "state":"commNormal",
+                                "lastResetTime":"123",
+                                "lastCommTime":"123"
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "id": 1,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.dncomm/sys.tasksched/S-dnlink/F-PortCommState",
+                        "payload": 
+                        {
+                            "token": "#",
+                            "time": "#",
+                            "data":
+                            {
+                                "port":"1F",
+                                "notice":"commAbnormalCheck"
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": 2,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.test/sys.tasksched/S-meter/F-PortCommState",
+                        "payload": 
+                        {
+                            "token": "#",
+                            "time":"#",
+                            "ack":"true",
+                            "errmsg":"ok",
+                            "data":
+                            {
+                                "port":"1F",
+                                "state":"commNormal",
+                                "lastResetTime":"123",
+                                "lastCommTime":"123"
+                            }
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "代理传输",
+            "description": "代理传输",
+            "type": "inactive",
+            "input": [
+                {
+                    "id": 0,
+                    "type": "linux",
+                    "linux_command": "systemctl stop sys.dncomm.main"
+                },
+                {
+                    "id": 3,
+                    "type": "wait",
+                    "time_s": 5
+                },
+                {
+                    "id": 1,
+                    "type": "mqtt",
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.tasksched/sys.test/S-meter/F-ProxyFrame",
+                        "payload": 
+                        {
+                            "token":"2",
+                            "time":"2021-05-08T09:30:08.230+0800",
+                            "data":
+                            {
+                                "taskID":"5",
+                                "port":"1F",
+                                "portParam":"1200-8-E-1-500-1000",
+                                "timeout":"20",
+                                "frame":"680F00400310810303E8000010D216"
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": 2,
+                    "type": "mqtt",
+                    "comment": "注意!!!这里的token是output id 1的token",
+                    "dependencies": {
+                        "token_id": 1,
+                        "task_id": 1
+                    },
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.tasksched/sys.dncomm/S-dnlink/F-ProxyFrame",
+                        "payload": 
+                        {
+                            "token":"#",
+                            "time":"2021-05-08T09:30:08.230+0800",
+                            "data":
+                            {
+                                "srcAPP":"sys.test",
+                                "taskID":"#",
+                                "port":"1F",
+                                "portParam":"1200-8-E-1-500-1000",
+                                "outTime":"20",
+                                "frame":"680F00400310810303E8000010D216"
+                            }
+                        }
+                    }
+                }
+            ],
+            "output": [
+                {
+                    "id": 1,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.dncomm/sys.tasksched/S-dnlink/F-ProxyFrame",
+                        "payload": 
+                        {
+                            "token": "#",
+                            "time": "#",
+                            "data":
+                            {
+                                "srcAPP":"sys.test",
+                                "taskID":"#",
+                                "port":"1F",
+                                "portParam":"1200-8-E-1-500-1000",
+                                "timeout":"15",
+                                "frame":"680F00400310810303E8000010D216"
+                            }
+                        }
+                    }
+                },
+                {
+                    "id": 2,
+                    "type": "mqtt",
+                    "timeout_s": 20,
+                    "mqtt_message": 
+                    {
+                        "topic": "/sys.test/sys.tasksched/S-meter/F-ProxyFrame",
+                        "payload": 
+                        {
+                            "token": "#",
+                            "time":"#",
+                            "data":
+                            {
+                                "taskID":"#",
+                                "port":"1F",
+                                "frame":"680F00400310810303E8000010D216"
+                            }
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

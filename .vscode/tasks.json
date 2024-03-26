@@ -41,6 +41,7 @@
             "type": "shell",
             "command": "pyinstaller",
             "args": [
+                "-y",
                 "--windowed",
                 "--add-data",
                 "'D:/ProjectWorkPlace/FrameAnalysic-V1.0/Assistent/app/config;./app/config'",
@@ -58,7 +59,29 @@
                 "reveal": "silent",
                 "panel": "new"
             }
+        },
+        {
+            "label": "Run upgrade",
+            "type": "shell",
+            "command": "pyinstaller",
+            "args": [
+                "-y",
+                "--windowed",
+                "--onefile",
+                "--add-data",
+                "'D:/ProjectWorkPlace/FrameAnalysic-V1.0/Assistent/app/assets;./app/assets'",
+                "--icon='D:/ProjectWorkPlace/FrameAnalysic-V1.0/Assistent/app/resource/images/logo.png'",
+                "--distpath='D:/ProjectWorkPlace/FrameAnalysic-V1.0/build'",
+                "test.py"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "silent",
+                "panel": "new"
+            }
         }
-
     ]
 }

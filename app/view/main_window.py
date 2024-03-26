@@ -4,7 +4,7 @@ from PyQt5.QtGui import QIcon, QDesktopServices
 from PyQt5.QtWidgets import QApplication
 
 from qfluentwidgets import (NavigationAvatarWidget, NavigationItemPosition, MessageBox, FluentWindow,
-                            SplashScreen)
+                            SplashScreen,InfoBar)
 from qfluentwidgets import FluentIcon as FIF
 
 from .gallery_interface import GalleryInterface
@@ -27,12 +27,14 @@ from ..common.config import SUPPORT_URL, cfg
 from ..common.icon import Icon
 from ..common.signal_bus import signalBus
 from ..common.translator import Translator
-from .receive_send_interface import SendReceive
+from .receive_send_interface import SendReceive,ReceiveSendInterface
 from ..common import resource
 from .param_interface import ParamInterface
 from .custom_frame_interface import CustomFrame
 from .database_interface import DataBaseInterface
 from .app_message_interface import AppMessageInterface
+from ..plugins.update import UpgradeWindows
+from PyQt5.QtCore import QThread
 class MainWindow(FluentWindow):
 
     def __init__(self):
@@ -55,7 +57,8 @@ class MainWindow(FluentWindow):
         self.settingInterface = SettingInterface(self)
         self.textInterface = TextInterface(self)
         self.viewInterface = ViewInterface(self)
-        self.sendreceive = SendReceive(self)
+        # self.sendreceive = SendReceive(self)
+        self.sendreceive = ReceiveSendInterface(self)
         self.customFrame = CustomFrame(self)
         self.dataBaseView = DataBaseInterface(self)
         self.appmessage = AppMessageInterface(self)
@@ -68,13 +71,13 @@ class MainWindow(FluentWindow):
         # add items to navigation interface
         self.initNavigation()
         self.splashScreen.finish()
+        self.check_upgrade()
 
     def connectSignalToSlot(self):
         signalBus.micaEnableChanged.connect(self.setMicaEffectEnabled)
         signalBus.switchToSampleCard.connect(self.switchToSample)
         signalBus.supportSignal.connect(self.onSupport)
-        signalBus.windowschange.connect(self.analysicView.analysicView.update_tree_widget)
-
+        signalBus.infopopup.connect(self.onInfoPopup)
     def initNavigation(self):
         # add navigation items
         t = Translator()
@@ -108,11 +111,7 @@ class MainWindow(FluentWindow):
         #     onClick=self.onSupport,
         #     position=NavigationItemPosition.BOTTOM
         # )
-        self.addSubInterface(
-            self.settingInterface, FIF.SETTING, self.tr('Settings'), NavigationItemPosition.BOTTOM)
-        
-        size = QSize(self.size().width() - self.splashScreen.iconSize().width()- 10, self.size().height() - self.splashScreen.iconSize().height() - 10)
-        signalBus.windowschange.emit(size)
+        self.addSubInterface(self.settingInterface, FIF.SETTING, self.tr('Settings'), NavigationItemPosition.BOTTOM)
 
     def initWindow(self):
         self.resize(960, 780)
@@ -147,8 +146,6 @@ class MainWindow(FluentWindow):
     def resizeEvent(self, e):
         super().resizeEvent(e)
         self.splashScreen.resize(self.size())
-        size = QSize(self.size().width() - self.splashScreen.iconSize().width() - 10, self.size().height() - self.splashScreen.iconSize().height() - 10)
-        signalBus.windowschange.emit(size)
 
     def switchToSample(self, routeKey, index):
         """ switch to sample """
@@ -157,3 +154,23 @@ class MainWindow(FluentWindow):
             if w.objectName() == routeKey:
                 self.stackedWidget.setCurrentWidget(w, False)
                 w.scrollToCard(index)
+    def onInfoPopup(self, result, msg, status):
+        if result:
+            InfoBar.success(
+                msg,
+                status,
+                duration=1500,
+                parent=self
+            )
+        else:
+            InfoBar.warning(
+                msg,
+                status,
+                duration=1500,
+                parent=self
+            )
+    def check_upgrade(self):
+        check = cfg.get(cfg.checkUpdateAtStartUp)
+        if check:
+            self.upgrade = UpgradeWindows()
+            self.upgrade.check_upgrade()

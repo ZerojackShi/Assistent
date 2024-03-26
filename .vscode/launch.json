@@ -1,23 +1,34 @@
 {
-    // 使用 IntelliSense 了解相关属性。 
-    // 悬停以查看现有属性的描述。
-    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+    
         {
-            "name": "Python: 当前文件",
+            "name": "Python: Assistent",
             "type": "python",
             "request": "launch",
             "program": "Assistent.py",
             "console": "integratedTerminal",
-            "preLaunchTask": "Run pyrcc5", // 这里引用了上面定义的任务
+            "preLaunchTask": "Run pyrcc5"
         },
         {
             "name": "Python: 编译",
             "type": "python",
             "request": "launch",
             "console": "integratedTerminal",
-            "preLaunchTask": "Run pyinstaller", // 这里引用了上面定义的任务
+            "preLaunchTask": "Run pyinstaller"
+        },
+        {
+            "name": "Python: 编译升级程序",
+            "type": "python",
+            "request": "launch",
+            "console": "integratedTerminal",
+            "preLaunchTask": "Run upgrade"
+        },
+        {
+            "name": "Python 当前文件",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}"
         }
     ]
 }
