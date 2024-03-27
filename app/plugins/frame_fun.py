@@ -204,6 +204,11 @@ class FrameFun:
     def get_data_str_with_space(data):
         data_str = ' '.join(['{:02X}'.format(byte) for byte in data])
         return data_str
+    
+    @staticmethod
+    def get_data_str_reverser_with_space(data):
+        data_str = " ".join([f"{b:02X}" for b in reversed(data)])
+        return data_str
 
     @staticmethod
     def get_data_str_reverser(data):
@@ -483,17 +488,52 @@ class FrameFun:
     @staticmethod
     def get_config_xml(data_item_id:str, protocol:str, region:str, dir=None):
         find_protocol = protocol.upper()
+        # data_item_id = data_item_id.upper()
         if "DLT/645" in find_protocol:
-            return config_645.get_item(data_item_id, find_protocol, region)
+            itemconfig = config_645.get_item(data_item_id, find_protocol, region)
+            if itemconfig is not None:
+                return itemconfig
+            else:
+                if data_item_id.isupper():
+                    return config_645.get_item(data_item_id.lower(), find_protocol, region, dir)
+                if itemconfig is not None:
+                    return config_645.get_item(data_item_id.upper(), find_protocol, region, dir)
         elif "CSG13" in find_protocol:
-            return config_csg13.get_item(data_item_id, find_protocol, region, dir)
+            itemconfig = config_csg13.get_item(data_item_id, find_protocol, region, dir)
+            if itemconfig is not None:
+                return itemconfig
+            else:
+                if data_item_id.isupper():
+                    return config_csg13.get_item(data_item_id.lower(), find_protocol, region, dir)
+                else:
+                    return config_csg13.get_item(data_item_id.upper(), find_protocol, region, dir)
+        else:
+            return None
     @staticmethod
     def get_template_element(template:str, protocol:str, region:str):
         find_protocol = protocol.upper()
+        template = template.upper()
         if "DLT/645" in protocol:
-            return config_645.get_item(template, find_protocol, region)
-        elif "CSG13" in protocol:
-            return config_csg13.get_item(template, find_protocol, region)
+            itemconfig = config_645.get_item(template, find_protocol, region)
+            if itemconfig is not None:
+                return itemconfig
+            else:
+                if template.isupper():
+                    return config_645.get_item(template.lower(), find_protocol, region)
+                else:
+                    return config_645.get_item(template.upper(), find_protocol, region)
+        elif "CSG13" in find_protocol:
+            itemconfig = config_csg13.get_item(template, find_protocol, region)
+            if itemconfig is not None:
+                return itemconfig
+            else:
+                if template.isupper():
+                    return config_csg13.get_item(template.lower(), find_protocol, region)
+                else:
+                    return config_csg13.get_item(template.upper(), find_protocol, region)
+        else:
+            return None
+            
 
 
     @staticmethod
@@ -552,6 +592,29 @@ class FrameFun:
             return ""
         return FrameFun.bintodecimal(port_data)
     @staticmethod
+    def str_reverse_with_space(str:str):
+        # 将字符串按每两个字符分割成一个列表，并反转
+        split_str = [str[i:i+2] for i in range(0, len(str), 2)][::-1]
+
+        # 将列表中的每个元素转换为大写形式
+        upper_str = [x.upper() for x in split_str]
+
+        # 将列表中的元素连接起来，每个元素之间用空格分隔
+        output_str = ' '.join(upper_str)
+        return output_str   
+    
+    @staticmethod   
+    def str_order_with_space(str:str):
+        # 将字符串按每两个字符分割成一个列表，并反转
+        split_str = [str[i:i+2] for i in range(0, len(str), 2)]
+
+        # 将列表中的每个元素转换为大写形式
+        upper_str = [x.upper() for x in split_str]
+
+        # 将列表中的元素连接起来，每个元素之间用空格分隔
+        output_str = ' '.join(upper_str)
+        return output_str   
+    @staticmethod
     def to_hex_string_reverse(value):
         if isinstance(value, str):
             return value
@@ -561,6 +624,17 @@ class FrameFun:
             return FrameFun.get_data_str_reverser(value)
         else:
             raise ValueError("Unsupported data type. Expected int or list of ints.")
+    @staticmethod    
+    def to_hex_string_reverse_with_space(value):
+        if isinstance(value, str):
+            return FrameFun.str_reverse_with_space(value)
+        elif isinstance(value, int):
+            return hex(value)[2:].upper()
+        elif isinstance(value, list):
+            return FrameFun.get_data_str_reverser_with_space(value)
+        else:
+            raise ValueError("Unsupported data type. Expected int or list of ints.")
+        
     @staticmethod
     def to_hex_string_delete_33h_reverse(value):
         if isinstance(value, str):

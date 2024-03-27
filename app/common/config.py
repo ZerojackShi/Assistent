@@ -232,7 +232,7 @@ class QframeConfig(QObject):
         def find_target_dataitem(root, target_id, target_protocol, region, dir=None):
             target_node = root.findall(".//*[@id='{}']".format(target_id,target_protocol,region))
             if target_node is None:
-                print("No node found with id {} protocol {} and region {}".format(target_id))
+                print("No node found with id {} protocol {} and region {}".format(target_id,target_protocol,region))
                 return None
             #当前标签无法找到
             print("found with id {} protocol {} and region {}".format(target_id,target_protocol,region))
