@@ -29,3 +29,13 @@ jobs:
                     --icon='${{ github.workspace }}/app/resource/images/logo.png' \
                     --distpath='${{ github.workspace }}/build' \
                     Assistent.py
+
+    - name: Compress build directory
+      run: |
+        zip -r build.zip ${{ github.workspace }}/build
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: executables
+        path: build.zip
