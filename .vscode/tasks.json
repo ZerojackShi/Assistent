@@ -44,11 +44,11 @@
                 "-y",
                 "--windowed",
                 "--add-data",
-                "'D:/ProjectWorkPlace/FrameAnalysic-V1.0/Assistent/app/config;./app/config'",
+                "'D:/ProjackSpace/assistent/app/config;./app/config'",
                 "--add-data",
-                "'D:/ProjectWorkPlace/FrameAnalysic-V1.0/Assistent/app/assets;./app/assets'",
-                "--icon='D:/ProjectWorkPlace/FrameAnalysic-V1.0/Assistent/app/resource/images/logo.png'",
-                "--distpath='D:/ProjectWorkPlace/FrameAnalysic-V1.0/build'",
+                "'D:/ProjackSpace/assistent/app/assets;./app/assets'",
+                "--icon='D:/ProjackSpace/assistent/app/resource/images/logo.png'",
+                "--distpath='D:/ProjackSpace/build'",
                 "Assistent.py"
             ],
             "group": {
@@ -69,9 +69,9 @@
                 "--windowed",
                 "--onefile",
                 "--add-data",
-                "'D:/ProjectWorkPlace/FrameAnalysic-V1.0/Assistent/app/assets;./app/assets'",
-                "--icon='D:/ProjectWorkPlace/FrameAnalysic-V1.0/Assistent/app/resource/images/logo.png'",
-                "--distpath='D:/ProjectWorkPlace/FrameAnalysic-V1.0/build'",
+                "'D:/ProjackSpace/assistent/app/assets;./app/assets'",
+                "--icon='D:/ProjackSpace/assistent/app/resource/images/logo.png'",
+                "--distpath='D:/ProjackSpace/build'",
                 "test.py"
             ],
             "group": {
