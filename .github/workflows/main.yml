@@ -23,7 +23,7 @@ jobs:
 
     - name: Build executable
       run: |
-        pyinstaller -y --windowed --add-data ${{ github.workspace }}/app/config;./app/config --add-data ${{ github.workspace }}/app/assets;./app/assets --icon=${{ github.workspace }}/app/resource/images/logo.png --distpath=${{ github.workspace }}/build Assistent.py
+        pyinstaller -y --windowed --add-data '${{ github.workspace }}/app/config;./app/config' --add-data '${{ github.workspace }}/app/assets;./app/assets' --icon='${{ github.workspace }}/app/resource/images/logo.png' --distpath='${{ github.workspace }}/build' --name=Assistent Assistent.py
 
     - name: Compress build directory
       run: |
