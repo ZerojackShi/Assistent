@@ -2,8 +2,7 @@ from PyQt5.QtCore import QThread, pyqtSignal,Qt
 from ..common.config import cfg, APP_EXEC, FEEDBACK_URL, AUTHOR, VERSION, YEAR, isWin11,REPO_OWNER,REPO_NAME,Authorization,APP_NAME,UPDATE_FILE,UPDATE_DIR
 from qfluentwidgets import InfoBar,MessageBox,TextEdit,PrimaryPushButton
 import requests,os,re,zipfile,shutil,subprocess
-from tqdm import tqdm
-import time,configparser,wget,difflib
+import time,configparser,difflib
 from PyQt5.QtWidgets import (QWidget, QFrame, QLabel, QHBoxLayout, QVBoxLayout,
                              QToolButton, QGraphicsOpacityEffect,QApplication, QMainWindow,QPushButton,QSpacerItem,QSizePolicy)
 from PyQt5.QtGui import QIcon
@@ -12,7 +11,7 @@ from ..common.style_sheet import StyleSheet
 import ctypes,sys
 import ctypes
 from ctypes import wintypes,c_ulong
-import comtypes.client
+
 def get_github_tags(repo_owner, repo_name):
     url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases"
     headers = {'Authorization': f'token {Authorization}','User-Agent': f"{APP_NAME}"}
