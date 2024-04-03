@@ -27,8 +27,8 @@ jobs:
 
     - name: Compress build directory
       run: |
-        zip -r Assistent.zip ${{ github.workspace }}/dest
-
+        Compress-Archive -Path '${{ github.workspace }}/dest' -DestinationPath 'Assistent.zip'
+    
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
