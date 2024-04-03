@@ -1,6 +1,7 @@
 name: Build and Push
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -29,8 +30,23 @@ jobs:
       run: |
         Compress-Archive -Path '${{ github.workspace }}/dest/Assistent' -DestinationPath 'Assistent.zip'
     
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v2
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
       with:
-        name: executables
-        path: Assistent.zip
+        files: |
+          Assistent.zip
+        tag_name: ${{ inputs.tag_name }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+# Inputs
+inputs:
+  file_path:
+    description: 'The path to the file to be included in the release'
+    required: true
+  tag_name:
+    description: 'The tag name for the release'
+    required: true
