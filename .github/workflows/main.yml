@@ -23,14 +23,14 @@ jobs:
 
     - name: Build executable
       run: |
-        pyinstaller -y --windowed --add-data '${{ github.workspace }}/app/config;./app/config' --add-data '${{ github.workspace }}/app/assets;./app/assets' --icon='${{ github.workspace }}/app/resource/images/logo.png' --distpath='${{ github.workspace }}/build' --name=Assistent Assistent.py
+        pyinstaller -y --windowed --add-data '${{ github.workspace }}/app/config;./app/config' --add-data '${{ github.workspace }}/app/assets;./app/assets' --icon='${{ github.workspace }}/app/resource/images/logo.png' --distpath='${{ github.workspace }}/dest' --name=Assistent Assistent.py
 
     - name: Compress build directory
       run: |
-        zip -r build.zip ${{ github.workspace }}/build
+        zip -r Assistent.zip ${{ github.workspace }}/dest
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v2
       with:
         name: executables
-        path: build.zip
+        path: Assistent.zip
