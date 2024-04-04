@@ -6,9 +6,6 @@ on:
       tag_name:
         description: 'The tag name for the release'
         required: true
-  push:
-    branches:
-      - main
 
 jobs:
   build:
