@@ -1,11 +1,9 @@
 name: Create build
 
 on:
-  workflow_dispatch:
-    inputs:
-      tag_name:
-        description: 'The tag name for the release'
-        required: true
+ push:
+    branches:
+      - main
 
 jobs:
   build:
@@ -42,7 +40,7 @@ jobs:
       with:
         files: |
           Assistent.zip
-        tag_name: ${{ github.event.inputs.tag_name }}
+        tag_name: V1.1
         release_name: Release ${{ github.ref }}
         draft: false
         prerelease: false
