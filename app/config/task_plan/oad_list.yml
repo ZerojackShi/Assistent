@@ -7,3 +7,7 @@ Oad_List:
   - master_oad: 0x50040200
     name: Vir_50040200_List
     file: !inc ./50040200_List.yml
+
+  - master_oad: 0x50060200
+    name: Vir_50060200_List
+    file: !inc ./50060200_List.yml

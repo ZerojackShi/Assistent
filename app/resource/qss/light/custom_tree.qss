@@ -29,3 +29,13 @@ QTreeWidget::item {
     background: red; /* 设置选中项的背景颜色为红色 */
     color: white; /* 设置选中项的文字颜色为白色 */
 }
+QTreeView::branch:has-children:!has-siblings:closed,
+QTreeView::branch:closed:has-children:has-siblings {
+    border-image: none;
+    image: url(:/gallery/images/close_white.png);
+}
+QTreeView::branch:open:has-children:!has-siblings,
+QTreeView::branch:open:has-children:has-siblings {
+    border-image: none;
+    image: url(:/gallery/images/open_white.png);
+}

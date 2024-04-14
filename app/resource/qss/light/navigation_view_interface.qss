@@ -14,3 +14,9 @@ TabInterface QLabel {
     border-left: 1px solid rgb(229, 229, 229);
     border-top-right-radius: 10px;
 }
+QLabel {
+    color: black;
+    background-color: transparent;
+    font-family: 'Courier New', 'PingFang SC';
+    font-size: 13px;
+}

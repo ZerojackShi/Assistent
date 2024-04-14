@@ -490,6 +490,8 @@ class FrameFun:
         find_protocol = protocol.upper()
         # data_item_id = data_item_id.upper()
         if "DLT/645" in find_protocol:
+            if find_protocol != "DLT/645-2007":
+                find_protocol = "DLT/645-2007"
             itemconfig = config_645.get_item(data_item_id, find_protocol, region)
             if itemconfig is not None:
                 return itemconfig
@@ -640,7 +642,8 @@ class FrameFun:
         if isinstance(value, str):
             return value
         elif isinstance(value, int):
-            return hex(value)[2:].upper()
+            hex_str = hex(value)[2:].upper()
+            return hex_str.zfill(2)  # 在前面补零，直到达到指定长度
         elif isinstance(value, list):
             return FrameFun.get_data_str_delete_33h_reverse(value)
         else:
@@ -650,7 +653,8 @@ class FrameFun:
         if isinstance(value, str):
             return value
         elif isinstance(value, int):
-            return hex(value)[2:].upper()
+            hex_str = hex(value)[2:].upper()
+            return hex_str.zfill(2)  # 在前面补零，直到达到指定长度
         elif isinstance(value, list):
             return FrameFun.get_data_str_with_space(value)
         else:

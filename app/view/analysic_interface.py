@@ -9,11 +9,14 @@ from ..common.config import cfg, log_config
 from ..common.style_sheet import StyleSheet
 from ..plugins import protocol
 from ..plugins.frame_csg import FrameCsg
+from ..plugins.MeterTask import MeterTask
 from .gallery_interface import GalleryInterface
 from ..common.translator import Translator
 from ..common.signal_bus import signalBus
 import sys,os,time
 from PyQt5.QtSvg import QSvgGenerator
+from functools import partial
+
 class CustomTreeWidgetItem(QtWidgets.QTreeWidgetItem):
     def __init__(self, parent, text_list):
         self.data = text_list  # Store the associated data
@@ -36,6 +39,7 @@ class CustomTreeWidget(QtWidgets.QTreeWidget):
     custom_signal = QtCore.pyqtSignal(QtWidgets.QTreeWidgetItem)  # Define a custom signal
     def __init__(self):
         super().__init__()
+        self.expend_status = True
         self.last_item = None
         self.last_column = 0
         self.scrollDelegate = SmoothScrollDelegate(self)
@@ -54,6 +58,22 @@ class CustomTreeWidget(QtWidgets.QTreeWidget):
         self.datalist = None
         self.item_position = None
         StyleSheet.CUSTOM_TREE.apply(self)
+
+
+
+    def contextMenuEvent(self, event):
+        menu = RoundMenu(self)
+        self.export_action = Action("导出为图片", self)
+        self.export_action.triggered.connect(lambda: self.export(1))
+        self.copy_action = Action("复制到剪贴板", self)
+        self.copy_action.triggered.connect(lambda: self.export(2))
+        action_info = "折叠所有" if self.expend_status == True else "展开所有"
+        self.expend_action = Action(action_info, self)
+        self.expend_action.triggered.connect(lambda: self.close_or_expend())
+        menu.addAction(self.export_action)
+        menu.addAction(self.copy_action)
+        menu.addAction(self.expend_action)
+        menu.exec_(event.globalPos())
 
     def onItemClicked(self, item):
 
@@ -109,16 +129,22 @@ class CustomTreeWidget(QtWidgets.QTreeWidget):
             child_items = item_data.get("子项", [])
             if child_items:
                 self.create_tree(item, child_items,item_positions)
-    def contextMenuEvent(self, event):
-        menu = RoundMenu(self)
-        export_action = Action("导出为图片", self)
-        export_action.triggered.connect(lambda: self.export(1))
-        copy_action = Action("复制到剪贴板", self)
-        copy_action.triggered.connect(lambda: self.export(2))
-        menu.addAction(export_action)
-        menu.addAction(copy_action)
-        menu.exec_(event.globalPos())
-    
+
+    def close_or_expend(self):
+        if self.expend_status:
+            self.collapseAll()
+        else:
+            self.expandAll()
+
+
+    def expandAll(self):
+        self.expend_status = True
+        super().expandAll()
+
+    def collapseAll(self):
+        self.expend_status = False
+        super().collapseAll()
+
     def export(self, type):
         try:
             if type == 1:
@@ -294,11 +320,14 @@ class Alalysic(QWidget):
     def display_tree(self):
         self.tree_widget.clear()
         input_text = self.input_text.toPlainText()
+        if input_text == '':
+            return
         protocol.frame_fun.globregion = cfg.get(cfg.Region)
         print(protocol.frame_fun.globregion)
         # Process the input text and generate the tree data
         show_data = []
         framedis = FrameCsg()
+        meter_task = MeterTask()
         # Add tree data using add data function
         try:
             frame = bytearray.fromhex(input_text)
@@ -309,7 +338,7 @@ class Alalysic(QWidget):
             for i in range(0, len(hex_str), 2):
                 formatted_frame += hex_str[i:i + 2] + ' '
             self.disconnect_text_changed()
-            self.input_text.setPlainText(formatted_frame)
+            self.input_text.setPlainText(formatted_frame.upper())
             cursor = self.input_text.textCursor()
 
             # Clear any previous selections
@@ -326,6 +355,8 @@ class Alalysic(QWidget):
             elif framedis.is_csg_frame(frame):
                 protocol.frame_fun.globalprotocol = "CSG13"
                 framedis.Analysis_csg_frame_by_afn(frame,show_data,0)
+            elif meter_task.is_meter_task(frame):
+                meter_task.analysic_meter_task(frame,show_data, 0)
             self.tree_widget.create_tree(None, show_data, self.item_position)
             self.tree_widget.expandAll()
             self.reconnect_text_changed()

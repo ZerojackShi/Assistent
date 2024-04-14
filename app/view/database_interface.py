@@ -60,11 +60,10 @@ class ReadTask(QWidget):
         cleaned_string = data.replace(' ', '').replace('\n', '')
         data_content = [int(cleaned_string[i:i + 2], 16) for i in range(0, len(cleaned_string), 2)]
         item_str = frame_fun.to_hex_string_with_space(data_content)
-        self.taskParamInput.setPlainText(item_str)
+        self.taskParamInput.setPlainText(item_str.upper())
         protocol.frame_fun.globregion = cfg.get(cfg.Region)
-        frame_fun.globalprotocol = "CSG13"
         meter_task = MeterTask()
-        meter_task.analysic_meter_task(data_content, alalysic_result, 0, self.item_position)
+        meter_task.analysic_meter_task(data_content, alalysic_result, 0)
         self.tree_widget.create_tree(None, alalysic_result, self.item_position)
         self.tree_widget.expandAll()
 
@@ -180,12 +179,12 @@ class FrameInterface(QWidget):
         self.stackedWidget = QStackedWidget(self)
         self.vBoxLayout = QVBoxLayout(self)
 
-        self.taskterface = ReadTask()
+        # self.taskterface = ReadTask()
         self.itemterface = CustomItem()
         # add items to pivot
 
         self.addSubInterface(self.itemterface, 'itemterface', self.tr('数据解析'))
-        self.addSubInterface(self.taskterface, 'taskterface', self.tr('任务配置'))
+        # self.addSubInterface(self.taskterface, 'taskterface', self.tr('任务配置'))
 
         self.vBoxLayout.addWidget(self.pivot, 1)
         self.vBoxLayout.addWidget(self.stackedWidget, 9)
