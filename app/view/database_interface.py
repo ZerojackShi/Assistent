@@ -12,8 +12,9 @@ from ..plugins.frame_fun import FrameFun as frame_fun
 from .analysic_interface import CustomTreeWidgetItem,CustomTreeWidget
 from ..common.config import cfg
 from ..common.signal_bus import signalBus
+from ..plugins.MeterTask import MeterTask
 
-class ParamTaskParam(QWidget):
+class ReadTask(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.item_position = {}
@@ -58,11 +59,12 @@ class ParamTaskParam(QWidget):
             return
         cleaned_string = data.replace(' ', '').replace('\n', '')
         data_content = [int(cleaned_string[i:i + 2], 16) for i in range(0, len(cleaned_string), 2)]
+        item_str = frame_fun.to_hex_string_with_space(data_content)
+        self.taskParamInput.setPlainText(item_str)
         protocol.frame_fun.globregion = cfg.get(cfg.Region)
         frame_fun.globalprotocol = "CSG13"
-        template_element = frame_fun.get_template_element("BASETASK", frame_fun.globalprotocol,frame_fun.globregion)
-        show_data = protocol.parse_splitByLength_data(template_element, data_content, 0, 0)
-        frame_fun.prase_data_with_config(show_data, False, alalysic_result)
+        meter_task = MeterTask()
+        meter_task.analysic_meter_task(data_content, alalysic_result, 0, self.item_position)
         self.tree_widget.create_tree(None, alalysic_result, self.item_position)
         self.tree_widget.expandAll()
 
@@ -178,11 +180,12 @@ class FrameInterface(QWidget):
         self.stackedWidget = QStackedWidget(self)
         self.vBoxLayout = QVBoxLayout(self)
 
-        # self.taskterface = ParamTaskParam()
+        self.taskterface = ReadTask()
         self.itemterface = CustomItem()
         # add items to pivot
-        # self.addSubInterface(self.taskterface, 'paramInterface', self.tr('任务参数'))
+
         self.addSubInterface(self.itemterface, 'itemterface', self.tr('数据解析'))
+        self.addSubInterface(self.taskterface, 'taskterface', self.tr('任务配置'))
 
         self.vBoxLayout.addWidget(self.pivot, 1)
         self.vBoxLayout.addWidget(self.stackedWidget, 9)

@@ -251,15 +251,18 @@ class UpgradeThread(QThread):
         super(UpgradeThread, self).__init__(parent)
 
     def run(self):
-        # 在这里执行检查更新的操作
-        tags = get_github_tags(REPO_OWNER, REPO_NAME)
-        local_node = cfg.get(cfg.node_id)
-        tag = check_for_updates(VERSION, local_node, tags)
-        if tag:
-            self.update_status.emit(True, tag)
-        else:
-            tag = {}
-            self.update_status.emit(False, tag)
+        try:
+            # 在这里执行检查更新的操作
+            tags = get_github_tags(REPO_OWNER, REPO_NAME)
+            local_node = cfg.get(cfg.node_id)
+            tag = check_for_updates(VERSION, local_node, tags)
+            if tag:
+                self.update_status.emit(True, tag)
+            else:
+                tag = {}
+                self.update_status.emit(False, tag)
+        except Exception as e:
+            print(f"Error: {e}")
         return
     def __del__(self):
         self.wait()

@@ -718,46 +718,49 @@ def Analysic_csg_ack_frame(frame, dir, prm, result_list,start_pos):
     pw = False
 
     while pos < length:
-        DA = data_segment[pos:pos + 2]
-        item = data_segment[pos + 2: pos + 6]
-        point_str = prase_DA_data(DA)
+        try:
+            DA = data_segment[pos:pos + 2]
+            item = data_segment[pos + 2: pos + 6]
+            point_str = prase_DA_data(DA)
 
-        data_item = frame_fun.get_data_str_reverser(item)
+            data_item = frame_fun.get_data_str_reverser(item)
 
-        frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
-        pos += 2
+            frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
+            pos += 2
 
-        data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
-        item_data = []
-        if data_item_elem is not None:
-            sublength = data_item_elem.find('length')
-            if sublength is not None:
-                sub_length = int(sublength.text)
+            data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
+            item_data = []
+            if data_item_elem is not None:
+                sublength = data_item_elem.find('length')
+                if sublength is not None:
+                    sub_length = int(sublength.text)
+                else:
+                    sub_length = len(sub_datament[4:])
+                sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                prase_data = PraseFrameData()
+                alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,sub_datament, index + pos + 4)
+                frame_fun.prase_data_with_config(alalysic_result, False,item_data)
+                name = data_item_elem.find('name').text
+                dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
             else:
-                sub_length = len(sub_datament[4:])
-            sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-            prase_data = PraseFrameData()
-            alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,sub_datament, index + pos + 4)
-            frame_fun.prase_data_with_config(alalysic_result, False,item_data)
-            name = data_item_elem.find('name').text
-            dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
-        else:
-            sub_datament = data_segment[pos + 4:]
-            sub_length = len(sub_datament)
-            item_data = None
-            dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
+                sub_datament = data_segment[pos + 4:]
+                sub_length = len(sub_datament)
+                item_data = None
+                dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
 
-        result_str = f"数据标识[{data_item}]数据内容："
-        frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
-        frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识内容",frame_fun.get_data_str_with_space(sub_datament),result_str + frame_fun.get_data_str_reverser(sub_datament),[index + pos + 4, index + pos + 4 + sub_length], item_data)
+            result_str = f"数据标识[{data_item}]数据内容："
+            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
+            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识内容",frame_fun.get_data_str_with_space(sub_datament),result_str + frame_fun.get_data_str_reverser(sub_datament),[index + pos + 4, index + pos + 4 + sub_length], item_data)
 
-        pos += (sub_length + 4)
-        num += 1
-        if length - pos == 16:
-            pw  = guest_is_exit_pw(length, pw_data,None, None, False)
-            if pw:
-                length -= 16
-
+            pos += (sub_length + 4)
+            num += 1
+            if length - pos == 16:
+                pw  = guest_is_exit_pw(length, pw_data,None, None, False)
+                if pw:
+                    length -= 16
+        except Exception as e:
+            CustomMessageBox("告警",'解析数据失败！')
+            break
     if pw:
         pw_str = "PW由16个字节组成，是由主站按系统约定的认证算法产生，并在主站发送的报文中下发给终端，由终端进行校验认证。"
         frame_fun.add_data(sub_result, f"消息验证码Pw",frame_fun.get_data_str_with_space(pw_data),pw_str,pw_pos)
@@ -789,64 +792,68 @@ def Analysic_csg_link_frame(frame,dir, prm,result_list,start_pos):
     pw = False
     prase_data = PraseFrameData()
     while pos < length:
-        DA = data_segment[pos:pos + 2]
-        item = data_segment[pos + 2: pos + 6]
+        try:
+            DA = data_segment[pos:pos + 2]
+            item = data_segment[pos + 2: pos + 6]
 
-        point_str = prase_DA_data(DA)
-        data_item = frame_fun.get_data_str_reverser(item)
+            point_str = prase_DA_data(DA)
+            data_item = frame_fun.get_data_str_reverser(item)
 
-        frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
-        pos += 2
+            frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
+            pos += 2
 
-        data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
-        item_data = []
-        if data_item_elem is not None:
-            if dir == 1 and prm == 0:
-                sub_length = 1
-                sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                err_str = prase_err_code_result(sub_datament[0])
-            else:
-                sub_length_cont = data_item_elem.find('length')
-                if sub_length_cont is not None:
-                    sub_length = sub_length_cont.text
-                    if sub_length.upper() in "UNKNOWN":
-                        sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
-                    else:
-                        sub_length = int(sub_length)
+            data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
+            item_data = []
+            if data_item_elem is not None:
+                if dir == 1 and prm == 0:
+                    sub_length = 1
+                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                    err_str = prase_err_code_result(sub_datament[0])
                 else:
-                    sub_length = len(data_segment[4:])
+                    sub_length_cont = data_item_elem.find('length')
+                    if sub_length_cont is not None:
+                        sub_length = sub_length_cont.text
+                        if sub_length.upper() in "UNKNOWN":
+                            sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
+                        else:
+                            sub_length = int(sub_length)
+                    else:
+                        sub_length = len(data_segment[4:])
 
-                sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,sub_datament, index + pos + 4)
-                frame_fun.prase_data_with_config(alalysic_result, False,item_data)
-            name = data_item_elem.find('name').text
-            dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
-        else:
-            if dir == 1 and prm == 0:
-                sub_length = 1
-                sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                err_str = prase_err_code_result(sub_datament[0]);
+                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                    alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,sub_datament, index + pos + 4)
+                    frame_fun.prase_data_with_config(alalysic_result, False,item_data)
+                name = data_item_elem.find('name').text
+                dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
             else:
-                CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
-                break
-            dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
-        if dir == 1 and prm == 0:
-            result_str = "写参数返回结果：" + frame_fun.get_data_str_reverser(sub_datament) +  "-" + err_str
-        else:
-            result_str = f"数据标识[{data_item}]数据内容：" + frame_fun.get_data_str_reverser(sub_datament)
-        frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
-        if dir == 1 and prm == 0:
-            frame_fun.add_data(sub_result, f"<第{num + 1}组>ERR",frame_fun.get_data_str_with_space(sub_datament),result_str,[index + pos + 4, index + pos + 4 + sub_length], item_data)
-        else:
-            if len(item_data):
-                frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识内容",frame_fun.get_data_str_with_space(sub_datament),result_str,[index + pos + 4, index + pos + 4 + sub_length], item_data)
+                if dir == 1 and prm == 0:
+                    sub_length = 1
+                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                    err_str = prase_err_code_result(sub_datament[0]);
+                else:
+                    CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                    break
+                dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
+            if dir == 1 and prm == 0:
+                result_str = "写参数返回结果：" + frame_fun.get_data_str_reverser(sub_datament) +  "-" + err_str
+            else:
+                result_str = f"数据标识[{data_item}]数据内容：" + frame_fun.get_data_str_reverser(sub_datament)
+            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
+            if dir == 1 and prm == 0:
+                frame_fun.add_data(sub_result, f"<第{num + 1}组>ERR",frame_fun.get_data_str_with_space(sub_datament),result_str,[index + pos + 4, index + pos + 4 + sub_length], item_data)
+            else:
+                if len(item_data):
+                    frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识内容",frame_fun.get_data_str_with_space(sub_datament),result_str,[index + pos + 4, index + pos + 4 + sub_length], item_data)
 
-        pos += (sub_length + 4)
-        num += 1
-        if length - pos == 16:
-            pw  = guest_is_exit_pw(length, pw_data, None, None, False)
-            if pw:
-                length -= 16
+            pos += (sub_length + 4)
+            num += 1
+            if length - pos == 16:
+                pw  = guest_is_exit_pw(length, pw_data, None, None, False)
+                if pw:
+                    length -= 16
+        except Exception as e:
+            CustomMessageBox("告警",'解析数据失败！')
+            break
 
     if pw:
         pw_str = "PW由16个字节组成，是由主站按系统约定的认证算法产生，并在主站发送的报文中下发给终端，由终端进行校验认证。"
@@ -878,59 +885,62 @@ def Analysic_csg_write_frame(frame, dir, prm,result_list,start_pos):
     pw = False
     prase_data = PraseFrameData()
     while pos < length:
-        DA = data_segment[pos:pos + 2]
-        item = data_segment[pos + 2: pos + 6]
+        try:
+            DA = data_segment[pos:pos + 2]
+            item = data_segment[pos + 2: pos + 6]
 
-        point_str = prase_DA_data(DA)
-        data_item = frame_fun.get_data_str_reverser(item)
+            point_str = prase_DA_data(DA)
+            data_item = frame_fun.get_data_str_reverser(item)
 
-        frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
-        pos += 2
+            frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
+            pos += 2
 
-        data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
-        item_data = []
-        if data_item_elem is not None:
-            if dir == 1 and prm == 0:
-                sub_length = 1
-                sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                err_str = prase_err_code_result(sub_datament[0]);
-            else:
-                sub_length_cont = data_item_elem.find('length').text
-                if sub_length_cont.upper() in "UNKNOWN":
-                    sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
+            data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
+            item_data = []
+            if data_item_elem is not None:
+                if dir == 1 and prm == 0:
+                    sub_length = 1
+                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                    err_str = prase_err_code_result(sub_datament[0]);
                 else:
-                    sub_length = int(sub_length_cont)
-                sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,sub_datament, index + pos + 4)
-                frame_fun.prase_data_with_config(alalysic_result, False,item_data)
-            name = data_item_elem.find('name').text
-            dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
-        else:
-            if dir == 1 and prm == 0:
-                sub_length = 1
-                sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                err_str = prase_err_code_result(sub_datament[0]);
+                    sub_length_cont = data_item_elem.find('length').text
+                    if sub_length_cont.upper() in "UNKNOWN":
+                        sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
+                    else:
+                        sub_length = int(sub_length_cont)
+                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                    alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,sub_datament, index + pos + 4)
+                    frame_fun.prase_data_with_config(alalysic_result, False,item_data)
+                name = data_item_elem.find('name').text
+                dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
             else:
-                CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
-                break
-            dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
-        if dir == 1 and prm == 0:
-            result_str = "写参数返回结果：" + frame_fun.get_data_str_reverser(sub_datament) +  "-" + err_str
-        else:
-            result_str = f"数据标识[{data_item}]数据内容：" + frame_fun.get_data_str_reverser(sub_datament)
-        frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
-        if dir == 1 and prm == 0:
-            frame_fun.add_data(sub_result, f"<第{num + 1}组>ERR",frame_fun.get_data_str_with_space(sub_datament),result_str,[index + pos + 4, index + pos + 4 + sub_length], item_data)
-        else:
-            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识内容",frame_fun.get_data_str_with_space(sub_datament),result_str,[index + pos + 4, index + pos + 4 + sub_length], item_data)
+                if dir == 1 and prm == 0:
+                    sub_length = 1
+                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                    err_str = prase_err_code_result(sub_datament[0]);
+                else:
+                    CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                    break
+                dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
+            if dir == 1 and prm == 0:
+                result_str = "写参数返回结果：" + frame_fun.get_data_str_reverser(sub_datament) +  "-" + err_str
+            else:
+                result_str = f"数据标识[{data_item}]数据内容：" + frame_fun.get_data_str_reverser(sub_datament)
+            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
+            if dir == 1 and prm == 0:
+                frame_fun.add_data(sub_result, f"<第{num + 1}组>ERR",frame_fun.get_data_str_with_space(sub_datament),result_str,[index + pos + 4, index + pos + 4 + sub_length], item_data)
+            else:
+                frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识内容",frame_fun.get_data_str_with_space(sub_datament),result_str,[index + pos + 4, index + pos + 4 + sub_length], item_data)
 
-        pos += (sub_length + 4)
-        num += 1
-        if length - pos == 16:
-            pw  = guest_is_exit_pw(length, pw_data)
-            if pw:
-                length -= 16
-
+            pos += (sub_length + 4)
+            num += 1
+            if length - pos == 16:
+                pw  = guest_is_exit_pw(length, pw_data)
+                if pw:
+                    length -= 16
+        except Exception as e:
+            CustomMessageBox("告警",'解析数据失败！')
+            break
     if pw:
         pw_str = "PW由16个字节组成，是由主站按系统约定的认证算法产生，并在主站发送的报文中下发给终端，由终端进行校验认证。"
         frame_fun.add_data(sub_result, f"消息验证码Pw",frame_fun.get_data_str_with_space(pw_data),pw_str,pw_pos)
@@ -962,59 +972,62 @@ def Analysic_csg_security_frame(frame, dir, prm,result_list,start_pos):
     data_segment = valid_data_segment[:length]
     prase_data = PraseFrameData()
     while pos < length:
-        DA = data_segment[pos:pos + 2]
-        item = data_segment[pos + 2: pos + 6]
+        try:
+            DA = data_segment[pos:pos + 2]
+            item = data_segment[pos + 2: pos + 6]
 
-        point_str = prase_DA_data(DA)
+            point_str = prase_DA_data(DA)
 
-        data_item = frame_fun.get_data_str_reverser(item)
+            data_item = frame_fun.get_data_str_reverser(item)
 
-        frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
-        pos += 2
+            frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
+            pos += 2
 
-        data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
-        item_data = []
-        if data_item == "E0010182":
-            dir = 1
-            prm = 0
-        if data_item_elem is not None:
-            if dir == 1 and prm == 0:#上行回复
-                sub_length_cont = data_item_elem.find('length').text
-                if sub_length_cont.upper() in "UNKNOWN":
-                    sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
-                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                    new_datament = sub_datament
+            data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
+            item_data = []
+            if data_item == "E0010182":
+                dir = 1
+                prm = 0
+            if data_item_elem is not None:
+                if dir == 1 and prm == 0:#上行回复
+                    sub_length_cont = data_item_elem.find('length').text
+                    if sub_length_cont.upper() in "UNKNOWN":
+                        sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
+                        sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                        new_datament = sub_datament
+                    else:
+                        sub_length = int(sub_length_cont)
+                        sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                        sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
+
+                    alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
+                    frame_fun.prase_data_with_config(alalysic_result, False,item_data)
                 else:
-                    sub_length = int(sub_length_cont)
-                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                    sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
-
-                alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
-                frame_fun.prase_data_with_config(alalysic_result, False,item_data)
+                    sub_length = 0#下行读取报文
+                name = data_item_elem.find('name').text
+                dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
             else:
-                sub_length = 0#下行读取报文
-            name = data_item_elem.find('name').text
-            dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
-        else:
+                if dir == 1 and prm == 0:
+                    pw = guest_is_exit_pw(length,data_segment)
+                    CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                    break
+                else:
+                    sub_length = 0
+                dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
+
+            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
             if dir == 1 and prm == 0:
-                pw = guest_is_exit_pw(length,data_segment)
-                CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
-                break
-            else:
-                sub_length = 0
-            dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
+                frame_fun.add_data(sub_result, f"<第{num + 1}组>数据内容",frame_fun.get_data_str_with_space(sub_datament),point_str[len("Pn="):] + "-" + dis_data_identifier[len("数据标识编码："):],[index + pos + 4, index + pos + 4 + sub_length], item_data)
+            pos += (sub_length + 4)
+            num += 1
 
-        frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
-        if dir == 1 and prm == 0:
-            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据内容",frame_fun.get_data_str_with_space(sub_datament),point_str[len("Pn="):] + "-" + dis_data_identifier[len("数据标识编码："):],[index + pos + 4, index + pos + 4 + sub_length], item_data)
-        pos += (sub_length + 4)
-        num += 1
-
-        if length - pos == 16:
-            pw  = guest_is_exit_pw(length, pw_data)
-            if pw:
-                length -= 16
-
+            if length - pos == 16:
+                pw  = guest_is_exit_pw(length, pw_data)
+                if pw:
+                    length -= 16
+        except Exception as e:
+            CustomMessageBox("告警",'解析数据失败！')
+            break
     if pw:
         pw_str = "PW由16个字节组成，是由主站按系统约定的认证算法产生，并在主站发送的报文中下发给终端，由终端进行校验认证。"
         frame_fun.add_data(sub_result, f"消息验证码Pw",frame_fun.get_data_str_with_space(pw_data),pw_str,pw_pos)
@@ -1046,55 +1059,58 @@ def Analysic_csg_read_cur_frame(frame, dir, prm,result_list,start_pos):
     data_segment = valid_data_segment[:length]
     prase_data = PraseFrameData()
     while pos < length:
-        DA = data_segment[pos:pos + 2]
-        item = data_segment[pos + 2: pos + 6]
+        try:
+            DA = data_segment[pos:pos + 2]
+            item = data_segment[pos + 2: pos + 6]
 
-        point_str = prase_DA_data(DA)
+            point_str = prase_DA_data(DA)
 
-        data_item = frame_fun.get_data_str_reverser(item)
+            data_item = frame_fun.get_data_str_reverser(item)
 
-        frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
-        pos += 2
+            frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
+            pos += 2
 
-        data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
-        item_data = []
-        if data_item_elem is not None:
-            if dir == 1 and prm == 0:#上行回复
-                sub_length_cont = data_item_elem.find('length').text
-                if sub_length_cont.upper() in "UNKNOWN":
-                    sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
-                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                    new_datament = sub_datament
+            data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
+            item_data = []
+            if data_item_elem is not None:
+                if dir == 1 and prm == 0:#上行回复
+                    sub_length_cont = data_item_elem.find('length').text
+                    if sub_length_cont.upper() in "UNKNOWN":
+                        sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
+                        sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                        new_datament = sub_datament
+                    else:
+                        sub_length = int(sub_length_cont)
+                        sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                        sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
+                    alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
+                    frame_fun.prase_data_with_config(alalysic_result, False,item_data)
                 else:
-                    sub_length = int(sub_length_cont)
-                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                    sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
-                alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
-                frame_fun.prase_data_with_config(alalysic_result, False,item_data)
+                    sub_length = 0#下行读取报文
+                name = data_item_elem.find('name').text
+                dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
             else:
-                sub_length = 0#下行读取报文
-            name = data_item_elem.find('name').text
-            dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
-        else:
+                if dir == 1 and prm == 0:
+                    pw = guest_is_exit_pw(length,data_segment)
+                    CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                    break
+                else:
+                    sub_length = 0
+                dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
+
+            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
             if dir == 1 and prm == 0:
-                pw = guest_is_exit_pw(length,data_segment)
-                CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
-                break
-            else:
-                sub_length = 0
-            dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
+                frame_fun.add_data(sub_result, f"<第{num + 1}组>数据内容",frame_fun.get_data_str_with_space(sub_datament),point_str[len("Pn="):] + "-" + dis_data_identifier[len("数据标识编码："):],[index + pos + 4, index + pos + 4 + sub_length], item_data)
+            pos += (sub_length + 4)
+            num += 1
 
-        frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
-        if dir == 1 and prm == 0:
-            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据内容",frame_fun.get_data_str_with_space(sub_datament),point_str[len("Pn="):] + "-" + dis_data_identifier[len("数据标识编码："):],[index + pos + 4, index + pos + 4 + sub_length], item_data)
-        pos += (sub_length + 4)
-        num += 1
-
-        if length - pos == 16:
-            pw  = guest_is_exit_pw(length, pw_data)
-            if pw:
-                length -= 16
-
+            if length - pos == 16:
+                pw  = guest_is_exit_pw(length, pw_data)
+                if pw:
+                    length -= 16
+        except Exception as e:
+            CustomMessageBox("告警",'解析数据失败！')
+            break
     if pw:
         pw_str = "PW由16个字节组成，是由主站按系统约定的认证算法产生，并在主站发送的报文中下发给终端，由终端进行校验认证。"
         frame_fun.add_data(sub_result, f"消息验证码Pw",frame_fun.get_data_str_with_space(pw_data),pw_str,pw_pos)
@@ -1130,65 +1146,68 @@ def Analysic_csg_read_history_frame(frame, dir, prm,result_list,start_pos):
     data_time = None
     prase_data = PraseFrameData()
     while pos < length:
-        if guest_next_data_is_cur_item_data(data_item_elem, data_segment[pos:], data_time) == False:
-            DA = data_segment[pos:pos + 2]
-            item = data_segment[pos + 2: pos + 6]
-            point_str = prase_DA_data(DA)
-            data_item_elem,data_item = try_get_item_and_point(item, DA)
+        try:
+            if guest_next_data_is_cur_item_data(data_item_elem, data_segment[pos:], data_time) == False:
+                DA = data_segment[pos:pos + 2]
+                item = data_segment[pos + 2: pos + 6]
+                point_str = prase_DA_data(DA)
+                data_item_elem,data_item = try_get_item_and_point(item, DA)
+                if data_item_elem is not None:
+                    name = data_item_elem.find('name').text
+                    dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
+                else:
+                    dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
+                frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
+                pos += 2
+                frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
+                pos += 4
+
+            item_data = []
             if data_item_elem is not None:
-                name = data_item_elem.find('name').text
-                dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
+                if dir == 1 and prm == 0:#上行回复
+                    sub_length = int(data_item_elem.find('length').text)
+                    sub_datament = data_segment[pos:pos + sub_length]
+                    sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
+                    alalysic_result = prase_data.parse_data_item(data_item_elem,new_datament, index + pos, False)
+                    frame_fun.prase_data_with_config(alalysic_result, False,item_data)
+                else:
+                    sub_length = 0#下行读取报文
             else:
-                dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
-            frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
-            pos += 2
-            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
-            pos += 4
+                if dir == 1 and prm == 0:
+                    sub_length = len(data_segment)
+                    pw = guest_is_exit_pw(length,data_segment, data_item_elem, data_time, True)
+                    CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                    break
+                else:
+                    sub_length = 0
 
-        item_data = []
-        if data_item_elem is not None:
-            if dir == 1 and prm == 0:#上行回复
-                sub_length = int(data_item_elem.find('length').text)
-                sub_datament = data_segment[pos:pos + sub_length]
-                sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
-                alalysic_result = prase_data.parse_data_item(data_item_elem,new_datament, index + pos, False)
-                frame_fun.prase_data_with_config(alalysic_result, False,item_data)
+            if dir == 1:
+                frame_fun.add_data(sub_result, f"<第{num + 1}组>数据内容",frame_fun.get_data_str_with_space(sub_datament),point_str[len("Pn="):] + "-" + dis_data_identifier[len("数据标识编码："):],[index + pos, index + pos + sub_length + 6], item_data)
+                data_time = data_segment[pos + sub_length:pos + sub_length + 6]
+                time_str = frame_fun.parse_time_data(data_time, "CCYYMMDDhhmm", False)
+                frame_fun.add_data(sub_result, f"<第{num + 1}组>数据时间",frame_fun.get_data_str_with_space(data_time),f"数据时间：" + time_str,[index + pos + sub_length,index + pos + sub_length + 6])
+                pos += 6
             else:
-                sub_length = 0#下行读取报文
-        else:
-            if dir == 1 and prm == 0:
-                sub_length = len(data_segment)
-                pw = guest_is_exit_pw(length,data_segment, data_item_elem, data_time, True)
-                CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
-                break
-            else:
-                sub_length = 0
+                start_time = data_segment[pos:pos + 6]
+                end_time = data_segment[pos + 6:pos + 12]
+                data_dinsty = data_segment[pos + 12]
+                start_time_str = frame_fun.parse_time_data(start_time, "CCYYMMDDhhmm", False)
+                end_time_str = frame_fun.parse_time_data(end_time, "CCYYMMDDhhmm", False)
+                data_dinsty_str = get_data_dinsty(data_dinsty)
+                frame_fun.add_data(sub_result, f"<第{num + 1}组>数据起始时间",frame_fun.get_data_str_with_space(start_time),start_time_str,[index + pos, index + pos + 6])
+                frame_fun.add_data(sub_result, f"<第{num + 1}组>数据结束时间",frame_fun.get_data_str_with_space(end_time),end_time_str,[index + pos + 6, index + pos + 12])
+                frame_fun.add_data(sub_result, f"<第{num + 1}组>数据密度",f"{data_dinsty:02X}",f"数据间隔时间："+data_dinsty_str,[index + pos + 12, index + pos + 13])
+                pos += 13
+            pos += sub_length
+            num += 1
 
-        if dir == 1:
-            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据内容",frame_fun.get_data_str_with_space(sub_datament),point_str[len("Pn="):] + "-" + dis_data_identifier[len("数据标识编码："):],[index + pos, index + pos + sub_length + 6], item_data)
-            data_time = data_segment[pos + sub_length:pos + sub_length + 6]
-            time_str = frame_fun.parse_time_data(data_time, "CCYYMMDDhhmm", False)
-            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据时间",frame_fun.get_data_str_with_space(data_time),f"数据时间：" + time_str,[index + pos + sub_length,index + pos + sub_length + 6])
-            pos += 6
-        else:
-            start_time = data_segment[pos:pos + 6]
-            end_time = data_segment[pos + 6:pos + 12]
-            data_dinsty = data_segment[pos + 12]
-            start_time_str = frame_fun.parse_time_data(start_time, "CCYYMMDDhhmm", False)
-            end_time_str = frame_fun.parse_time_data(end_time, "CCYYMMDDhhmm", False)
-            data_dinsty_str = get_data_dinsty(data_dinsty)
-            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据起始时间",frame_fun.get_data_str_with_space(start_time),start_time_str,[index + pos, index + pos + 6])
-            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据结束时间",frame_fun.get_data_str_with_space(end_time),end_time_str,[index + pos + 6, index + pos + 12])
-            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据密度",f"{data_dinsty:02X}",f"数据间隔时间："+data_dinsty_str,[index + pos + 12, index + pos + 13])
-            pos += 13
-        pos += sub_length
-        num += 1
-
-        if length - pos == 16:
-            pw  = guest_is_exit_pw(length, pw_data, data_item_elem, data_time, True)
-            if pw:
-                length -= 16
-
+            if length - pos == 16:
+                pw  = guest_is_exit_pw(length, pw_data, data_item_elem, data_time, True)
+                if pw:
+                    length -= 16
+        except Exception as e:
+            CustomMessageBox("告警",'解析数据失败！')
+            break
     if pw:
         pw_str = "PW由16个字节组成，是由主站按系统约定的认证算法产生，并在主站发送的报文中下发给终端，由终端进行校验认证。"
         frame_fun.add_data(sub_result, f"消息验证码Pw",frame_fun.get_data_str_with_space(pw_data),pw_str,pw_pos)
@@ -1220,56 +1239,59 @@ def Analysic_csg_read_param_frame(frame, dir, prm,result_list,start_pos):
     data_segment = valid_data_segment[:length]
     prase_data = PraseFrameData()
     while pos < length:
-        DA = data_segment[pos:pos + 2]
-        item = data_segment[pos + 2: pos + 6]
+        try:
+            DA = data_segment[pos:pos + 2]
+            item = data_segment[pos + 2: pos + 6]
 
-        point_str = prase_DA_data(DA)
+            point_str = prase_DA_data(DA)
 
-        data_item = frame_fun.get_data_str_reverser(item)
+            data_item = frame_fun.get_data_str_reverser(item)
 
-        frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
-        pos += 2
+            frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
+            pos += 2
 
-        data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
-        item_data = []
-        if data_item_elem is not None:
-            if dir == 1 and prm == 0:#上行回复
-                sub_length_cont = data_item_elem.find('length').text
-                if sub_length_cont.upper() in "UNKNOWN":
-                    sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
-                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                    new_datament = sub_datament
+            data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
+            item_data = []
+            if data_item_elem is not None:
+                if dir == 1 and prm == 0:#上行回复
+                    sub_length_cont = data_item_elem.find('length').text
+                    if sub_length_cont.upper() in "UNKNOWN":
+                        sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
+                        sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                        new_datament = sub_datament
+                    else:
+                        sub_length = int(sub_length_cont)
+                        sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                        sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
+
+                    alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
+                    frame_fun.prase_data_with_config(alalysic_result, False,item_data)
                 else:
-                    sub_length = int(sub_length_cont)
-                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                    sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
-
-                alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
-                frame_fun.prase_data_with_config(alalysic_result, False,item_data)
+                    sub_length = 0#下行读取报文
+                name = data_item_elem.find('name').text
+                dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
             else:
-                sub_length = 0#下行读取报文
-            name = data_item_elem.find('name').text
-            dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
-        else:
+                if dir == 1 and prm == 0:
+                    pw = guest_is_exit_pw(length,data_segment)
+                    CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                    break
+                else:
+                    sub_length = 0
+                dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
+
+            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
             if dir == 1 and prm == 0:
-                pw = guest_is_exit_pw(length,data_segment)
-                CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
-                break
-            else:
-                sub_length = 0
-            dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
+                frame_fun.add_data(sub_result, f"<第{num + 1}组>数据内容",frame_fun.get_data_str_with_space(sub_datament),point_str[len("Pn="):] + "-" + dis_data_identifier[len("数据标识编码："):],[index + pos + 4, index + pos + 4 + sub_length], item_data)
+            pos += (sub_length + 4)
+            num += 1
 
-        frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
-        if dir == 1 and prm == 0:
-            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据内容",frame_fun.get_data_str_with_space(sub_datament),point_str[len("Pn="):] + "-" + dis_data_identifier[len("数据标识编码："):],[index + pos + 4, index + pos + 4 + sub_length], item_data)
-        pos += (sub_length + 4)
-        num += 1
-
-        if length - pos == 16:
-            pw  = guest_is_exit_pw(length, pw_data)
-            if pw:
-                length -= 16
-
+            if length - pos == 16:
+                pw  = guest_is_exit_pw(length, pw_data)
+                if pw:
+                    length -= 16
+        except Exception as e:
+            CustomMessageBox("告警",'解析数据失败！')
+            break
     if pw:
         pw_str = "PW由16个字节组成，是由主站按系统约定的认证算法产生，并在主站发送的报文中下发给终端，由终端进行校验认证。"
         frame_fun.add_data(sub_result, f"消息验证码Pw",frame_fun.get_data_str_with_space(pw_data),pw_str,pw_pos)
@@ -1326,82 +1348,86 @@ def Analysic_csg_read_task_frame(frame, dir, prm,result_list,start_pos):
     data_time=None
     prase_data = PraseFrameData()
     while pos < length:
-        if frame_fun.globregion == "海南":
-            data_count = data_segment[pos]
-            pos += 1
+        try:
+            if frame_fun.globregion == "海南":
+                data_count = data_segment[pos]
+                pos += 1
 
-        if guest_next_data_is_cur_item_data(data_item_elem, data_segment[pos:], data_time) == False:
-            DA = data_segment[pos:pos + 2]
-            item = data_segment[pos + 2: pos + 6]
-            data_item_elem,data_item = try_get_item_and_point(item, DA)
-            point_str = prase_DA_data(DA)
-            if data_item_elem is not None:
-                name = data_item_elem.find('name').text
-                dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
-            else:
-                dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
-            if dir == 1:#上行回复
-                frame_fun.add_data(task_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
-                pos += 2
-                frame_fun.add_data(task_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
-                pos += 4
-            else:
-                frame_fun.add_data(sub_result,f"信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
-                pos += 2
-                frame_fun.add_data(sub_result, f"数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
-                pos += 4
-                
-                if frame_fun.globregion == "海南":
-                    frame_fun.add_data(sub_result, f"数据个数",f"{data_count}:02X",f"数据个数：{data_count}",[index + pos -6, index + pos -5])
-
-        item_data = []
-        if data_item_elem is not None:
-            if dir == 1:#上行回复
-                sub_length_cont = data_item_elem.find('length').text
-                if sub_length_cont.upper() in "UNKNOWN":
-                    sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos:])
-                    sub_datament = data_segment[pos:pos + sub_length]
-                    new_datament = sub_datament
+            if guest_next_data_is_cur_item_data(data_item_elem, data_segment[pos:], data_time) == False:
+                DA = data_segment[pos:pos + 2]
+                item = data_segment[pos + 2: pos + 6]
+                data_item_elem,data_item = try_get_item_and_point(item, DA)
+                point_str = prase_DA_data(DA)
+                if data_item_elem is not None:
+                    name = data_item_elem.find('name').text
+                    dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
                 else:
-                    sub_length = int(sub_length_cont)
-                    sub_datament = data_segment[pos:pos + sub_length]
-                    sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
-                alalysic_result = prase_data.parse_data_item(data_item_elem,new_datament, index + pos, False)
-                frame_fun.prase_data_with_config(alalysic_result, False,item_data)
+                    dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
+                if dir == 1:#上行回复
+                    frame_fun.add_data(task_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
+                    pos += 2
+                    frame_fun.add_data(task_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
+                    pos += 4
+                else:
+                    frame_fun.add_data(sub_result,f"信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
+                    pos += 2
+                    frame_fun.add_data(sub_result, f"数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
+                    pos += 4
+                    
+                    if frame_fun.globregion == "海南":
+                        frame_fun.add_data(sub_result, f"数据个数",f"{data_count}:02X",f"数据个数：{data_count}",[index + pos -6, index + pos -5])
+
+            item_data = []
+            if data_item_elem is not None:
+                if dir == 1:#上行回复
+                    sub_length_cont = data_item_elem.find('length').text
+                    if sub_length_cont.upper() in "UNKNOWN":
+                        sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos:])
+                        sub_datament = data_segment[pos:pos + sub_length]
+                        new_datament = sub_datament
+                    else:
+                        sub_length = int(sub_length_cont)
+                        sub_datament = data_segment[pos:pos + sub_length]
+                        sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
+                    alalysic_result = prase_data.parse_data_item(data_item_elem,new_datament, index + pos, False)
+                    frame_fun.prase_data_with_config(alalysic_result, False,item_data)
+                else:
+                    sub_length = 0#下行读取报文
             else:
-                sub_length = 0#下行读取报文
-        else:
-            CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                break
+
+            if dir == 1:
+                frame_fun.add_data(task_result, f"<第{num + 1}组>数据内容",frame_fun.get_data_str_with_space(sub_datament),point_str[len("Pn="):] + "-" + dis_data_identifier[len("数据标识编码："):],[index + pos, index + pos + sub_length], item_data)
+                data_time = data_segment[pos + sub_length:pos + sub_length + 5]
+                time_str = frame_fun.parse_time_data(data_time, "YYMMDDhhmm", False)
+                frame_fun.add_data(task_result, f"<第{num + 1}组>数据时间",frame_fun.get_data_str_with_space(data_time),f"数据时间：" + time_str,[index + pos + sub_length,index + pos + sub_length + 5])
+                pos += 5
+            else:
+                start_time = data_segment[pos:pos + 6]
+                end_time = data_segment[pos + 6:pos + 12]
+                data_dinsty = data_segment[pos + 12]
+                start_time_str = frame_fun.parse_time_data(start_time, "CCYYMMDDhhmm", False)
+                end_time_str = frame_fun.parse_time_data(end_time, "CCYYMMDDhhmm", False)
+                data_dinsty_str = get_data_dinsty(data_dinsty)
+                frame_fun.add_data(sub_result, f"数据起始时间",frame_fun.get_data_str_with_space(start_time),start_time_str,[index + pos, index + pos + 6])
+                frame_fun.add_data(sub_result, f"数据结束时间",frame_fun.get_data_str_with_space(end_time),end_time_str,[index + pos + 6, index + pos + 12])
+                frame_fun.add_data(sub_result, f"数据密度",f"{data_dinsty:02X}",f"数据间隔时间："+data_dinsty_str,[index + pos + 12, index + pos + 13])
+                pos += 13
+            pos += sub_length
+            num += 1
+
+            if length - pos == 16:
+                pw  = guest_is_exit_pw(length, pw_data, data_item_elem, data_time, True)
+                if pw:
+                    length -= 16
+
+            if dir == 1:
+                if num >= item_count * pncount:
+                    break
+        except Exception as e:
+            CustomMessageBox("告警",'解析数据失败！')
             break
-
-        if dir == 1:
-            frame_fun.add_data(task_result, f"<第{num + 1}组>数据内容",frame_fun.get_data_str_with_space(sub_datament),point_str[len("Pn="):] + "-" + dis_data_identifier[len("数据标识编码："):],[index + pos, index + pos + sub_length], item_data)
-            data_time = data_segment[pos + sub_length:pos + sub_length + 5]
-            time_str = frame_fun.parse_time_data(data_time, "YYMMDDhhmm", False)
-            frame_fun.add_data(task_result, f"<第{num + 1}组>数据时间",frame_fun.get_data_str_with_space(data_time),f"数据时间：" + time_str,[index + pos + sub_length,index + pos + sub_length + 5])
-            pos += 5
-        else:
-            start_time = data_segment[pos:pos + 6]
-            end_time = data_segment[pos + 6:pos + 12]
-            data_dinsty = data_segment[pos + 12]
-            start_time_str = frame_fun.parse_time_data(start_time, "CCYYMMDDhhmm", False)
-            end_time_str = frame_fun.parse_time_data(end_time, "CCYYMMDDhhmm", False)
-            data_dinsty_str = get_data_dinsty(data_dinsty)
-            frame_fun.add_data(sub_result, f"数据起始时间",frame_fun.get_data_str_with_space(start_time),start_time_str,[index + pos, index + pos + 6])
-            frame_fun.add_data(sub_result, f"数据结束时间",frame_fun.get_data_str_with_space(end_time),end_time_str,[index + pos + 6, index + pos + 12])
-            frame_fun.add_data(sub_result, f"数据密度",f"{data_dinsty:02X}",f"数据间隔时间："+data_dinsty_str,[index + pos + 12, index + pos + 13])
-            pos += 13
-        pos += sub_length
-        num += 1
-
-        if length - pos == 16:
-            pw  = guest_is_exit_pw(length, pw_data, data_item_elem, data_time, True)
-            if pw:
-                length -= 16
-
-        if dir == 1:
-            if num >= item_count * pncount:
-                break;
     
     if dir == 1:
         frame_fun.add_data(sub_result, "任务数据内容", frame_fun.get_data_str_with_space(frame[22:-2]), f"{task_name}数据内容", [22,-2],task_result)
@@ -1442,65 +1468,68 @@ def Analysic_csg_read_alarm_frame(frame, dir, prm,result_list,start_pos):
     data_segment = valid_data_segment[:length]
     prase_data = PraseFrameData()
     while pos < length:
-        DA = data_segment[pos:pos + 2]
-        item = data_segment[pos + 2: pos + 6]
+        try:
+            DA = data_segment[pos:pos + 2]
+            item = data_segment[pos + 2: pos + 6]
 
-        point_str = prase_DA_data(DA)
+            point_str = prase_DA_data(DA)
 
-        data_item = frame_fun.get_data_str_reverser(item)
+            data_item = frame_fun.get_data_str_reverser(item)
 
-        frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
-        pos += 2
+            frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
+            pos += 2
 
-        data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
-        item_data = []
-        if data_item_elem is not None:
-            if dir == 1:#上行回复
-                sub_length_cont = data_item_elem.find('length').text
-                if sub_length_cont.upper() in "UNKNOWN":
-                    sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
-                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                    new_datament = sub_datament
+            data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
+            item_data = []
+            if data_item_elem is not None:
+                if dir == 1:#上行回复
+                    sub_length_cont = data_item_elem.find('length').text
+                    if sub_length_cont.upper() in "UNKNOWN":
+                        sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
+                        sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                        new_datament = sub_datament
+                    else:
+                        sub_length = int(sub_length_cont)
+                        sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                        sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
+
+                    alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
+                    frame_fun.prase_data_with_config(alalysic_result, False,item_data)
                 else:
-                    sub_length = int(sub_length_cont)
-                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                    sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
-
-                alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
-                frame_fun.prase_data_with_config(alalysic_result, False,item_data)
+                    sub_length = 0#下行读取报文
+                name = data_item_elem.find('name').text
+                dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
             else:
-                sub_length = 0#下行读取报文
-            name = data_item_elem.find('name').text
-            dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
-        else:
+                if dir == 1:
+                    pw = guest_is_exit_pw(length,data_segment)
+                    CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                    break
+                else:
+                    sub_length = 0
+                dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
+
+            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
+            pos += 4
             if dir == 1:
-                pw = guest_is_exit_pw(length,data_segment)
-                CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
-                break
+                frame_fun.add_data(sub_result, f"<第{num + 1}组>数据内容",frame_fun.get_data_str_with_space(new_datament),point_str[len("Pn="):] + "-" + dis_data_identifier[len("数据标识编码："):],[index + pos, index + pos + sub_length], item_data)
             else:
-                sub_length = 0
-            dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
+                start_time = data_segment[pos:pos + 6]
+                end_time = data_segment[pos + 6:pos + 12]
+                start_time_str = frame_fun.parse_time_data(start_time, "CCYYMMDDhhmm", False)
+                end_time_str = frame_fun.parse_time_data(end_time, "CCYYMMDDhhmm", False)
+                frame_fun.add_data(sub_result, f"数据起始时间",frame_fun.get_data_str_with_space(start_time),start_time_str,[index + pos, index + pos + 6])
+                frame_fun.add_data(sub_result, f"数据结束时间",frame_fun.get_data_str_with_space(end_time),end_time_str,[index + pos + 6, index + pos + 12])
+                pos += 12
+            pos += (sub_length)
+            num += 1
 
-        frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
-        pos += 4
-        if dir == 1:
-            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据内容",frame_fun.get_data_str_with_space(new_datament),point_str[len("Pn="):] + "-" + dis_data_identifier[len("数据标识编码："):],[index + pos, index + pos + sub_length], item_data)
-        else:
-            start_time = data_segment[pos:pos + 6]
-            end_time = data_segment[pos + 6:pos + 12]
-            start_time_str = frame_fun.parse_time_data(start_time, "CCYYMMDDhhmm", False)
-            end_time_str = frame_fun.parse_time_data(end_time, "CCYYMMDDhhmm", False)
-            frame_fun.add_data(sub_result, f"数据起始时间",frame_fun.get_data_str_with_space(start_time),start_time_str,[index + pos, index + pos + 6])
-            frame_fun.add_data(sub_result, f"数据结束时间",frame_fun.get_data_str_with_space(end_time),end_time_str,[index + pos + 6, index + pos + 12])
-            pos += 12
-        pos += (sub_length)
-        num += 1
-
-        if length - pos == 16:
-            pw  = guest_is_exit_pw(length, pw_data)
-            if pw:
-                length -= 16
-
+            if length - pos == 16:
+                pw  = guest_is_exit_pw(length, pw_data)
+                if pw:
+                    length -= 16
+        except Exception as e:
+            CustomMessageBox("告警",'解析数据失败！')
+            break
     if pw:
         pw_str = "PW由16个字节组成，是由主站按系统约定的认证算法产生，并在主站发送的报文中下发给终端，由终端进行校验认证。"
         frame_fun.add_data(sub_result, f"消息验证码Pw",frame_fun.get_data_str_with_space(pw_data),pw_str,pw_pos)
@@ -1531,65 +1560,68 @@ def Analysic_csg_read_event_frame(frame, dir, prm,result_list,start_pos):
     data_segment = valid_data_segment[:length]
     prase_data = PraseFrameData()
     while pos < length:
-        DA = data_segment[pos:pos + 2]
-        item = data_segment[pos + 2: pos + 6]
+        try:
+            DA = data_segment[pos:pos + 2]
+            item = data_segment[pos + 2: pos + 6]
 
-        point_str = prase_DA_data(DA)
+            point_str = prase_DA_data(DA)
 
-        data_item = frame_fun.get_data_str_reverser(item)
+            data_item = frame_fun.get_data_str_reverser(item)
 
-        frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
-        pos += 2
+            frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
+            pos += 2
 
-        data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
-        item_data = []
-        if data_item_elem is not None:
-            if dir == 1 and prm == 0:#上行回复
-                sub_length_cont = data_item_elem.find('length').text
-                if sub_length_cont.upper() in "UNKNOWN":
-                    sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
-                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                    new_datament = sub_datament
+            data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
+            item_data = []
+            if data_item_elem is not None:
+                if dir == 1 and prm == 0:#上行回复
+                    sub_length_cont = data_item_elem.find('length').text
+                    if sub_length_cont.upper() in "UNKNOWN":
+                        sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
+                        sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                        new_datament = sub_datament
+                    else:
+                        sub_length = int(sub_length_cont)
+                        sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                        sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
+
+                    alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
+                    frame_fun.prase_data_with_config(alalysic_result, False,item_data)
                 else:
-                    sub_length = int(sub_length_cont)
-                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                    sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
-
-                alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
-                frame_fun.prase_data_with_config(alalysic_result, False,item_data)
+                    sub_length = 0#下行读取报文
+                name = data_item_elem.find('name').text
+                dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
             else:
-                sub_length = 0#下行读取报文
-            name = data_item_elem.find('name').text
-            dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
-        else:
+                if dir == 1 and prm == 0:
+                    pw = guest_is_exit_pw(length,data_segment)
+                    CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                    break
+                else:
+                    sub_length = 0
+                dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
+
+            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
+            pos += 4
             if dir == 1 and prm == 0:
-                pw = guest_is_exit_pw(length,data_segment)
-                CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
-                break
+                frame_fun.add_data(sub_result, f"<第{num + 1}组>数据内容",frame_fun.get_data_str_with_space(sub_datament),point_str[len("Pn="):] + "-" + dis_data_identifier[len("数据标识编码："):],[index + pos, index + pos + sub_length], item_data)
             else:
-                sub_length = 0
-            dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
+                start_time = data_segment[pos:pos + 6]
+                end_time = data_segment[pos + 6:pos + 12]
+                start_time_str = frame_fun.parse_time_data(start_time, "CCYYMMDDhhmm", False)
+                end_time_str = frame_fun.parse_time_data(end_time, "CCYYMMDDhhmm", False)
+                frame_fun.add_data(sub_result, f"数据起始时间",frame_fun.get_data_str_with_space(start_time),start_time_str,[index + pos, index + pos + 6])
+                frame_fun.add_data(sub_result, f"数据结束时间",frame_fun.get_data_str_with_space(end_time),end_time_str,[index + pos + 6, index + pos + 12])
+                pos += 12
+            pos += (sub_length)
+            num += 1
 
-        frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
-        pos += 4
-        if dir == 1 and prm == 0:
-            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据内容",frame_fun.get_data_str_with_space(sub_datament),point_str[len("Pn="):] + "-" + dis_data_identifier[len("数据标识编码："):],[index + pos, index + pos + sub_length], item_data)
-        else:
-            start_time = data_segment[pos:pos + 6]
-            end_time = data_segment[pos + 6:pos + 12]
-            start_time_str = frame_fun.parse_time_data(start_time, "CCYYMMDDhhmm", False)
-            end_time_str = frame_fun.parse_time_data(end_time, "CCYYMMDDhhmm", False)
-            frame_fun.add_data(sub_result, f"数据起始时间",frame_fun.get_data_str_with_space(start_time),start_time_str,[index + pos, index + pos + 6])
-            frame_fun.add_data(sub_result, f"数据结束时间",frame_fun.get_data_str_with_space(end_time),end_time_str,[index + pos + 6, index + pos + 12])
-            pos += 12
-        pos += (sub_length)
-        num += 1
-
-        if length - pos == 16:
-            pw  = guest_is_exit_pw(length, pw_data)
-            if pw:
-                length -= 16
-
+            if length - pos == 16:
+                pw  = guest_is_exit_pw(length, pw_data)
+                if pw:
+                    length -= 16
+        except Exception as e:
+            CustomMessageBox("告警",'解析数据失败！')
+            break
     if pw:
         pw_str = "PW由16个字节组成，是由主站按系统约定的认证算法产生，并在主站发送的报文中下发给终端，由终端进行校验认证。"
         frame_fun.add_data(sub_result, f"消息验证码Pw",frame_fun.get_data_str_with_space(pw_data),pw_str,pw_pos)
@@ -1620,70 +1652,73 @@ def Analysic_csg_relay_frame(frame, dir, prm,result_list,start_pos):
     data_segment = valid_data_segment[:length]
     prase_data = PraseFrameData()
     while pos < length:
-        DA = data_segment[pos:pos + 2]
-        item = data_segment[pos + 2: pos + 6]
+        try:
+            DA = data_segment[pos:pos + 2]
+            item = data_segment[pos + 2: pos + 6]
 
-        point_str = prase_DA_data(DA)
+            point_str = prase_DA_data(DA)
 
-        data_item = frame_fun.get_data_str_reverser(item)
+            data_item = frame_fun.get_data_str_reverser(item)
 
-        frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
-        pos += 2
+            frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
+            pos += 2
 
-        data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
-        item_data = []
-        if data_item_elem is not None:
-            if dir == 1 and prm == 0:#上行回复
-                frame_result = []
-                sub_length_cont = data_item_elem.find('length').text
-                if sub_length_cont.upper() in "UNKNOWN":
-                    sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
-                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                    new_datament = sub_datament
+            data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
+            item_data = []
+            if data_item_elem is not None:
+                if dir == 1 and prm == 0:#上行回复
+                    frame_result = []
+                    sub_length_cont = data_item_elem.find('length').text
+                    if sub_length_cont.upper() in "UNKNOWN":
+                        sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
+                        sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                        new_datament = sub_datament
+                    else:
+                        sub_length = int(sub_length_cont)
+                        sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                        sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
+
+                    sub_length, frame_len = prase_data.get_sub_length(data_segment[pos+5:],data_item_elem,"中继报文长度")
+                    replay_type = prase_data.get_relay_type(data_segment[pos +4])
+                    frame_fun.add_data(item_data, "中继类型",frame_fun.get_data_str_with_space(data_segment[pos +4:pos + 5]), f"中继类型:{replay_type}", [index +pos +4,index+pos + 5])
+                    frame_fun.add_data(item_data, "中继应答长度",frame_fun.get_data_str_with_space(data_segment[pos +5:pos + 5 +sub_length]), f"中继应答长度{frame_len}", [index +pos +5,index+pos + 5 +sub_length])
+                    FRAME_645.Analysis_645_fram_by_afn(data_segment[pos + 5 + sub_length:pos + 5 + frame_len + sub_length],frame_result,pos + 5 + sub_length  + index)
+                    frame_fun.add_data(item_data, "中继应答内容",frame_fun.get_data_str_with_space(data_segment[pos + 5 + sub_length:pos + 5 + frame_len]), f"中继应答内容", [index + pos + 5 + sub_length,index+pos + 5 + frame_len],frame_result)
+                    sub_length += frame_len
+                    sub_length+=1
+                    sub_datament = data_segment[pos + 4:pos + 4+sub_length]
                 else:
-                    sub_length = int(sub_length_cont)
-                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                    sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
+                    sub_length_cont = data_item_elem.find('length').text
+                    if sub_length_cont.upper() in "UNKNOWN":
+                        sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
+                        sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                        new_datament = sub_datament
+                    else:
+                        sub_length = int(sub_length_cont)
+                        sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                        sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
 
-                sub_length, frame_len = prase_data.get_sub_length(data_segment[pos+5:],data_item_elem,"中继报文长度")
-                replay_type = prase_data.get_relay_type(data_segment[pos +4])
-                frame_fun.add_data(item_data, "中继类型",frame_fun.get_data_str_with_space(data_segment[pos +4:pos + 5]), f"中继类型:{replay_type}", [index +pos +4,index+pos + 5])
-                frame_fun.add_data(item_data, "中继应答长度",frame_fun.get_data_str_with_space(data_segment[pos +5:pos + 5 +sub_length]), f"中继应答长度{frame_len}", [index +pos +5,index+pos + 5 +sub_length])
-                FRAME_645.Analysis_645_fram_by_afn(data_segment[pos + 5 + sub_length:pos + 5 + frame_len + sub_length],frame_result,pos + 5 + sub_length  + index)
-                frame_fun.add_data(item_data, "中继应答内容",frame_fun.get_data_str_with_space(data_segment[pos + 5 + sub_length:pos + 5 + frame_len]), f"中继应答内容", [index + pos + 5 + sub_length,index+pos + 5 + frame_len],frame_result)
-                sub_length += frame_len
-                sub_length+=1
-                sub_datament = data_segment[pos + 4:pos + 4+sub_length]
+                    alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
+                    frame_fun.prase_data_with_config(alalysic_result, False,item_data)
+                name = data_item_elem.find('name').text
+                dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
             else:
-                sub_length_cont = data_item_elem.find('length').text
-                if sub_length_cont.upper() in "UNKNOWN":
-                    sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
-                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                    new_datament = sub_datament
-                else:
-                    sub_length = int(sub_length_cont)
-                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                    sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
+                pw = guest_is_exit_pw(length,data_segment)
+                CustomMessageBox("警告",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                break
 
-                alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
-                frame_fun.prase_data_with_config(alalysic_result, False,item_data)
-            name = data_item_elem.find('name').text
-            dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
-        else:
-            pw = guest_is_exit_pw(length,data_segment)
-            CustomMessageBox("警告",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
+            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据内容",frame_fun.get_data_str_with_space(sub_datament),point_str[len("Pn="):] + "-" + dis_data_identifier[len("数据标识编码："):],[index + pos + 4, index + pos + 4 + sub_length], item_data)
+            pos += (sub_length + 4)
+            num += 1
+
+            if length - pos == 16:
+                pw  = guest_is_exit_pw(length, pw_data)
+                if pw:
+                    length -= 16
+        except Exception as e:
+            CustomMessageBox("告警",'解析数据失败！')
             break
-
-        frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
-        frame_fun.add_data(sub_result, f"<第{num + 1}组>数据内容",frame_fun.get_data_str_with_space(sub_datament),point_str[len("Pn="):] + "-" + dis_data_identifier[len("数据标识编码："):],[index + pos + 4, index + pos + 4 + sub_length], item_data)
-        pos += (sub_length + 4)
-        num += 1
-
-        if length - pos == 16:
-            pw  = guest_is_exit_pw(length, pw_data)
-            if pw:
-                length -= 16
-
     if pw:
         pw_str = "PW由16个字节组成，是由主站按系统约定的认证算法产生，并在主站发送的报文中下发给终端，由终端进行校验认证。"
         frame_fun.add_data(sub_result, f"消息验证码Pw",frame_fun.get_data_str_with_space(pw_data),pw_str,pw_pos)
@@ -1714,55 +1749,58 @@ def Analysic_csg_topo_frame(frame, dir, prm,result_list,start_pos):
     data_segment = valid_data_segment[:length]
     prase_data = PraseFrameData()
     while pos < length:
-        DA = data_segment[pos:pos + 2]
-        item = data_segment[pos + 2: pos + 6]
+        try:
+            DA = data_segment[pos:pos + 2]
+            item = data_segment[pos + 2: pos + 6]
 
-        point_str = prase_DA_data(DA)
+            point_str = prase_DA_data(DA)
 
-        data_item = frame_fun.get_data_str_reverser(item)
+            data_item = frame_fun.get_data_str_reverser(item)
 
-        frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
-        pos += 2
+            frame_fun.add_data(sub_result,f"<第{num + 1}组>信息点标识DA", frame_fun.get_data_str_with_space(DA), point_str, [index + pos, index + pos + 2])
+            pos += 2
 
-        data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
-        item_data = []
-        if data_item_elem is not None:
-            sub_length_cont = data_item_elem.find('length').text
-            if sub_length_cont.upper() in "UNKNOWN":
-                sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
-                sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                new_datament = sub_datament
+            data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
+            item_data = []
+            if data_item_elem is not None:
+                sub_length_cont = data_item_elem.find('length').text
+                if sub_length_cont.upper() in "UNKNOWN":
+                    sub_length = prase_data.caculate_item_length(data_item_elem, data_segment[pos + 4:])
+                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                    new_datament = sub_datament
+                else:
+                    sub_length = int(sub_length_cont)
+                    sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
+                    sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
+
+                alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
+                # print(alalysic_result)
+                frame_fun.prase_data_with_config(alalysic_result, False, item_data)
+                # else:
+                #     sub_length = 0#下行读取报文
+                name = data_item_elem.find('name').text
+                dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
             else:
-                sub_length = int(sub_length_cont)
-                sub_datament = data_segment[pos + 4:pos + 4 + sub_length]
-                sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
+                if dir == 1 and prm == 0:
+                    pw = guest_is_exit_pw(length,data_segment)
+                    CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
+                    break
+                else:
+                    sub_length = 0
+                dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
 
-            alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,new_datament, index + pos + 4)
-            # print(alalysic_result)
-            frame_fun.prase_data_with_config(alalysic_result, False, item_data)
-            # else:
-            #     sub_length = 0#下行读取报文
-            name = data_item_elem.find('name').text
-            dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name
-        else:
-            if dir == 1 and prm == 0:
-                pw = guest_is_exit_pw(length,data_segment)
-                CustomMessageBox("告警",'未查找到数据标识：'+ data_item + '请检查配置文件！')
-                break
-            else:
-                sub_length = 0
-            dis_data_identifier = "数据标识编码：" + f"[{data_item}]"
+            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
+            frame_fun.add_data(sub_result, f"<第{num + 1}组>数据内容",frame_fun.get_data_str_with_space(sub_datament),point_str[len("Pn="):] + "-" + dis_data_identifier[len("数据标识编码："):],[index + pos + 4, index + pos + 4 + sub_length], item_data)
+            pos += (sub_length + 4)
+            num += 1
 
-        frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
-        frame_fun.add_data(sub_result, f"<第{num + 1}组>数据内容",frame_fun.get_data_str_with_space(sub_datament),point_str[len("Pn="):] + "-" + dis_data_identifier[len("数据标识编码："):],[index + pos + 4, index + pos + 4 + sub_length], item_data)
-        pos += (sub_length + 4)
-        num += 1
-
-        if length - pos == 16:
-            pw  = guest_is_exit_pw(length, pw_data)
-            if pw:
-                length -= 16
-
+            if length - pos == 16:
+                pw  = guest_is_exit_pw(length, pw_data)
+                if pw:
+                    length -= 16
+        except Exception as e:
+            CustomMessageBox("告警",'解析数据失败！')
+            break
     if pw:
         pw_str = "PW由16个字节组成，是由主站按系统约定的认证算法产生，并在主站发送的报文中下发给终端，由终端进行校验认证。"
         frame_fun.add_data(sub_result, f"消息验证码Pw",frame_fun.get_data_str_with_space(pw_data),pw_str,pw_pos)

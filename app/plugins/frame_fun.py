@@ -866,3 +866,11 @@ class FrameFun:
         bcd_array = [FrameFun.binary2bcd(year//100),FrameFun.binary2bcd(year % 100),FrameFun.binary2bcd(date.month()),FrameFun.binary2bcd(date.day()),FrameFun.binary2bcd(time.hour()),
                     FrameFun.binary2bcd(time.minute()),FrameFun.binary2bcd(time.second())]
         return bcd_array
+    
+    @staticmethod
+    def cosem_bin2_int32u(bin):
+        val = 0
+        for byte in bin:
+            val <<= 8
+            val += byte
+        return val

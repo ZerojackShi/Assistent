@@ -1,0 +1,447 @@
+Vir_50020200_List: &Vir_50020200_List
+  - {V_oad: 0x86100100,    item_07: 0x061001FF, item_97: 0x06010001,R_oad: NULL,  count:  8,  len_07:    6,  len_97: 6}  #电压
+  - {V_oad: 0x86100101,    item_07: 0x06100101, item_97: 0x06010001,R_oad: NULL,  count:  8,  len_07:    2,  len_97: 2}  #A相电压
+  - {V_oad: 0x86100102,    item_07: 0x06100102, item_97: 0x06010001,R_oad: NULL,  count: 10,  len_07:    2,  len_97: 2}  #B相电压
+  - {V_oad: 0x86100103,    item_07: 0x06100103, item_97: 0x06010001,R_oad: NULL,  count: 12,  len_07:    2,  len_97: 2}  #C相电压
+  
+  - {V_oad: 0x86100200,    item_07: 0x061002FF, item_97: 0x06010001,R_oad: NULL,  count: 14,  len_07:    9,  len_97: 9}  #电流
+  - {V_oad: 0x86100201,    item_07: 0x06100201, item_97: 0x06010001,R_oad: NULL,  count: 14,  len_07:    3,  len_97: 3}  #A相电流
+  - {V_oad: 0x86100202,    item_07: 0x06100202, item_97: 0x06010001,R_oad: NULL,  count: 17,  len_07:    3,  len_97: 3}  #B相电流
+  - {V_oad: 0x86100203,    item_07: 0x06100203, item_97: 0x06010001,R_oad: NULL,  count: 20,  len_07:    3,  len_97: 3}  #C相电流
+  
+  - {V_oad: 0x86100300,    item_07: 0x061003FF, item_97: 0x06020001,R_oad: NULL,  count:  9,  len_07:   12,  len_97: 2}  #有功功率
+  - {V_oad: 0x86100301,    item_07: 0x06100300, item_97: 0x06020001,R_oad: NULL,  count:  9,  len_07:    3,  len_97: 3}  #总有功功率
+  - {V_oad: 0x86100302,    item_07: 0x06100301, item_97: 0x06020001,R_oad: NULL,  count: 12,  len_07:    3,  len_97: 3}  #A相有功功率
+  - {V_oad: 0x86100303,    item_07: 0x06100302, item_97: 0x06020001,R_oad: NULL,  count: 15,  len_07:    3,  len_97: 3}  #B相有功功率
+  - {V_oad: 0x86100304,    item_07: 0x06100303, item_97: 0x06020001,R_oad: NULL,  count: 18,  len_07:    3,  len_97: 3}  #C相有功功率
+  
+  - {V_oad: 0x86100400,    item_07: 0x061004FF, item_97: 0x06020001,R_oad: NULL,  count: 21,  len_07:   12,  len_97: 2}  #无功功率
+  - {V_oad: 0x86100401,    item_07: 0x06100400, item_97: 0x06020001,R_oad: NULL,  count: 21,  len_07:    3,  len_97: 3}  #总无功功率
+  - {V_oad: 0x86100402,    item_07: 0x06100401, item_97: 0x06020001,R_oad: NULL,  count: 24,  len_07:    3,  len_97: 3}  #A相无功功率
+  - {V_oad: 0x86100403,    item_07: 0x06100402, item_97: 0x06020001,R_oad: NULL,  count: 27,  len_07:    3,  len_97: 3}  #B相无功功率
+  - {V_oad: 0x86100404,    item_07: 0x06100403, item_97: 0x06020001,R_oad: NULL,  count: 30,  len_07:    3,  len_97: 3}  #C相无功功率
+  
+  - {V_oad: 0x86100500,    item_07: 0x061005FF, item_97: 0x06030001,R_oad: NULL,  count: 10,  len_07:    8,  len_97: 8}  #功率因数
+  - {V_oad: 0x86100501,    item_07: 0x06100500, item_97: 0x06030001,R_oad: NULL,  count: 10,  len_07:    2,  len_97: 2}  #总功率因数
+  - {V_oad: 0x86100502,    item_07: 0x06100501, item_97: 0x06030001,R_oad: NULL,  count: 12,  len_07:    2,  len_97: 2}  #A相功率因数
+  - {V_oad: 0x86100503,    item_07: 0x06100502, item_97: 0x06030001,R_oad: NULL,  count: 14,  len_07:    2,  len_97: 2}  #B相功率因数
+  - {V_oad: 0x86100504,    item_07: 0x06100503, item_97: 0x06030001,R_oad: NULL,  count: 16,  len_07:    2,  len_97: 2}  #C相功率因数
+  
+  - {V_oad: 0x86100600,    item_07: 0x061006FF, item_97: 0x06040001,R_oad: NULL,  count: 11,  len_07:   16,  len_97: 6}  #有功、无功曲线总电能总数据块
+  - {V_oad: 0x86100601,    item_07: 0x06100601, item_97: 0x06040001,R_oad: NULL,  count: 11,  len_07:    4,  len_97: 4}  #正向有功总电能
+  - {V_oad: 0x86100602,    item_07: 0x06100602, item_97: 0x06040001,R_oad: NULL,  count: 15,  len_07:    4,  len_97: 4}  #反向有功总电能
+  - {V_oad: 0x86100603,    item_07: 0x06100603, item_97: 0x06040001,R_oad: NULL,  count: 19,  len_07:    4,  len_97: 4}  #组合无功 1 总电能
+  - {V_oad: 0x86100604,    item_07: 0x06100604, item_97: 0x06040001,R_oad: NULL,  count: 23,  len_07:    4,  len_97: 4}  #组合无功 2 总电能
+  
+  - {V_oad: 0x86100700,    item_07: 0x061007FF, item_97: 0x06050001,R_oad: NULL,  count: 12,  len_07:   16,  len_97: 6}  #四象限无功曲线数据块
+  - {V_oad: 0x86100701,    item_07: 0x06100701, item_97: 0x06050001,R_oad: NULL,  count: 12,  len_07:    4,  len_97: 4}  #第一象限无功总电能
+  - {V_oad: 0x86100702,    item_07: 0x06100702, item_97: 0x06050001,R_oad: NULL,  count: 16,  len_07:    4,  len_97: 4}  #第二象限无功总电能
+  - {V_oad: 0x86100703,    item_07: 0x06100703, item_97: 0x06050001,R_oad: NULL,  count: 20,  len_07:    4,  len_97: 4}  #第三象限无功总电能
+  - {V_oad: 0x86100704,    item_07: 0x06100704, item_97: 0x06050001,R_oad: NULL,  count: 24,  len_07:    4,  len_97: 4}  #第四象限无功总电能
+  
+  - {V_oad: 0x86100800,    item_07: 0x061008FF, item_97: 0x06060001,R_oad: NULL,  count: 13,  len_07:    6,  len_97: 6}  #当前需量曲线数据块
+  - {V_oad: 0x86100801,    item_07: 0x06100801, item_97: 0x06060001,R_oad: NULL,  count: 13,  len_07:    3,  len_97: 3}  #当前有功需量
+  - {V_oad: 0x86100802,    item_07: 0x06100802, item_97: 0x06060001,R_oad: NULL,  count: 16,  len_07:    3,  len_97: 3}  #当前无功需量
+  
+  - {V_oad: 0x86100C00,    item_07: 0x06100CFF, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 4,   len_07:   20,  len_97: 0}  #21规范-组合有功费率1~4电能数据块
+  - {V_oad: 0x86100C01,    item_07: 0x06100C01, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率1电能
+  - {V_oad: 0x86100C02,    item_07: 0x06100C02, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率2电能
+  - {V_oad: 0x86100C03,    item_07: 0x06100C03, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率3电能
+  - {V_oad: 0x86100C04,    item_07: 0x06100C04, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率4电能
+  
+  - {V_oad: 0x86100D00,    item_07: 0x06100DFF, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 4,   len_07:   20,  len_97: 0}  #21规范-组合有功费率5~8电能数据块
+  - {V_oad: 0x86100D01,    item_07: 0x06100D01, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率5电能
+  - {V_oad: 0x86100D02,    item_07: 0x06100D02, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率6电能
+  - {V_oad: 0x86100D03,    item_07: 0x06100D03, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率7电能
+  - {V_oad: 0x86100D04,    item_07: 0x06100D04, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率8电能
+  
+  - {V_oad: 0x86100E00,    item_07: 0x06100EFF, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 4,   len_07:   20,  len_97: 0}  #组合有功费率9～12 电能曲线数据块
+  - {V_oad: 0x86100E01,    item_07: 0x06100E01, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #组合有功费率 9 电能
+  - {V_oad: 0x86100E02,    item_07: 0x06100E02, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #组合有功费率 10 电能
+  - {V_oad: 0x86100E03,    item_07: 0x06100E03, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #组合有功费率 11 电能
+  - {V_oad: 0x86100E04,    item_07: 0x06100E04, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #组合有功费率 12 电能
+  
+  - {V_oad: 0x86E00001,    item_07: 0x06E00001, item_97: 0x06E00001,R_oad: NULL,  count:  0,  len_07:   48,  len_97: 8}  #南网IR46电表新增：曲线第1数据块
+  
+  - {V_oad: 0x8201FF00,    item_07: 0x0201FF00, item_97: 0x0201FF00,R_oad: NULL,  count: 16,  len_07:    6,  len_97: 6}  #当前电压
+  - {V_oad: 0x8202FF00,    item_07: 0x0202FF00, item_97: 0x0202FF00,R_oad: NULL,  count: 16,  len_07:    9,  len_97: 9}  #当前电流
+  - {V_oad: 0x8203FF00,    item_07: 0x0203FF00, item_97: 0x0203FF00,R_oad: NULL,  count: 16,  len_07:    12, len_97: 12}  #当前有功功率
+  - {V_oad: 0x8001FF00,    item_07: 0x0001FF00, item_97: 0x0001FF00,R_oad: NULL,  count: 16,  len_07:    20, len_97: 20}  #当前正向有功总电能
+  - {V_oad: 0x8206FF00,    item_07: 0x0206FF00, item_97: 0x0206FF00,R_oad: NULL,  count: 16,  len_07:    8,  len_97: 8}  #当前总功率因数
+  - {V_oad: 0xE0030200,    item_07: 0x020FFF00, item_97: 0x020FFF00,R_oad: NULL,  count: 0,   len_07:   12,  len_97: 12}  #当前交采相角
+  
+  - {V_oad: 0x82810001,    item_07: 0x02810001, item_97: 0x02810001,R_oad: NULL,  count:  0,  len_07:    2,  len_97: 2}  #A相进线接线端子温度
+  - {V_oad: 0x82810002,    item_07: 0x02810002, item_97: 0x02810002,R_oad: NULL,  count:  0,  len_07:    2,  len_97: 2}  #A相出线接线端子温度
+  - {V_oad: 0x82810003,    item_07: 0x02810003, item_97: 0x02810003,R_oad: NULL,  count:  0,  len_07:    2,  len_97: 2}  #B相进线接线端子温度
+  - {V_oad: 0x82810004,    item_07: 0x02810004, item_97: 0x02810004,R_oad: NULL,  count:  0,  len_07:    2,  len_97: 2}  #B相出线接线端子温度
+  - {V_oad: 0x82810005,    item_07: 0x02810005, item_97: 0x02810005,R_oad: NULL,  count:  0,  len_07:    2,  len_97: 2}  #C相进线接线端子温度
+  - {V_oad: 0x82810006,    item_07: 0x02810006, item_97: 0x02810006,R_oad: NULL,  count:  0,  len_07:    2,  len_97: 2}  #C相出线接线端子温度
+  - {V_oad: 0x82821001,    item_07: 0x02821001, item_97: 0x02821001,R_oad: NULL,  count:  0,  len_07:    3,  len_97: 3}  #当前总误差自监测误差数据
+  - {V_oad: 0x82821002,    item_07: 0x02821002, item_97: 0x02821002,R_oad: NULL,  count:  0,  len_07:    3,  len_97: 3}  #当前A相误差自监测误差数据
+  - {V_oad: 0x82821003,    item_07: 0x02821003, item_97: 0x02821003,R_oad: NULL,  count:  0,  len_07:    3,  len_97: 3}  #当前B相误差自监测误差数据
+  - {V_oad: 0x82821004,    item_07: 0x02821004, item_97: 0x02821004,R_oad: NULL,  count:  0,  len_07:    3,  len_97: 3}  #当前C相误差自监测误差数据
+  - {V_oad: 0x828210FF,    item_07: 0x028210FF, item_97: 0x028210FF,R_oad: NULL,  count:  0,  len_07:   12,  len_97: 2}  #当前误差自监测误差数据块
+  
+  - {V_oad: 0x86103000,    item_07: 0x061030FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  2,  len_07:   10,  len_97: 0}  #21规范-组合无功总电能曲线数据块
+  - {V_oad: 0x86103001,    item_07: 0x06103001, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-组合无功1总电能
+  - {V_oad: 0x86103002,    item_07: 0x06103002, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-组合无功2总电能
+  
+  - {V_oad: 0x86110600,    item_07: 0x061106FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  2,  len_07:   10,  len_97: 0}  #21规范-有功曲线总电能数据块
+  - {V_oad: 0x86110601,    item_07: 0x06110601, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-正向有功总电能
+  - {V_oad: 0x86110602,    item_07: 0x06110602, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-反向有功总电能
+  
+  - {V_oad: 0x86110700,    item_07: 0x061107FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  4,  len_07:   20,  len_97: 0}  #21规范-四象限无功曲线数据块
+  - {V_oad: 0x86110701,    item_07: 0x06110701, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-第一象限无功总电能
+  - {V_oad: 0x86110702,    item_07: 0x06110702, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-第二象限无功总电能
+  - {V_oad: 0x86110703,    item_07: 0x06110703, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-第三象限无功总电能
+  - {V_oad: 0x86110704,    item_07: 0x06110704, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-第四象限无功总电能
+  
+  - {V_oad: 0x86110900,    item_07: 0x061109FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  2,  len_07:   10,  len_97: 0}  #21规范-谐波总电能数据块数据块
+  - {V_oad: 0x86110901,    item_07: 0x06110901, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 0}  #21规范-正向有功谐波总电能
+  - {V_oad: 0x86110902,    item_07: 0x06110902, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 0}  #21规范-反向有功谐波总电能
+  
+  - {V_oad: 0x86110A00,    item_07: 0x06110AFF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  2,  len_07:   10,  len_97: 0}  #21规范-基波总电能数据块数据块
+  - {V_oad: 0x86110A01,    item_07: 0x06110A01, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 0}  #21规范-正向有功基波总电能
+  - {V_oad: 0x86110A02,    item_07: 0x06110A02, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 0}  #21规范-反向有功基波总电能
+  
+  - {V_oad: 0x86120100,    item_07: 0x061201FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  3,  len_07:    6,  len_97: 6}  #模块负荷记录-电压数据块
+  - {V_oad: 0x86120101,    item_07: 0x06120101, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    2,  len_97: 2}  #模块负荷记录-A相电压
+  - {V_oad: 0x86120102,    item_07: 0x06120102, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    2,  len_97: 2}  #模块负荷记录-B相电压
+  - {V_oad: 0x86120103,    item_07: 0x06120103, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    2,  len_97: 2}  #模块负荷记录-C相电压
+  
+  - {V_oad: 0x86120200,    item_07: 0x061202FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  3,  len_07:    9,  len_97: 9}  #模块负荷记录-电流数据块
+  - {V_oad: 0x86120201,    item_07: 0x06120201, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-A相电流
+  - {V_oad: 0x86120202,    item_07: 0x06120202, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-B相电流
+  - {V_oad: 0x86120203,    item_07: 0x06120203, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-C相电流
+  
+  - {V_oad: 0x86120300,    item_07: 0x061203FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  4,  len_07:   12,  len_97: 2}  #模块负荷记录-有功功率数据块
+  - {V_oad: 0x86120301,    item_07: 0x06120301, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-总有功功率
+  - {V_oad: 0x86120302,    item_07: 0x06120302, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-A相有功功率
+  - {V_oad: 0x86120303,    item_07: 0x06120303, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-B相有功功率
+  - {V_oad: 0x86120304,    item_07: 0x06120304, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-C相有功功率
+  
+  - {V_oad: 0x86120400,    item_07: 0x061204FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  4,  len_07:   12,  len_97: 2}  #模块负荷记录-无功功率数据块
+  - {V_oad: 0x86120401,    item_07: 0x06120401, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-总无功功率
+  - {V_oad: 0x86120402,    item_07: 0x06120402, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-A相无功功率
+  - {V_oad: 0x86120403,    item_07: 0x06120403, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-B相无功功率
+  - {V_oad: 0x86120404,    item_07: 0x06120404, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-C相无功功率
+  
+  - {V_oad: 0x86120500,    item_07: 0x061205FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  4,  len_07:    8,  len_97: 8}  #模块负荷记录-功率因数数据块
+  - {V_oad: 0x86120501,    item_07: 0x06120501, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    2,  len_97: 2}  #模块负荷记录-总功率因数
+  - {V_oad: 0x86120502,    item_07: 0x06120502, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    2,  len_97: 2}  #模块负荷记录-A相功率因数
+  - {V_oad: 0x86120503,    item_07: 0x06120503, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    2,  len_97: 2}  #模块负荷记录-B相功率因数
+  - {V_oad: 0x86120504,    item_07: 0x06120504, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    2,  len_97: 2}  #模块负荷记录-C相功率因数
+  
+  - {V_oad: 0x86120600,    item_07: 0x061206FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  4,  len_07:   16,  len_97: 6}  #模块负荷记录-有功，无功总电能数据块
+  - {V_oad: 0x86120601,    item_07: 0x06120601, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-正向有功总电能
+  - {V_oad: 0x86120602,    item_07: 0x06120602, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-反向有功总电能
+  - {V_oad: 0x86120603,    item_07: 0x06120603, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-组合无功1总电能
+  - {V_oad: 0x86120604,    item_07: 0x06120604, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-组合无功2总电能
+  
+  - {V_oad: 0x86120700,    item_07: 0x061207FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  4,  len_07:   16,  len_97: 6}  #模块负荷记录-四象限无功总电能数据块
+  - {V_oad: 0x86120701,    item_07: 0x06120701, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-第一象限无功总电能
+  - {V_oad: 0x86120702,    item_07: 0x06120702, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-第二象限无功总电能
+  - {V_oad: 0x86120703,    item_07: 0x06120703, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-第三象限无功总电能
+  - {V_oad: 0x86120704,    item_07: 0x06120704, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-第四象限无功总电能
+  
+  - {V_oad: 0x86120800,    item_07: 0x061208FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  2,  len_07:    6,  len_97: 6}  #模块负荷记录-当前需量数据块
+  - {V_oad: 0x86120801,    item_07: 0x06120801, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-当前有功需量
+  - {V_oad: 0x86120802,    item_07: 0x06120802, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-当前无功需量
+  
+  - {V_oad: 0x86100100,    item_07: 0x061001FF, item_97: 0x06010001,R_oad: NULL,  count:  8,  len_07:    6,  len_97: 6}  #电压
+  - {V_oad: 0x86100101,    item_07: 0x06100101, item_97: 0x06010001,R_oad: NULL,  count:  8,  len_07:    2,  len_97: 2}  #A相电压
+  - {V_oad: 0x86100102,    item_07: 0x06100102, item_97: 0x06010001,R_oad: NULL,  count: 10,  len_07:    2,  len_97: 2}  #B相电压
+  - {V_oad: 0x86100103,    item_07: 0x06100103, item_97: 0x06010001,R_oad: NULL,  count: 12,  len_07:    2,  len_97: 2}  #C相电压
+  
+  - {V_oad: 0x86100200,    item_07: 0x061002FF, item_97: 0x06010001,R_oad: NULL,  count: 14,  len_07:    9,  len_97: 9}  #电流
+  - {V_oad: 0x86100201,    item_07: 0x06100201, item_97: 0x06010001,R_oad: NULL,  count: 14,  len_07:    3,  len_97: 3}  #A相电流
+  - {V_oad: 0x86100202,    item_07: 0x06100202, item_97: 0x06010001,R_oad: NULL,  count: 17,  len_07:    3,  len_97: 3}  #B相电流
+  - {V_oad: 0x86100203,    item_07: 0x06100203, item_97: 0x06010001,R_oad: NULL,  count: 20,  len_07:    3,  len_97: 3}  #C相电流
+  
+  - {V_oad: 0x86100300,    item_07: 0x061003FF, item_97: 0x06020001,R_oad: NULL,  count:  9,  len_07:   12,  len_97: 2}  #有功功率
+  - {V_oad: 0x86100301,    item_07: 0x06100300, item_97: 0x06020001,R_oad: NULL,  count:  9,  len_07:    3,  len_97: 3}  #总有功功率
+  - {V_oad: 0x86100302,    item_07: 0x06100301, item_97: 0x06020001,R_oad: NULL,  count: 12,  len_07:    3,  len_97: 3}  #A相有功功率
+  - {V_oad: 0x86100303,    item_07: 0x06100302, item_97: 0x06020001,R_oad: NULL,  count: 15,  len_07:    3,  len_97: 3}  #B相有功功率
+  - {V_oad: 0x86100304,    item_07: 0x06100303, item_97: 0x06020001,R_oad: NULL,  count: 18,  len_07:    3,  len_97: 3}  #C相有功功率
+  
+  - {V_oad: 0x86100400,    item_07: 0x061004FF, item_97: 0x06020001,R_oad: NULL,  count: 21,  len_07:   12,  len_97: 2}  #无功功率
+  - {V_oad: 0x86100401,    item_07: 0x06100400, item_97: 0x06020001,R_oad: NULL,  count: 21,  len_07:    3,  len_97: 3}  #总无功功率
+  - {V_oad: 0x86100402,    item_07: 0x06100401, item_97: 0x06020001,R_oad: NULL,  count: 24,  len_07:    3,  len_97: 3}  #A相无功功率
+  - {V_oad: 0x86100403,    item_07: 0x06100402, item_97: 0x06020001,R_oad: NULL,  count: 27,  len_07:    3,  len_97: 3}  #B相无功功率
+  - {V_oad: 0x86100404,    item_07: 0x06100403, item_97: 0x06020001,R_oad: NULL,  count: 30,  len_07:    3,  len_97: 3}  #C相无功功率
+  
+  - {V_oad: 0x86100500,    item_07: 0x061005FF, item_97: 0x06030001,R_oad: NULL,  count: 10,  len_07:    8,  len_97: 8}  #功率因数
+  - {V_oad: 0x86100501,    item_07: 0x06100500, item_97: 0x06030001,R_oad: NULL,  count: 10,  len_07:    2,  len_97: 2}  #总功率因数
+  - {V_oad: 0x86100502,    item_07: 0x06100501, item_97: 0x06030001,R_oad: NULL,  count: 12,  len_07:    2,  len_97: 2}  #A相功率因数
+  - {V_oad: 0x86100503,    item_07: 0x06100502, item_97: 0x06030001,R_oad: NULL,  count: 14,  len_07:    2,  len_97: 2}  #B相功率因数
+  - {V_oad: 0x86100504,    item_07: 0x06100503, item_97: 0x06030001,R_oad: NULL,  count: 16,  len_07:    2,  len_97: 2}  #C相功率因数
+  
+  - {V_oad: 0x86100600,    item_07: 0x061006FF, item_97: 0x06040001,R_oad: NULL,  count: 11,  len_07:   16,  len_97: 6}  #有功、无功曲线总电能总数据块
+  - {V_oad: 0x86100601,    item_07: 0x06100601, item_97: 0x06040001,R_oad: NULL,  count: 11,  len_07:    4,  len_97: 4}  #正向有功总电能
+  - {V_oad: 0x86100602,    item_07: 0x06100602, item_97: 0x06040001,R_oad: NULL,  count: 15,  len_07:    4,  len_97: 4}  #反向有功总电能
+  - {V_oad: 0x86100603,    item_07: 0x06100603, item_97: 0x06040001,R_oad: NULL,  count: 19,  len_07:    4,  len_97: 4}  #组合无功 1 总电能
+  - {V_oad: 0x86100604,    item_07: 0x06100604, item_97: 0x06040001,R_oad: NULL,  count: 23,  len_07:    4,  len_97: 4}  #组合无功 2 总电能
+  
+  - {V_oad: 0x86100700,    item_07: 0x061007FF, item_97: 0x06050001,R_oad: NULL,  count: 12,  len_07:   16,  len_97: 6}  #四象限无功曲线数据块
+  - {V_oad: 0x86100701,    item_07: 0x06100701, item_97: 0x06050001,R_oad: NULL,  count: 12,  len_07:    4,  len_97: 4}  #第一象限无功总电能
+  - {V_oad: 0x86100702,    item_07: 0x06100702, item_97: 0x06050001,R_oad: NULL,  count: 16,  len_07:    4,  len_97: 4}  #第二象限无功总电能
+  - {V_oad: 0x86100703,    item_07: 0x06100703, item_97: 0x06050001,R_oad: NULL,  count: 20,  len_07:    4,  len_97: 4}  #第三象限无功总电能
+  - {V_oad: 0x86100704,    item_07: 0x06100704, item_97: 0x06050001,R_oad: NULL,  count: 24,  len_07:    4,  len_97: 4}  #第四象限无功总电能
+  
+  - {V_oad: 0x86100800,    item_07: 0x061008FF, item_97: 0x06060001,R_oad: NULL,  count: 13,  len_07:    6,  len_97: 6}  #当前需量曲线数据块
+  - {V_oad: 0x86100801,    item_07: 0x06100801, item_97: 0x06060001,R_oad: NULL,  count: 13,  len_07:    3,  len_97: 3}  #当前有功需量
+  - {V_oad: 0x86100802,    item_07: 0x06100802, item_97: 0x06060001,R_oad: NULL,  count: 16,  len_07:    3,  len_97: 3}  #当前无功需量
+  
+  - {V_oad: 0x86100C00,    item_07: 0x06100CFF, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 4,   len_07:   20,  len_97: 0}  #21规范-组合有功费率1~4电能数据块
+  - {V_oad: 0x86100C01,    item_07: 0x06100C01, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率1电能
+  - {V_oad: 0x86100C02,    item_07: 0x06100C02, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率2电能
+  - {V_oad: 0x86100C03,    item_07: 0x06100C03, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率3电能
+  - {V_oad: 0x86100C04,    item_07: 0x06100C04, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率4电能
+  
+  - {V_oad: 0x86100D00,    item_07: 0x06100DFF, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 4,   len_07:   20,  len_97: 0}  #21规范-组合有功费率5~8电能数据块
+  - {V_oad: 0x86100D01,    item_07: 0x06100D01, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率5电能
+  - {V_oad: 0x86100D02,    item_07: 0x06100D02, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率6电能
+  - {V_oad: 0x86100D03,    item_07: 0x06100D03, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率7电能
+  - {V_oad: 0x86100D04,    item_07: 0x06100D04, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率8电能
+  
+  - {V_oad: 0x86100E00,    item_07: 0x06100EFF, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 4,   len_07:   20,  len_97: 0}  #组合有功费率9～12 电能曲线数据块
+  - {V_oad: 0x86100E01,    item_07: 0x06100E01, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #组合有功费率 9 电能
+  - {V_oad: 0x86100E02,    item_07: 0x06100E02, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #组合有功费率 10 电能
+  - {V_oad: 0x86100E03,    item_07: 0x06100E03, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #组合有功费率 11 电能
+  - {V_oad: 0x86100E04,    item_07: 0x06100E04, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #组合有功费率 12 电能
+  
+  - {V_oad: 0x86E00001,    item_07: 0x06E00001, item_97: 0x06E00001,R_oad: NULL,  count:  0,  len_07:   48,  len_97: 8}  #南网IR46电表新增：曲线第1数据块
+  
+  - {V_oad: 0x8201FF00,    item_07: 0x0201FF00, item_97: 0x0201FF00,R_oad: NULL,  count: 16,  len_07:    6,  len_97: 6}  #当前电压
+  - {V_oad: 0x8202FF00,    item_07: 0x0202FF00, item_97: 0x0202FF00,R_oad: NULL,  count: 16,  len_07:    9,  len_97: 9}  #当前电流
+  - {V_oad: 0x8203FF00,    item_07: 0x0203FF00, item_97: 0x0203FF00,R_oad: NULL,  count: 16,  len_07:    12, len_97: 12}  #当前有功功率
+  - {V_oad: 0x8001FF00,    item_07: 0x0001FF00, item_97: 0x0001FF00,R_oad: NULL,  count: 16,  len_07:    20, len_97: 20}  #当前正向有功总电能
+  - {V_oad: 0x8206FF00,    item_07: 0x0206FF00, item_97: 0x0206FF00,R_oad: NULL,  count: 16,  len_07:    8,  len_97: 8}  #当前总功率因数
+  - {V_oad: 0xE0030200,    item_07: 0x020FFF00, item_97: 0x020FFF00,R_oad: NULL,  count: 0,   len_07:   12,  len_97: 12}  #当前交采相角
+  
+  - {V_oad: 0x82810001,    item_07: 0x02810001, item_97: 0x02810001,R_oad: NULL,  count:  0,  len_07:    2,  len_97: 2}  #A相进线接线端子温度
+  - {V_oad: 0x82810002,    item_07: 0x02810002, item_97: 0x02810002,R_oad: NULL,  count:  0,  len_07:    2,  len_97: 2}  #A相出线接线端子温度
+  - {V_oad: 0x82810003,    item_07: 0x02810003, item_97: 0x02810003,R_oad: NULL,  count:  0,  len_07:    2,  len_97: 2}  #B相进线接线端子温度
+  - {V_oad: 0x82810004,    item_07: 0x02810004, item_97: 0x02810004,R_oad: NULL,  count:  0,  len_07:    2,  len_97: 2}  #B相出线接线端子温度
+  - {V_oad: 0x82810005,    item_07: 0x02810005, item_97: 0x02810005,R_oad: NULL,  count:  0,  len_07:    2,  len_97: 2}  #C相进线接线端子温度
+  - {V_oad: 0x82810006,    item_07: 0x02810006, item_97: 0x02810006,R_oad: NULL,  count:  0,  len_07:    2,  len_97: 2}  #C相出线接线端子温度
+  - {V_oad: 0x82821001,    item_07: 0x02821001, item_97: 0x02821001,R_oad: NULL,  count:  0,  len_07:    3,  len_97: 3}  #当前总误差自监测误差数据
+  - {V_oad: 0x82821002,    item_07: 0x02821002, item_97: 0x02821002,R_oad: NULL,  count:  0,  len_07:    3,  len_97: 3}  #当前A相误差自监测误差数据
+  - {V_oad: 0x82821003,    item_07: 0x02821003, item_97: 0x02821003,R_oad: NULL,  count:  0,  len_07:    3,  len_97: 3}  #当前B相误差自监测误差数据
+  - {V_oad: 0x82821004,    item_07: 0x02821004, item_97: 0x02821004,R_oad: NULL,  count:  0,  len_07:    3,  len_97: 3}  #当前C相误差自监测误差数据
+  - {V_oad: 0x828210FF,    item_07: 0x028210FF, item_97: 0x028210FF,R_oad: NULL,  count:  0,  len_07:   12,  len_97: 2}  #当前误差自监测误差数据块
+  
+  - {V_oad: 0x86103000,    item_07: 0x061030FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  2,  len_07:   10,  len_97: 0}  #21规范-组合无功总电能曲线数据块
+  - {V_oad: 0x86103001,    item_07: 0x06103001, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-组合无功1总电能
+  - {V_oad: 0x86103002,    item_07: 0x06103002, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-组合无功2总电能
+  
+  - {V_oad: 0x86110600,    item_07: 0x061106FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  2,  len_07:   10,  len_97: 0}  #21规范-有功曲线总电能数据块
+  - {V_oad: 0x86110601,    item_07: 0x06110601, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-正向有功总电能
+  - {V_oad: 0x86110602,    item_07: 0x06110602, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-反向有功总电能
+  
+  - {V_oad: 0x86110700,    item_07: 0x061107FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  4,  len_07:   20,  len_97: 0}  #21规范-四象限无功曲线数据块
+  - {V_oad: 0x86110701,    item_07: 0x06110701, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-第一象限无功总电能
+  - {V_oad: 0x86110702,    item_07: 0x06110702, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-第二象限无功总电能
+  - {V_oad: 0x86110703,    item_07: 0x06110703, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-第三象限无功总电能
+  - {V_oad: 0x86110704,    item_07: 0x06110704, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-第四象限无功总电能
+  
+  - {V_oad: 0x86110900,    item_07: 0x061109FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  2,  len_07:   10,  len_97: 0}  #21规范-谐波总电能数据块数据块
+  - {V_oad: 0x86110901,    item_07: 0x06110901, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 0}  #21规范-正向有功谐波总电能
+  - {V_oad: 0x86110902,    item_07: 0x06110902, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 0}  #21规范-反向有功谐波总电能
+  
+  - {V_oad: 0x86110A00,    item_07: 0x06110AFF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  2,  len_07:   10,  len_97: 0}  #21规范-基波总电能数据块数据块
+  - {V_oad: 0x86110A01,    item_07: 0x06110A01, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 0}  #21规范-正向有功基波总电能
+  - {V_oad: 0x86110A02,    item_07: 0x06110A02, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 0}  #21规范-反向有功基波总电能
+  
+  - {V_oad: 0x86120100,    item_07: 0x061201FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  3,  len_07:    6,  len_97: 6}  #模块负荷记录-电压数据块
+  - {V_oad: 0x86120101,    item_07: 0x06120101, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    2,  len_97: 2}  #模块负荷记录-A相电压
+  - {V_oad: 0x86120102,    item_07: 0x06120102, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    2,  len_97: 2}  #模块负荷记录-B相电压
+  - {V_oad: 0x86120103,    item_07: 0x06120103, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    2,  len_97: 2}  #模块负荷记录-C相电压
+  
+  - {V_oad: 0x86120200,    item_07: 0x061202FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  3,  len_07:    9,  len_97: 9}  #模块负荷记录-电流数据块
+  - {V_oad: 0x86120201,    item_07: 0x06120201, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-A相电流
+  - {V_oad: 0x86120202,    item_07: 0x06120202, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-B相电流
+  - {V_oad: 0x86120203,    item_07: 0x06120203, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-C相电流
+  
+  - {V_oad: 0x86120300,    item_07: 0x061203FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  4,  len_07:   12,  len_97: 2}  #模块负荷记录-有功功率数据块
+  - {V_oad: 0x86120301,    item_07: 0x06120301, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-总有功功率
+  - {V_oad: 0x86120302,    item_07: 0x06120302, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-A相有功功率
+  - {V_oad: 0x86120303,    item_07: 0x06120303, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-B相有功功率
+  - {V_oad: 0x86120304,    item_07: 0x06120304, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-C相有功功率
+  
+  - {V_oad: 0x86120400,    item_07: 0x061204FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  4,  len_07:   12,  len_97: 2}  #模块负荷记录-无功功率数据块
+  - {V_oad: 0x86120401,    item_07: 0x06120401, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-总无功功率
+  - {V_oad: 0x86120402,    item_07: 0x06120402, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-A相无功功率
+  - {V_oad: 0x86120403,    item_07: 0x06120403, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-B相无功功率
+  - {V_oad: 0x86120404,    item_07: 0x06120404, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-C相无功功率
+  
+  - {V_oad: 0x86120500,    item_07: 0x061205FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  4,  len_07:    8,  len_97: 8}  #模块负荷记录-功率因数数据块
+  - {V_oad: 0x86120501,    item_07: 0x06120501, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    2,  len_97: 2}  #模块负荷记录-总功率因数
+  - {V_oad: 0x86120502,    item_07: 0x06120502, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    2,  len_97: 2}  #模块负荷记录-A相功率因数
+  - {V_oad: 0x86120503,    item_07: 0x06120503, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    2,  len_97: 2}  #模块负荷记录-B相功率因数
+  - {V_oad: 0x86120504,    item_07: 0x06120504, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    2,  len_97: 2}  #模块负荷记录-C相功率因数
+  
+  - {V_oad: 0x86120600,    item_07: 0x061206FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  4,  len_07:   16,  len_97: 6}  #模块负荷记录-有功，无功总电能数据块
+  - {V_oad: 0x86120601,    item_07: 0x06120601, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-正向有功总电能
+  - {V_oad: 0x86120602,    item_07: 0x06120602, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-反向有功总电能
+  - {V_oad: 0x86120603,    item_07: 0x06120603, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-组合无功1总电能
+  - {V_oad: 0x86120604,    item_07: 0x06120604, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-组合无功2总电能
+  
+  - {V_oad: 0x86120700,    item_07: 0x061207FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  4,  len_07:   16,  len_97: 6}  #模块负荷记录-四象限无功总电能数据块
+  - {V_oad: 0x86120701,    item_07: 0x06120701, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-第一象限无功总电能
+  - {V_oad: 0x86120702,    item_07: 0x06120702, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-第二象限无功总电能
+  - {V_oad: 0x86120703,    item_07: 0x06120703, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-第三象限无功总电能
+  - {V_oad: 0x86120704,    item_07: 0x06120704, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-第四象限无功总电能
+  
+  - {V_oad: 0x86120800,    item_07: 0x061208FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  2,  len_07:    6,  len_97: 6}  #模块负荷记录-当前需量数据块
+  - {V_oad: 0x86120801,    item_07: 0x06120801, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-当前有功需量
+  - {V_oad: 0x86120802,    item_07: 0x06120802, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-当前无功需量
+  
+  - {V_oad: 0x86100100,    item_07: 0x061001FF, item_97: 0x06010001,R_oad: NULL,  count:  8,  len_07:    6,  len_97: 6}  #电压
+  - {V_oad: 0x86100101,    item_07: 0x06100101, item_97: 0x06010001,R_oad: NULL,  count:  8,  len_07:    2,  len_97: 2}  #A相电压
+  - {V_oad: 0x86100102,    item_07: 0x06100102, item_97: 0x06010001,R_oad: NULL,  count: 10,  len_07:    2,  len_97: 2}  #B相电压
+  - {V_oad: 0x86100103,    item_07: 0x06100103, item_97: 0x06010001,R_oad: NULL,  count: 12,  len_07:    2,  len_97: 2}  #C相电压
+  
+  - {V_oad: 0x86100200,    item_07: 0x061002FF, item_97: 0x06010001,R_oad: NULL,  count: 14,  len_07:    9,  len_97: 9}  #电流
+  - {V_oad: 0x86100201,    item_07: 0x06100201, item_97: 0x06010001,R_oad: NULL,  count: 14,  len_07:    3,  len_97: 3}  #A相电流
+  - {V_oad: 0x86100202,    item_07: 0x06100202, item_97: 0x06010001,R_oad: NULL,  count: 17,  len_07:    3,  len_97: 3}  #B相电流
+  - {V_oad: 0x86100203,    item_07: 0x06100203, item_97: 0x06010001,R_oad: NULL,  count: 20,  len_07:    3,  len_97: 3}  #C相电流
+  
+  - {V_oad: 0x86100300,    item_07: 0x061003FF, item_97: 0x06020001,R_oad: NULL,  count:  9,  len_07:   12,  len_97: 2}  #有功功率
+  - {V_oad: 0x86100301,    item_07: 0x06100300, item_97: 0x06020001,R_oad: NULL,  count:  9,  len_07:    3,  len_97: 3}  #总有功功率
+  - {V_oad: 0x86100302,    item_07: 0x06100301, item_97: 0x06020001,R_oad: NULL,  count: 12,  len_07:    3,  len_97: 3}  #A相有功功率
+  - {V_oad: 0x86100303,    item_07: 0x06100302, item_97: 0x06020001,R_oad: NULL,  count: 15,  len_07:    3,  len_97: 3}  #B相有功功率
+  - {V_oad: 0x86100304,    item_07: 0x06100303, item_97: 0x06020001,R_oad: NULL,  count: 18,  len_07:    3,  len_97: 3}  #C相有功功率
+  
+  - {V_oad: 0x86100400,    item_07: 0x061004FF, item_97: 0x06020001,R_oad: NULL,  count: 21,  len_07:   12,  len_97: 2}  #无功功率
+  - {V_oad: 0x86100401,    item_07: 0x06100400, item_97: 0x06020001,R_oad: NULL,  count: 21,  len_07:    3,  len_97: 3}  #总无功功率
+  - {V_oad: 0x86100402,    item_07: 0x06100401, item_97: 0x06020001,R_oad: NULL,  count: 24,  len_07:    3,  len_97: 3}  #A相无功功率
+  - {V_oad: 0x86100403,    item_07: 0x06100402, item_97: 0x06020001,R_oad: NULL,  count: 27,  len_07:    3,  len_97: 3}  #B相无功功率
+  - {V_oad: 0x86100404,    item_07: 0x06100403, item_97: 0x06020001,R_oad: NULL,  count: 30,  len_07:    3,  len_97: 3}  #C相无功功率
+  
+  - {V_oad: 0x86100500,    item_07: 0x061005FF, item_97: 0x06030001,R_oad: NULL,  count: 10,  len_07:    8,  len_97: 8}  #功率因数
+  - {V_oad: 0x86100501,    item_07: 0x06100500, item_97: 0x06030001,R_oad: NULL,  count: 10,  len_07:    2,  len_97: 2}  #总功率因数
+  - {V_oad: 0x86100502,    item_07: 0x06100501, item_97: 0x06030001,R_oad: NULL,  count: 12,  len_07:    2,  len_97: 2}  #A相功率因数
+  - {V_oad: 0x86100503,    item_07: 0x06100502, item_97: 0x06030001,R_oad: NULL,  count: 14,  len_07:    2,  len_97: 2}  #B相功率因数
+  - {V_oad: 0x86100504,    item_07: 0x06100503, item_97: 0x06030001,R_oad: NULL,  count: 16,  len_07:    2,  len_97: 2}  #C相功率因数
+  
+  - {V_oad: 0x86100600,    item_07: 0x061006FF, item_97: 0x06040001,R_oad: NULL,  count: 11,  len_07:   16,  len_97: 6}  #有功、无功曲线总电能总数据块
+  - {V_oad: 0x86100601,    item_07: 0x06100601, item_97: 0x06040001,R_oad: NULL,  count: 11,  len_07:    4,  len_97: 4}  #正向有功总电能
+  - {V_oad: 0x86100602,    item_07: 0x06100602, item_97: 0x06040001,R_oad: NULL,  count: 15,  len_07:    4,  len_97: 4}  #反向有功总电能
+  - {V_oad: 0x86100603,    item_07: 0x06100603, item_97: 0x06040001,R_oad: NULL,  count: 19,  len_07:    4,  len_97: 4}  #组合无功 1 总电能
+  - {V_oad: 0x86100604,    item_07: 0x06100604, item_97: 0x06040001,R_oad: NULL,  count: 23,  len_07:    4,  len_97: 4}  #组合无功 2 总电能
+  
+  - {V_oad: 0x86100700,    item_07: 0x061007FF, item_97: 0x06050001,R_oad: NULL,  count: 12,  len_07:   16,  len_97: 6}  #四象限无功曲线数据块
+  - {V_oad: 0x86100701,    item_07: 0x06100701, item_97: 0x06050001,R_oad: NULL,  count: 12,  len_07:    4,  len_97: 4}  #第一象限无功总电能
+  - {V_oad: 0x86100702,    item_07: 0x06100702, item_97: 0x06050001,R_oad: NULL,  count: 16,  len_07:    4,  len_97: 4}  #第二象限无功总电能
+  - {V_oad: 0x86100703,    item_07: 0x06100703, item_97: 0x06050001,R_oad: NULL,  count: 20,  len_07:    4,  len_97: 4}  #第三象限无功总电能
+  - {V_oad: 0x86100704,    item_07: 0x06100704, item_97: 0x06050001,R_oad: NULL,  count: 24,  len_07:    4,  len_97: 4}  #第四象限无功总电能
+  
+  - {V_oad: 0x86100800,    item_07: 0x061008FF, item_97: 0x06060001,R_oad: NULL,  count: 13,  len_07:    6,  len_97: 6}  #当前需量曲线数据块
+  - {V_oad: 0x86100801,    item_07: 0x06100801, item_97: 0x06060001,R_oad: NULL,  count: 13,  len_07:    3,  len_97: 3}  #当前有功需量
+  - {V_oad: 0x86100802,    item_07: 0x06100802, item_97: 0x06060001,R_oad: NULL,  count: 16,  len_07:    3,  len_97: 3}  #当前无功需量
+  
+  - {V_oad: 0x86100C00,    item_07: 0x06100CFF, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 4,   len_07:   20,  len_97: 0}  #21规范-组合有功费率1~4电能数据块
+  - {V_oad: 0x86100C01,    item_07: 0x06100C01, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率1电能
+  - {V_oad: 0x86100C02,    item_07: 0x06100C02, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率2电能
+  - {V_oad: 0x86100C03,    item_07: 0x06100C03, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率3电能
+  - {V_oad: 0x86100C04,    item_07: 0x06100C04, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率4电能
+  
+  - {V_oad: 0x86100D00,    item_07: 0x06100DFF, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 4,   len_07:   20,  len_97: 0}  #21规范-组合有功费率5~8电能数据块
+  - {V_oad: 0x86100D01,    item_07: 0x06100D01, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率5电能
+  - {V_oad: 0x86100D02,    item_07: 0x06100D02, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率6电能
+  - {V_oad: 0x86100D03,    item_07: 0x06100D03, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率7电能
+  - {V_oad: 0x86100D04,    item_07: 0x06100D04, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #21规范-组合有功费率8电能
+  
+  - {V_oad: 0x86100E00,    item_07: 0x06100EFF, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 4,   len_07:   20,  len_97: 0}  #组合有功费率9～12 电能曲线数据块
+  - {V_oad: 0x86100E01,    item_07: 0x06100E01, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #组合有功费率 9 电能
+  - {V_oad: 0x86100E02,    item_07: 0x06100E02, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #组合有功费率 10 电能
+  - {V_oad: 0x86100E03,    item_07: 0x06100E03, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #组合有功费率 11 电能
+  - {V_oad: 0x86100E04,    item_07: 0x06100E04, item_97: 0xFFFFFFFF,R_oad: NULL,  count: 1,   len_07:    5,  len_97: 5}  #组合有功费率 12 电能
+  
+  - {V_oad: 0x86E00001,    item_07: 0x06E00001, item_97: 0x06E00001,R_oad: NULL,  count:  0,  len_07:   48,  len_97: 8}  #南网IR46电表新增：曲线第1数据块
+  
+  - {V_oad: 0x8201FF00,    item_07: 0x0201FF00, item_97: 0x0201FF00,R_oad: NULL,  count: 16,  len_07:    6,  len_97: 6}  #当前电压
+  - {V_oad: 0x8202FF00,    item_07: 0x0202FF00, item_97: 0x0202FF00,R_oad: NULL,  count: 16,  len_07:    9,  len_97: 9}  #当前电流
+  - {V_oad: 0x8203FF00,    item_07: 0x0203FF00, item_97: 0x0203FF00,R_oad: NULL,  count: 16,  len_07:    12, len_97: 12}  #当前有功功率
+  - {V_oad: 0x8001FF00,    item_07: 0x0001FF00, item_97: 0x0001FF00,R_oad: NULL,  count: 16,  len_07:    20, len_97: 20}  #当前正向有功总电能
+  - {V_oad: 0x8206FF00,    item_07: 0x0206FF00, item_97: 0x0206FF00,R_oad: NULL,  count: 16,  len_07:    8,  len_97: 8}  #当前总功率因数
+  - {V_oad: 0xE0030200,    item_07: 0x020FFF00, item_97: 0x020FFF00,R_oad: NULL,  count: 0,   len_07:   12,  len_97: 12}  #当前交采相角
+  
+  - {V_oad: 0x82810001,    item_07: 0x02810001, item_97: 0x02810001,R_oad: NULL,  count:  0,  len_07:    2,  len_97: 2}  #A相进线接线端子温度
+  - {V_oad: 0x82810002,    item_07: 0x02810002, item_97: 0x02810002,R_oad: NULL,  count:  0,  len_07:    2,  len_97: 2}  #A相出线接线端子温度
+  - {V_oad: 0x82810003,    item_07: 0x02810003, item_97: 0x02810003,R_oad: NULL,  count:  0,  len_07:    2,  len_97: 2}  #B相进线接线端子温度
+  - {V_oad: 0x82810004,    item_07: 0x02810004, item_97: 0x02810004,R_oad: NULL,  count:  0,  len_07:    2,  len_97: 2}  #B相出线接线端子温度
+  - {V_oad: 0x82810005,    item_07: 0x02810005, item_97: 0x02810005,R_oad: NULL,  count:  0,  len_07:    2,  len_97: 2}  #C相进线接线端子温度
+  - {V_oad: 0x82810006,    item_07: 0x02810006, item_97: 0x02810006,R_oad: NULL,  count:  0,  len_07:    2,  len_97: 2}  #C相出线接线端子温度
+  - {V_oad: 0x82821001,    item_07: 0x02821001, item_97: 0x02821001,R_oad: NULL,  count:  0,  len_07:    3,  len_97: 3}  #当前总误差自监测误差数据
+  - {V_oad: 0x82821002,    item_07: 0x02821002, item_97: 0x02821002,R_oad: NULL,  count:  0,  len_07:    3,  len_97: 3}  #当前A相误差自监测误差数据
+  - {V_oad: 0x82821003,    item_07: 0x02821003, item_97: 0x02821003,R_oad: NULL,  count:  0,  len_07:    3,  len_97: 3}  #当前B相误差自监测误差数据
+  - {V_oad: 0x82821004,    item_07: 0x02821004, item_97: 0x02821004,R_oad: NULL,  count:  0,  len_07:    3,  len_97: 3}  #当前C相误差自监测误差数据
+  - {V_oad: 0x828210FF,    item_07: 0x028210FF, item_97: 0x028210FF,R_oad: NULL,  count:  0,  len_07:   12,  len_97: 2}  #当前误差自监测误差数据块
+  
+  - {V_oad: 0x86103000,    item_07: 0x061030FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  2,  len_07:   10,  len_97: 0}  #21规范-组合无功总电能曲线数据块
+  - {V_oad: 0x86103001,    item_07: 0x06103001, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-组合无功1总电能
+  - {V_oad: 0x86103002,    item_07: 0x06103002, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-组合无功2总电能
+  
+  - {V_oad: 0x86110600,    item_07: 0x061106FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  2,  len_07:   10,  len_97: 0}  #21规范-有功曲线总电能数据块
+  - {V_oad: 0x86110601,    item_07: 0x06110601, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-正向有功总电能
+  - {V_oad: 0x86110602,    item_07: 0x06110602, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-反向有功总电能
+  
+  - {V_oad: 0x86110700,    item_07: 0x061107FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  4,  len_07:   20,  len_97: 0}  #21规范-四象限无功曲线数据块
+  - {V_oad: 0x86110701,    item_07: 0x06110701, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-第一象限无功总电能
+  - {V_oad: 0x86110702,    item_07: 0x06110702, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-第二象限无功总电能
+  - {V_oad: 0x86110703,    item_07: 0x06110703, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-第三象限无功总电能
+  - {V_oad: 0x86110704,    item_07: 0x06110704, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 5}  #21规范-第四象限无功总电能
+  
+  - {V_oad: 0x86110900,    item_07: 0x061109FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  2,  len_07:   10,  len_97: 0}  #21规范-谐波总电能数据块数据块
+  - {V_oad: 0x86110901,    item_07: 0x06110901, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 0}  #21规范-正向有功谐波总电能
+  - {V_oad: 0x86110902,    item_07: 0x06110902, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 0}  #21规范-反向有功谐波总电能
+  
+  - {V_oad: 0x86110A00,    item_07: 0x06110AFF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  2,  len_07:   10,  len_97: 0}  #21规范-基波总电能数据块数据块
+  - {V_oad: 0x86110A01,    item_07: 0x06110A01, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 0}  #21规范-正向有功基波总电能
+  - {V_oad: 0x86110A02,    item_07: 0x06110A02, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    5,  len_97: 0}  #21规范-反向有功基波总电能
+  
+  - {V_oad: 0x86120100,    item_07: 0x061201FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  3,  len_07:    6,  len_97: 6}  #模块负荷记录-电压数据块
+  - {V_oad: 0x86120101,    item_07: 0x06120101, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    2,  len_97: 2}  #模块负荷记录-A相电压
+  - {V_oad: 0x86120102,    item_07: 0x06120102, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    2,  len_97: 2}  #模块负荷记录-B相电压
+  - {V_oad: 0x86120103,    item_07: 0x06120103, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    2,  len_97: 2}  #模块负荷记录-C相电压
+  
+  - {V_oad: 0x86120200,    item_07: 0x061202FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  3,  len_07:    9,  len_97: 9}  #模块负荷记录-电流数据块
+  - {V_oad: 0x86120201,    item_07: 0x06120201, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-A相电流
+  - {V_oad: 0x86120202,    item_07: 0x06120202, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-B相电流
+  - {V_oad: 0x86120203,    item_07: 0x06120203, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-C相电流
+  
+  - {V_oad: 0x86120300,    item_07: 0x061203FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  4,  len_07:   12,  len_97: 2}  #模块负荷记录-有功功率数据块
+  - {V_oad: 0x86120301,    item_07: 0x06120301, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-总有功功率
+  - {V_oad: 0x86120302,    item_07: 0x06120302, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-A相有功功率
+  - {V_oad: 0x86120303,    item_07: 0x06120303, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-B相有功功率
+  - {V_oad: 0x86120304,    item_07: 0x06120304, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-C相有功功率
+  
+  - {V_oad: 0x86120400,    item_07: 0x061204FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  4,  len_07:   12,  len_97: 2}  #模块负荷记录-无功功率数据块
+  - {V_oad: 0x86120401,    item_07: 0x06120401, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-总无功功率
+  - {V_oad: 0x86120402,    item_07: 0x06120402, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-A相无功功率
+  - {V_oad: 0x86120403,    item_07: 0x06120403, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-B相无功功率
+  - {V_oad: 0x86120404,    item_07: 0x06120404, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-C相无功功率
+  
+  - {V_oad: 0x86120500,    item_07: 0x061205FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  4,  len_07:    8,  len_97: 8}  #模块负荷记录-功率因数数据块
+  - {V_oad: 0x86120501,    item_07: 0x06120501, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    2,  len_97: 2}  #模块负荷记录-总功率因数
+  - {V_oad: 0x86120502,    item_07: 0x06120502, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    2,  len_97: 2}  #模块负荷记录-A相功率因数
+  - {V_oad: 0x86120503,    item_07: 0x06120503, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    2,  len_97: 2}  #模块负荷记录-B相功率因数
+  - {V_oad: 0x86120504,    item_07: 0x06120504, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    2,  len_97: 2}  #模块负荷记录-C相功率因数
+  
+  - {V_oad: 0x86120600,    item_07: 0x061206FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  4,  len_07:   16,  len_97: 6}  #模块负荷记录-有功，无功总电能数据块
+  - {V_oad: 0x86120601,    item_07: 0x06120601, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-正向有功总电能
+  - {V_oad: 0x86120602,    item_07: 0x06120602, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-反向有功总电能
+  - {V_oad: 0x86120603,    item_07: 0x06120603, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-组合无功1总电能
+  - {V_oad: 0x86120604,    item_07: 0x06120604, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-组合无功2总电能
+  
+  - {V_oad: 0x86120700,    item_07: 0x061207FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  4,  len_07:   16,  len_97: 6}  #模块负荷记录-四象限无功总电能数据块
+  - {V_oad: 0x86120701,    item_07: 0x06120701, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-第一象限无功总电能
+  - {V_oad: 0x86120702,    item_07: 0x06120702, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-第二象限无功总电能
+  - {V_oad: 0x86120703,    item_07: 0x06120703, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-第三象限无功总电能
+  - {V_oad: 0x86120704,    item_07: 0x06120704, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    4,  len_97: 4}  #模块负荷记录-第四象限无功总电能
+  
+  - {V_oad: 0x86120800,    item_07: 0x061208FF, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  2,  len_07:    6,  len_97: 6}  #模块负荷记录-当前需量数据块
+  - {V_oad: 0x86120801,    item_07: 0x06120801, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-当前有功需量
+  - {V_oad: 0x86120802,    item_07: 0x06120802, item_97: 0xFFFFFFFF,R_oad: NULL,  count:  1,  len_07:    3,  len_97: 3}  #模块负荷记录-当前无功需量

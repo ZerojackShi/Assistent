@@ -1,0 +1,9 @@
+# 引用定义在另一个文件中的列表
+Oad_List:
+  - master_oad: 0x50020200
+    name: Vir_50020200_List
+    file: !inc ./50020200_List.yml
+  
+  - master_oad: 0x50040200
+    name: Vir_50040200_List
+    file: !inc ./50040200_List.yml

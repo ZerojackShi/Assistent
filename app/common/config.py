@@ -2,6 +2,7 @@
 import shutil
 import os
 import sys
+import yaml,yaml_include
 from enum import Enum
 from lxml import etree as ET
 from pathlib import Path
@@ -302,6 +303,41 @@ class LogConfig:
     def log_critical(self, message,exc_info=True):
         self.logger.critical(message,exc_info=exc_info)
 
+
+class OadFinder:
+    def __init__(self, file_path):
+        self.file_path = file_path
+        self.data = None
+
+        # 添加自定义构造器以支持 !include 标签
+        yaml.add_constructor("!inc", yaml_include.Constructor(base_dir='app/config/task_plan'))
+
+        # 检查文件是否存在并加载YAML数据
+        if not Path(file_path).exists():
+            raise FileNotFoundError(f"File not found: {file_path}")
+
+        with open(file_path, 'r', encoding="utf-8") as file:
+            self.data = yaml.full_load(file)
+
+    def find_oad_info(self, master_oad_id, virtual_oad_id):
+        if self.data is None:
+            return None
+        
+        try:
+            for oad_list in self.data.get("Oad_List", []):
+                if oad_list.get('master_oad') == master_oad_id:
+                    voad_list = oad_list.get('file')
+                    if isinstance(voad_list, dict):
+                        for key, value in voad_list.items():
+                            if isinstance(value, list):
+                                for item in value:
+                                    if isinstance(item, dict) and 'V_oad' in item and item['V_oad'] == virtual_oad_id:
+                                        return item
+        except Exception as e:
+            log_config.log_error(f"find_oad_info error: {e} {master_oad_id} {virtual_oad_id}")
+        
+        return None
+
 YEAR = 2023
 AUTHOR = "ZeroJack"
 REPO_OWNER = "ZerojackShi"
@@ -332,3 +368,6 @@ config_csg13 = QframeConfig()
 config_csg13.load('app/config/CSG13.xml')
 
 log_config = LogConfig()
+
+# 使用示例
+oad_finder = OadFinder(f'{CONFIG_DIR}/task_plan/oad_list.yml')
