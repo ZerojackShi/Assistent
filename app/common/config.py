@@ -306,17 +306,23 @@ class LogConfig:
 
 class OadFinder:
     def __init__(self, file_path):
-        self.file_path = file_path
         self.data = None
+        self.file_path = Path(file_path)
+        if self.file_path.exists() == False:
+            folder_path = Path('app/config/task_plan')
+            source_path = Path("_internal/app/config/task_plan")
+            shutil.copytree(source_path, folder_path)
 
         # 添加自定义构造器以支持 !include 标签
-        yaml.add_constructor("!inc", yaml_include.Constructor(base_dir='app/config/task_plan'))
+        folder_path = Path('app/config/task_plan')
+        yaml.add_constructor("!inc", yaml_include.Constructor(base_dir=folder_path))
 
         # 检查文件是否存在并加载YAML数据
-        if not Path(file_path).exists():
-            raise FileNotFoundError(f"File not found: {file_path}")
+        if not Path(self.file_path).exists():
+            print(f"File not found: {file_path}")
+            return
 
-        with open(file_path, 'r', encoding="utf-8") as file:
+        with open(self.file_path, 'r', encoding="utf-8") as file:
             self.data = yaml.full_load(file)
 
     def find_oad_info(self, master_oad_id, virtual_oad_id):
