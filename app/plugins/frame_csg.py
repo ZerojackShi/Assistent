@@ -135,6 +135,9 @@ def add_point_array_to_frame(frame, point_array):
             pos += 2
 
     return count, pos
+def add_pw_to_frame(frame:list):
+    frame.extend([0x00] * 16)
+    return 16
 
 def add_item_array_to_frame(frame, item_array):
     pos = 0
@@ -144,11 +147,10 @@ def add_item_array_to_frame(frame, item_array):
 
 def set_frame_finish(data, frame:list):
     frame_len = 0
-    if (len(data) +  FramePos.POS_START1.value < FramePos.POS_DATA.value + 16) and (frame[FramePos.POS_AFN.value] == 0x04):
-        pw = [0x00] * 16
-        frame.extend(pw)
-        data.extend(pw)
-        frame_len = 16
+    pw = [0x00] * 16
+    frame.extend(pw)
+    data.extend(pw)
+    frame_len = 16
     caculate_cs = frame_fun.caculate_cs(data)
     frame.extend([caculate_cs, 0x16])
     return frame_len

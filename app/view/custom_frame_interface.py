@@ -1209,6 +1209,476 @@ class MeterTaskInterface(QWidget):
         text = frame_fun.get_data_str_with_space(frame)
         self.framearea.setPlainText(text)
 
+
+class NoramlTaskInterface(QWidget):
+    frame_finfish = pyqtSignal(list, int)
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+
+        self.tasklayout = QHBoxLayout()  # 使用水平布局
+        self.tasklabel = QLabel('普通任务号')
+        self.tasklabel.setAlignment(Qt.AlignLeft)
+        self.taskNumberInput = LineEdit()
+        self.tasklayout.addWidget(self.tasklabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
+        self.tasklayout.addWidget(self.taskNumberInput, 1, Qt.AlignRight)
+
+        self.validradioWidget = QWidget()
+        self.validradioLayout = QHBoxLayout(self.validradioWidget)
+        self.validradioLayout.setContentsMargins(2, 0, 0, 0)
+        self.validradioLayout.setSpacing(15)
+        self.validradioButton1 = RadioButton(self.tr('无效'), self.validradioWidget)
+        self.validradioButton2 = RadioButton(self.tr('有效'), self.validradioWidget)
+        self.validbuttonGroup = QButtonGroup(self.validradioWidget)
+        self.validbuttonGroup.addButton(self.validradioButton1, 1)
+        self.validbuttonGroup.addButton(self.validradioButton2, 2)
+        self.validradioLayout.addWidget(self.validradioButton1)
+        self.validradioLayout.addWidget(self.validradioButton2)
+        self.validradioButton1.click()
+        self.validreadtypelayout = QHBoxLayout()  # 使用水平布局
+        self.validreadtypelabel = QLabel('有效性标志')
+        self.validreadtypelayout.addWidget(self.validreadtypelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
+        self.validreadtypelayout.addWidget(self.validradioWidget, 1, Qt.AlignRight)
+
+        self.reportbasetimelayout = QHBoxLayout()  # 使用水平布局
+        self.reportbasetimelabel = QLabel('上报基准时间')
+        self.reportbasetimeInput = DateTimePicker()
+        self.reportbasetimelayout.addWidget(self.reportbasetimelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
+        self.reportbasetimelayout.addWidget(self.reportbasetimeInput, 1, Qt.AlignRight)
+
+
+        self.reportunitradioWidget = QWidget()
+        self.reportunitradioLayout = QHBoxLayout(self.reportunitradioWidget)
+        self.reportunitradioLayout.setContentsMargins(2, 0, 0, 0)
+        self.reportunitradioLayout.setSpacing(15)
+        self.reportunitradioButton1 = RadioButton(self.tr('分'), self.reportunitradioWidget)
+        self.reportunitradioButton2 = RadioButton(self.tr('时'), self.reportunitradioWidget)
+        self.reportunitradioButton3 = RadioButton(self.tr('日'), self.reportunitradioWidget)
+        self.reportunitradioButton4 = RadioButton(self.tr('月'), self.reportunitradioWidget)
+        self.reportunitbuttonGroup = QButtonGroup(self.reportunitradioWidget)
+        self.reportunitbuttonGroup.addButton(self.reportunitradioButton1, 1)
+        self.reportunitbuttonGroup.addButton(self.reportunitradioButton2, 2)
+        self.reportunitbuttonGroup.addButton(self.reportunitradioButton3, 3)
+        self.reportunitbuttonGroup.addButton(self.reportunitradioButton4, 4)
+        self.reportunitradioLayout.addWidget(self.reportunitradioButton1)
+        self.reportunitradioLayout.addWidget(self.reportunitradioButton2)
+        self.reportunitradioLayout.addWidget(self.reportunitradioButton3)
+        self.reportunitradioLayout.addWidget(self.reportunitradioButton4)
+        self.reportunitradioButton1.click()
+        self.reportunitreadtypelayout = QHBoxLayout()  # 使用水平布局
+        self.reportunitreadtypelabel = QLabel('定时上报周期单位')
+        self.reportunitreadtypelayout.addWidget(self.reportunitreadtypelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
+        self.reportunitreadtypelayout.addWidget(self.reportunitradioWidget, 1, Qt.AlignRight)
+
+        self.reportcycleinput = QHBoxLayout()  # 使用水平布局
+        self.reportcyclelabel = QLabel('定时上报周期')
+        self.reportcyclelabel.setAlignment(Qt.AlignLeft)
+        self.reportcycleInput = LineEdit()
+        self.reportcycleinput.addWidget(self.reportcyclelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
+        self.reportcycleinput.addWidget(self.reportcycleInput, 1, Qt.AlignRight)
+
+        self.tasktyperadioWidget = QWidget()
+        self.tasktyperadioLayout = QHBoxLayout(self.tasktyperadioWidget)
+        self.tasktyperadioLayout.setContentsMargins(2, 0, 0, 0)
+        self.tasktyperadioLayout.setSpacing(15)
+        self.tasktyperadioButton1 = RadioButton(self.tr('自描述格式组织数据'), self.tasktyperadioWidget)
+        self.tasktyperadioButton2 = RadioButton(self.tr('任务定义的数据格式组织数据'), self.tasktyperadioWidget)
+        self.tasktypebuttonGroup = QButtonGroup(self.tasktyperadioWidget)
+        self.tasktypebuttonGroup.addButton(self.tasktyperadioButton1, 1)
+        self.tasktypebuttonGroup.addButton(self.tasktyperadioButton2, 2)
+        self.tasktyperadioLayout.addWidget(self.tasktyperadioButton1)
+        self.tasktyperadioLayout.addWidget(self.tasktyperadioButton2)
+        self.tasktyperadioButton1.click()
+        self.tasktypereadtypelayout = QHBoxLayout()  # 使用水平布局
+        self.tasktypereadtypelabel = QLabel('数据结构方式')
+        self.tasktypereadtypelayout.addWidget(self.tasktypereadtypelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
+        self.tasktypereadtypelayout.addWidget(self.tasktyperadioWidget, 1, Qt.AlignRight)
+
+        self.readtimelayout = QHBoxLayout()  # 使用水平布局
+        self.readtimelabel = QLabel('采样基准时间')
+        self.readtimeInput = DateTimePicker()
+        self.readtimelayout.addWidget(self.readtimelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
+        self.readtimelayout.addWidget(self.readtimeInput, 1, Qt.AlignRight)
+
+        self.meterunitradioWidget = QWidget()
+        self.meterunitradioLayout = QHBoxLayout(self.meterunitradioWidget)
+        self.meterunitradioLayout.setContentsMargins(2, 0, 0, 0)
+        self.meterunitradioLayout.setSpacing(15)
+        self.meterunitradioButton1 = RadioButton(self.tr('分'), self.meterunitradioWidget)
+        self.meterunitradioButton2 = RadioButton(self.tr('时'), self.meterunitradioWidget)
+        self.meterunitradioButton3 = RadioButton(self.tr('日'), self.meterunitradioWidget)
+        self.meterunitradioButton4 = RadioButton(self.tr('月'), self.meterunitradioWidget)
+        self.meterunitbuttonGroup = QButtonGroup(self.meterunitradioWidget)
+        self.meterunitbuttonGroup.addButton(self.meterunitradioButton1, 1)
+        self.meterunitbuttonGroup.addButton(self.meterunitradioButton2, 2)
+        self.meterunitbuttonGroup.addButton(self.meterunitradioButton3, 3)
+        self.meterunitbuttonGroup.addButton(self.meterunitradioButton4, 4)
+        self.meterunitradioLayout.addWidget(self.meterunitradioButton1)
+        self.meterunitradioLayout.addWidget(self.meterunitradioButton2)
+        self.meterunitradioLayout.addWidget(self.meterunitradioButton3)
+        self.meterunitradioLayout.addWidget(self.meterunitradioButton4)
+        self.meterunitradioButton1.click()
+        self.meterunitreadtypelayout = QHBoxLayout()  # 使用水平布局
+        self.meterunitreadtypelabel = QLabel('定时采样周期基本单位')
+        self.meterunitreadtypelayout.addWidget(self.meterunitreadtypelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
+        self.meterunitreadtypelayout.addWidget(self.meterunitradioWidget, 1, Qt.AlignRight)
+
+
+        self.metercyclelayout = QHBoxLayout()  # 使用水平布局
+        self.metercyclelabel = QLabel('定时采样周期')
+        self.metercyclelabel.setAlignment(Qt.AlignLeft)
+        self.metercycleInput = LineEdit()
+        self.metercyclelayout.addWidget(self.metercyclelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
+        self.metercyclelayout.addWidget(self.metercycleInput, 1, Qt.AlignRight)
+
+        self.datafreqlayout = QHBoxLayout()  # 使用水平布局
+        self.datafreqlabel = QLabel('数据抽取倍率')
+        self.datafreqlabel.setAlignment(Qt.AlignLeft)
+        self.datafreqInput = LineEdit()
+        self.datafreqlayout.addWidget(self.datafreqlabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
+        self.datafreqlayout.addWidget(self.datafreqInput, 1, Qt.AlignRight)
+
+        self.taskexeccountlayout = QHBoxLayout()  # 使用水平布局
+        self.taskexeccountlabel = QLabel('执行次数')
+        self.taskexeccountlabel.setAlignment(Qt.AlignLeft)
+        self.taskexeccountInput = LineEdit()
+        self.taskexeccountlayout.addWidget(self.taskexeccountlabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
+        self.taskexeccountlayout.addWidget(self.taskexeccountInput, 1, Qt.AlignRight)
+
+        self.pnlayout = QHBoxLayout()  # 使用水平布局
+        self.pnlabel = QLabel('测量点')
+        self.pnInput = PlainTextEdit()
+        self.pnInput.setFixedSize(400, 50)
+        self.pnlayout.addWidget(self.pnlabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
+        self.pnlayout.addWidget(self.pnInput, 1, Qt.AlignRight)
+
+        self.itemlayout = QHBoxLayout()  # 使用水平布局
+        self.itemlabel = QLabel('数据标识')
+        self.itemInput = PlainTextEdit()
+        self.itemInput.setFixedSize(400, 100)
+        self.itemlayout.addWidget(self.itemlabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
+        self.itemlayout.addWidget(self.itemInput, 1, Qt.AlignRight)
+
+        self.button = PrimaryPushButton(self.tr('生成报文'))
+        self.framearea = PlainTextEdit(self)
+        self.framearea.setPlaceholderText("报文生成区...")
+        self.framearea.setFixedHeight(200)
+        self.sendbutton = PrimaryPushButton(self.tr('发送报文'))
+        self.sendbutton.clicked.connect(self.sendframe)
+
+        self.qvlayout = QVBoxLayout(self)  # 使用垂直布局
+        self.qvlayout.addLayout(self.tasklayout)
+        self.qvlayout.addLayout(self.validreadtypelayout)
+        self.qvlayout.addLayout(self.reportbasetimelayout)
+        self.qvlayout.addLayout(self.reportunitreadtypelayout)
+        self.qvlayout.addLayout(self.reportcycleinput)
+        self.qvlayout.addLayout(self.tasktypereadtypelayout)
+        self.qvlayout.addLayout(self.readtimelayout)
+        self.qvlayout.addLayout(self.meterunitreadtypelayout)
+        self.qvlayout.addLayout(self.metercyclelayout)
+        self.qvlayout.addLayout(self.datafreqlayout)
+        self.qvlayout.addLayout(self.taskexeccountlayout)
+        self.qvlayout.addLayout(self.pnlayout)
+        self.qvlayout.addLayout(self.itemlayout)
+        self.qvlayout.addWidget(self.button)
+        self.qvlayout.addWidget(self.framearea)
+        self.qvlayout.addWidget(self.sendbutton)
+        self.qvlayout.setContentsMargins(0,0,0,5)
+
+        self.init_widget()
+    def init_widget(self):
+        self.pnInput.setPlaceholderText("使用英文','或'-'拆分,如1,3,5-6")
+        self.itemInput.setPlaceholderText("使用英文','拆分,如05060100,05060101")
+        current_date = QDate.currentDate()
+        current_time = QTime.currentTime()
+        self.reportbasetimeInput.setDateTime(current_date, current_time)
+        self.readtimeInput.setDateTime(current_date, current_time)
+        self.button.clicked.connect(self.create_frame)
+        StyleSheet.CUSTOM_INTERFACE.apply(self)
+
+    def sendframe(self):
+        text = self.framearea.toPlainText()
+        signalBus.sendmessage.emit(text)
+    def get_size(self):
+        return self.qvlayout.sizeHint() + QSize(0, 50)
+    def create_frame(self, frame):
+        afn = 0x04
+        frame_len = 0
+        frame = [0x00] * FramePos.POS_DATA.value
+
+        adress = [0xff] * 6  # Fix the initialization of adress
+        msa = 0x10
+        frame_csg.init_frame(0x4a, afn, adress, msa, 0x60, frame)
+        frame_len += FramePos.POS_DATA.value
+
+        frame.extend([0x00,0x00])
+        frame_len += 2
+
+        input_text = self.taskNumberInput.text()
+        if input_text: 
+            try:                                      
+                task_item = 0xE0000300 + int(input_text, 10)
+            except Exception as e:
+                InfoBar.warning(
+                title=self.tr('告警'),
+                content=self.tr("任务号错误!"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+                return
+        else:
+            InfoBar.warning(
+            title=self.tr('告警'),
+            content=self.tr("请输入任务号!"),
+            orient=Qt.Horizontal,
+            isClosable=True,
+            position=InfoBarPosition.TOP,
+            duration=2000,
+            parent=self
+        )
+            return
+        frame_len += frame_fun.item_to_di(task_item, frame)
+
+        #有效性标志
+        selected_button = self.validbuttonGroup.checkedButton()
+        selected_index = self.validbuttonGroup.id(selected_button)
+        frame.append(selected_index - 1)
+        frame_len += 1
+        #上报基准时间
+        time_date, time_time = self.reportbasetimeInput.getDateTime()
+        time_array = frame_fun.get_time_bcd_array(time_date, time_time)
+        frame.extend(time_array[1:6][::-1])
+        frame_len += 5
+        
+        #定时上报周期单位
+        selected_button = self.reportunitbuttonGroup.checkedButton()
+        selected_index = self.reportunitbuttonGroup.id(selected_button)
+        frame.append(selected_index - 1)
+        frame_len += 1
+
+        #定时上报周期
+        data = self.reportcycleInput.text()
+        if data is not None and data != "":
+            try:
+                cycle = int(data, 10)
+            except Exception as e:
+                InfoBar.warning(
+                title=self.tr('告警'),
+                content=self.tr("定时上报周期错误!"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+                return
+        else:
+            InfoBar.warning(
+            title=self.tr('告警'),
+            content=self.tr("请输入定时上报周期!"),
+            orient=Qt.Horizontal,
+            isClosable=True,
+            position=InfoBarPosition.TOP,
+            duration=2000,
+            parent=self
+        )
+            return
+            
+        frame.append(cycle)
+        frame_len += 1
+
+        #数据结构方式
+        selected_button = self.tasktypebuttonGroup.checkedButton()
+        selected_index = self.tasktypebuttonGroup.id(selected_button)
+        frame.append(selected_index - 1)
+        frame_len += 1
+
+        #采样基准时间
+        time_date, time_time = self.readtimeInput.getDateTime()
+        time_array = frame_fun.get_time_bcd_array(time_date, time_time)
+        frame.extend(time_array[1:6][::-1])
+        frame_len += 5
+
+        #采样周期单位
+        selected_button = self.meterunitbuttonGroup.checkedButton()
+        selected_index = self.meterunitbuttonGroup.id(selected_button)
+        frame.append(selected_index - 1)
+        frame_len += 1
+
+        #采样周期
+        data = self.metercycleInput.text()
+        if data is not None and data != "":
+            try:
+                cycle = int(data, 10)
+            except Exception as e:
+                InfoBar.warning(
+                title=self.tr('告警'),
+                content=self.tr("定时采样周期错误!"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+                return
+        else:
+            InfoBar.warning(
+            title=self.tr('告警'),
+            content=self.tr("请输入定时采样周期周期!"),
+            orient=Qt.Horizontal,
+            isClosable=True,
+            position=InfoBarPosition.TOP,
+            duration=2000,
+            parent=self
+        )
+            return
+        
+        frame.append(cycle)
+        frame_len += 1
+
+        #数据抽取倍率
+        data = self.datafreqInput.text()
+        if data is not None and data != "":
+            try:
+                cycle = int(data, 10)
+            except Exception as e:
+                InfoBar.warning(
+                title=self.tr('告警'),
+                content=self.tr("数据抽取倍率错误!"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+                return
+        else:
+            InfoBar.warning(
+            title=self.tr('告警'),
+            content=self.tr("请输入数据抽取倍率!"),
+            orient=Qt.Horizontal,
+            isClosable=True,
+            position=InfoBarPosition.TOP,
+            duration=2000,
+            parent=self
+        )
+            return
+        
+        frame.append(cycle)
+        frame_len += 1
+
+        #执行次数
+        data = self.taskexeccountInput.text()
+        if data is not None and data != "":
+            try:
+                cycle = int(data, 10)
+            except Exception as e:
+                InfoBar.warning(
+                title=self.tr('告警'),
+                content=self.tr("执行次数错误!"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+                return
+        else:
+            InfoBar.warning(
+            title=self.tr('告警'),
+            content=self.tr("请输入执行次数!"),
+            orient=Qt.Horizontal,
+            isClosable=True,
+            position=InfoBarPosition.TOP,
+            duration=2000,
+            parent=self
+        )
+            return
+        
+        cycle_array = frame_fun.int16_to_bcd(cycle)
+        frame.extend(cycle_array)
+        frame_len += 2
+
+        #测量点组
+        input_text = self.pnInput.toPlainText()
+        if input_text: 
+            try:                                      
+                point_array =  frame_fun.parse_meterpoint_input(input_text)
+            except Exception as e:
+                InfoBar.warning(
+                title=self.tr('告警'),
+                content=self.tr("测量点错误!"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+                return
+        else:
+            InfoBar.warning(
+            title=self.tr('告警'),
+            content=self.tr("请输入测量点!"),
+            orient=Qt.Horizontal,
+            isClosable=True,
+            position=InfoBarPosition.TOP,
+            duration=2000,
+            parent=self
+        )
+            return
+        
+        pn_frame = []
+        count, pos = frame_csg.add_point_array_to_frame(pn_frame, point_array)
+        frame.append(count)
+        frame.extend(pn_frame)
+        frame_len += pos + 1
+
+        #数据标识组
+        item_array = []
+        input_text = self.itemInput.toPlainText()
+        if input_text:
+            try:
+                item_array = frame_fun.prase_item_by_input_text(input_text)
+            except Exception as e:
+                InfoBar.warning(
+                title=self.tr('告警'),
+                content=self.tr("数据标识错误!"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+                return
+        else:
+            InfoBar.warning(
+            title=self.tr('告警'),
+            content=self.tr("请输入数据标识!"),
+            orient=Qt.Horizontal,
+            isClosable=True,
+            position=InfoBarPosition.TOP,
+            duration=2000,
+            parent=self
+        )
+            return
+
+        frame.append(len(item_array))
+        frame_len += 1
+        frame_len += frame_csg.add_item_array_to_frame(frame, item_array)
+
+        frame_len += frame_csg.set_frame_finish(frame[FramePos.POS_CTRL.value:frame_len], frame)
+        frame_csg.set_frame_len(frame_len - FramePos.POS_CTRL.value, frame)
+
+        self.frame_finfish.emit(frame, frame_len)
+        self.display_frame(frame, frame_len)
+
+    def display_frame(self, frame, length):
+        self.framearea.clear()
+        text = frame_fun.get_data_str_with_space(frame)
+        self.framearea.setPlainText(text)
+
 class FrameInterface(QWidget):
     """ Pivot interface """
 
@@ -1226,12 +1696,14 @@ class FrameInterface(QWidget):
         self.historyDataInterface = ReadHistoryInterface(self)
         self.readAlarmInterface = ReadEventAlarmInterface(type=1, parent=self)
         self.metertaskinterface = MeterTaskInterface(self)
+        self.normaltaskinterface = NoramlTaskInterface(self)
 
         # add items to pivot
         self.addSubInterface(self.paramInterface, 'paramInterface', self.tr('参数类'))
         self.addSubInterface(self.curdataInterface, 'curdataInterface', self.tr('当前数据类'))
         self.addSubInterface(self.historyDataInterface, 'histotyInterface', self.tr('历史数据类'))
         self.addSubInterface(self.readAlarmInterface, 'readAlarmInterface', self.tr('读取报警类'))
+        self.addSubInterface(self.normaltaskinterface, 'normaltaskinterface', self.tr('普通任务类'))
         self.addSubInterface(self.metertaskinterface, 'metertaskinterface', self.tr('表端任务类'))
         
         # self.button = PrimaryPushButton(self.tr('生成报文'))
