@@ -33,16 +33,4 @@ jobs:
     - name: Compress build directory
       run: |
         Compress-Archive -Path '${{ github.workspace }}/dest/Assistent' -DestinationPath 'Assistent.zip'
-    
-    - name: Create Release
-      id: create_release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: |
-          Assistent.zip
-        tag_name: V1.1
-        release_name: Release ${{ github.ref }}
-        draft: false
-        prerelease: false
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
