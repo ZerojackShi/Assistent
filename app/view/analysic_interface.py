@@ -13,7 +13,7 @@ from ..plugins.MeterTask import MeterTask
 from .gallery_interface import GalleryInterface
 from ..common.translator import Translator
 from ..common.signal_bus import signalBus
-import sys,os,time
+import sys,os,time,copy
 from PyQt5.QtSvg import QSvgGenerator
 from functools import partial
 
@@ -165,6 +165,7 @@ class CustomTreeWidget(QtWidgets.QTreeWidget):
                 )
                     return
             tree_widget = CustomTreeWidget()
+            # tree_widget = copy.deepcopy(self)
             viewport_size = self.viewport().size()
 
             w, h = viewport_size.width(), self.total_height

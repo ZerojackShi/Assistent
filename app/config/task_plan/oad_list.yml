@@ -4,6 +4,10 @@ Oad_List:
     name: Vir_50020200_List
     file: !inc ./50020200_List.yml
   
+  - master_oad: 0x00000000
+    name: Vir_50020200_List
+    file: !inc ./50020200_List.yml
+  
   - master_oad: 0x50040200
     name: Vir_50040200_List
     file: !inc ./50040200_List.yml

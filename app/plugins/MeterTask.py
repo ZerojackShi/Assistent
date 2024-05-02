@@ -33,6 +33,8 @@ class MeterTask:
         return master_oad, 4
     
     def get_master_oad_info(self, master_oad:int):
+        if master_oad == 0x00000000:
+            return "当前数据"
         if master_oad == 0x50020200:
             return "分钟冻结"
         if master_oad == 0x50040200:
@@ -58,6 +60,39 @@ class MeterTask:
                 return item_set, name.text
         
         return item_set, ""
+    
+    def check_item_is_in_plan(self, task_content, find_item):
+        try:
+            self.oad_count = task_content[1]
+            if self.oad_count == 0:
+                return
+            pos = 2
+            for i in range(self.oad_count):
+                pos += 3
+                master_oad, len = self.get_oad(task_content[pos:])
+                pos += (len + 1)
+                sub_oad, len = self.get_oad(task_content[pos:])
+                item, info = self.get_sub_oad_info(master_oad, sub_oad)
+                if item is not None:
+                    print("master_oad",master_oad,"sub_oad",sub_oad, "item",item)
+                    if item.upper() == f'{find_item:08x}'.upper():
+                        return True
+                pos += (len + 1)
+
+                sub_oad, len = self.get_oad(task_content[pos:])
+                pos += len
+                pos += 6
+                pos += 1
+                ms_type = task_content[pos]
+                pos += 1
+                ms_data = []
+                len, me_info = self.get_ms_len(ms_type, task_content[pos:], ms_data, pos)
+                pos += len
+                i += 1
+            return False
+        except Exception as e:
+            return False
+    
 
     def get_range_type(self, type):
         if type == 0:

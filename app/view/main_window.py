@@ -29,12 +29,13 @@ from ..common.signal_bus import signalBus
 from ..common.translator import Translator
 from .receive_send_interface import SendReceive,ReceiveSendInterface
 from ..common import resource
-from .param_interface import ParamInterface
+from .problam_interface import Problam_Interface
 from .custom_frame_interface import CustomFrame
 from .database_interface import DataBaseInterface
 from .app_message_interface import AppMessageInterface
 from ..plugins.update import UpgradeWindows
 from PyQt5.QtCore import QThread
+
 class MainWindow(FluentWindow):
 
     def __init__(self):
@@ -62,6 +63,8 @@ class MainWindow(FluentWindow):
         self.customFrame = CustomFrame(self)
         self.dataBaseView = DataBaseInterface(self)
         self.appmessage = AppMessageInterface(self)
+        self.problam = Problam_Interface(self)
+        self.test = StatusInfoInterface(self)
         # self.param_interface = ParamInterface(self)
         # enable acrylic effect
         self.navigationInterface.setAcrylicEnabled(True)
@@ -96,12 +99,12 @@ class MainWindow(FluentWindow):
         # self.addSubInterface(self.scrollInterface, FIF.SCROLL, t.scroll, pos)
         # self.addSubInterface(self.statusInfoInterface, FIF.CHAT, t.statusInfo, pos)
         # self.addSubInterface(self.textInterface, Icon.TEXT, t.text, pos)
-        # self.addSubInterface(self.viewInterface, Icon.GRID, t.view, pos)
         self.addSubInterface(self.analysicView, Icon.FRAME_ALALYSIC, t.frameanalysic,pos)
         self.addSubInterface(self.sendreceive, FIF.SEND, t.sendreceive, pos)
         self.addSubInterface(self.customFrame, FIF.SCROLL, t.customframe, pos)
         self.addSubInterface(self.dataBaseView, FIF.ZOOM, t.dataBaseView, pos)
         self.addSubInterface(self.appmessage, FIF.MESSAGE, t.appmessage, pos)
+        self.addSubInterface(self.problam, FIF.CHAT, t.problam, pos)
         # self.addSubInterface(self.param_interface, FIF.SCROLL, t.param, pos) 
 
         # add custom widget to bottom

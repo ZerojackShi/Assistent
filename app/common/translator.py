@@ -24,3 +24,4 @@ class Translator(QObject):
         self.customframe      = self.tr('自定义报文')
         self.dataBaseView      = self.tr('数据库解析')
         self.appmessage        = self.tr('APP消息接口')
+        self.problam = self.tr('问题分析')

@@ -147,10 +147,11 @@ def add_item_array_to_frame(frame, item_array):
 
 def set_frame_finish(data, frame:list):
     frame_len = 0
-    pw = [0x00] * 16
-    frame.extend(pw)
-    data.extend(pw)
-    frame_len = 16
+    if frame[FramePos.POS_AFN.value] == 0x04:
+        pw = [0x00] * 16
+        frame.extend(pw)
+        data.extend(pw)
+        frame_len = 16
     caculate_cs = frame_fun.caculate_cs(data)
     frame.extend([caculate_cs, 0x16])
     return frame_len
@@ -579,7 +580,8 @@ def is_within_one_month(bcd_array1, bcd_array2):
     if dt1 <= dt2:
         return False
     time_difference = dt2 - dt1
-
+    if abs(dt2.year - dt1.year) > 1:
+        return False
     # 检查差值是否不超过一个月
     if time_difference <= timedelta(days=30):
         return True
@@ -1147,6 +1149,7 @@ def Analysic_csg_read_history_frame(frame, dir, prm,result_list,start_pos):
     sub_length = 0
     data_time = None
     prase_data = PraseFrameData()
+    sub_pos = 0
     while pos < length:
         try:
             if guest_next_data_is_cur_item_data(data_item_elem, data_segment[pos:], data_time) == False:
@@ -1163,6 +1166,11 @@ def Analysic_csg_read_history_frame(frame, dir, prm,result_list,start_pos):
                 pos += 2
                 frame_fun.add_data(sub_result, f"<第{num + 1}组>数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
                 pos += 4
+                if frame_fun.globregion == "海南":
+                    data_count = data_segment[pos]
+                    identifier = "数据时间个数:" + f"{data_count:02d}"
+                    frame_fun.add_data(sub_result, f"<第{num + 1}组>数据时间个数",frame_fun.get_data_str_with_space(data_segment[pos:pos+1]),identifier,[index + pos, index + pos + 1])
+                    pos += 1
 
             item_data = []
             if data_item_elem is not None:
@@ -1351,10 +1359,6 @@ def Analysic_csg_read_task_frame(frame, dir, prm,result_list,start_pos):
     prase_data = PraseFrameData()
     while pos < length:
         try:
-            if frame_fun.globregion == "海南":
-                data_count = data_segment[pos]
-                pos += 1
-
             if guest_next_data_is_cur_item_data(data_item_elem, data_segment[pos:], data_time) == False:
                 DA = data_segment[pos:pos + 2]
                 item = data_segment[pos + 2: pos + 6]
@@ -1375,9 +1379,6 @@ def Analysic_csg_read_task_frame(frame, dir, prm,result_list,start_pos):
                     pos += 2
                     frame_fun.add_data(sub_result, f"数据标识编码DI",frame_fun.get_data_str_with_space(item),dis_data_identifier,[index + pos, index + pos + 4])
                     pos += 4
-                    
-                    if frame_fun.globregion == "海南":
-                        frame_fun.add_data(sub_result, f"数据个数",f"{data_count}:02X",f"数据个数：{data_count}",[index + pos -6, index + pos -5])
 
             item_data = []
             if data_item_elem is not None:

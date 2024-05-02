@@ -12,6 +12,16 @@ from qfluentwidgets import (qconfig, QConfig, ConfigItem, OptionsConfigItem, Boo
                             FolderListValidator, Theme, FolderValidator, ConfigSerializer, ConfigValidator,__version__)
 import logging
 from datetime import datetime
+from mur._public import *
+
+def custom_read_user_code() :
+    '''
+    用户场景： 读取（或输入）被管理员分配的用户码
+    [return] 用户码
+    '''
+    user_code = read(USER_CODE_PATH)   # 若无法从文件中读取
+    return user_code
+
 class Language(Enum):
     """ Language enumeration """
 
@@ -136,6 +146,9 @@ class Config(QConfig):
     Multireport = ConfigItem("BasicSeting", "Multireport", False, BoolValidator())
     MultireportAdress = ConfigItem("BasicSeting", "MultireportAdress", [], validator=None)
     node_id = ConfigItem("Version", "node_id", "None", validator=None)
+
+    # folders
+    problam_conf = ConfigItem("Problam", "conf_path", [], validator=None)
 
 class QframeConfig(QObject):
     """ Config of app """
@@ -361,7 +374,6 @@ Authorization = "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"
 UPDATE_FILE = './upgrade.zip'
 UPDATE_DIR = 'upgrade'
 APP_EXEC = "Assistent.exe"
-
 cfg = Config()
 cfg.themeMode.value = Theme.AUTO
 qconfig.load('app/config/config.json', cfg)

@@ -1,0 +1,71 @@
+name: 问题分析
+content: 数据问题分析
+result: ["执行步骤", "执行结果", "失败原因","问题原因", "时间"]
+input: 
+  - name: 数据库路径
+    ui_type: path
+    type: str
+    param: $path
+
+  - name: 测量点
+    ui_type: text
+    type: int
+    param: $point
+
+  - name: 数据标识
+    ui_type: text
+    type: int
+    param: $id
+
+  - name: 数据密度
+    ui_type: text
+    type: int
+    param: $density
+
+  - name: 开始时间
+    ui_type: datetime
+    type: timestamp
+    param: $starttime
+
+  - name: 结束时间
+    ui_type: datetime
+    type: timestamp
+    param: $endtime
+
+# 函数返回必须按照{key:value}格式,其中key为返回值名称,value为返回值类型
+# {"state":False, "result":{e},"uiinfo":[]}
+# 其中state为bool类型,result不固定，这个直接用于返回给步骤中的return接收,uiinfo,用于返回界面显示信息,格式为界面定义的格式result: ["执行步骤", "执行结果", "失败原因"]
+# 执行步骤
+# 函数定义仅支持最多两个参数，第一个为自定义参数，第二个为信号发送对象，用于发送信号到ui
+job:
+  - steps: 
+      name: 检查数据
+      items:
+        - name: 检查数据
+          script: D:/ProjackSpace/assistent/app/config/problam/example.py 
+          function: check_exec_plan  # 如果函数中调用其他非标准函数需要定义到这个test中，无法主动加载
+          arg: [$path, $point, $id]
+
+        
+        # - name: 拆分数据
+        #   script: D:/ProjackSpace/assistent/app/config/problam/example.py
+        #   function: function2 #函数内发送信号到ui显示内容
+        #   arg: $result1
+        #   return: $result2
+
+  - steps: 
+      name: 读取数据库
+      items:
+        - name: 读取数据库
+          run: dir
+        
+        - name: 检查数据
+          script: D:/ProjackSpace/assistent/app/config/problam/example.py
+          function: function1
+          return: $result1
+        
+        - name: 拆分数据
+          script: D:/ProjackSpace/assistent/app/config/problam/example.py
+          function: function3 #函数内不发送信号到ui显示内容
+          arg: $result1
+          return: $result2
