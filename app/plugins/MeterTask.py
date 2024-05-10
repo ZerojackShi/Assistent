@@ -11,6 +11,8 @@ MS_TYPE_A_RANGE_OF_USER_TYPES         = 0x05  #一组用户类型区间*/
 MS_TYPE_A_SET_OF_USER_ADDRESS_RANGES  = 0x06  #一组用户地址区间*/
 MS_TYPE_A_SET_OF_NUMBER_RANGES        = 0x07  #一组配置序号区间*/
 MS_TYPE_ALL_USER_WITHOUT_JC           = 0xF7  #除交采外的所有表 247*/
+MS_TYPE_A_SET_OF_VIP_USER_BY_PORT     = 0xF8  #一组用户类型区分端口*/
+MS_TYPE_A_SET_OF_USER_BY_PORT         = 0xF9  #一组用户类型区分端口*/
 MS_TYPE_A_GROUP_OF_VIP_USER_TYPES     = 0xFB  #一组重点用户类型 251*/
 MS_TYPE_A_SET_OF_USER_EVENT_LEVELS    = 0xFC  #一组用户事件等级 252*/
 MS_TYPE_VIP_USER_TYPES                = 0xFD  #重点用户 253*/
@@ -220,9 +222,36 @@ class MeterTask:
                 dis_data_identifier = "除交采外所有表"
                 return 0,dis_data_identifier
             
+            if ms_type == MS_TYPE_A_SET_OF_VIP_USER_BY_PORT:
+                pos += 1
+                ms_result = []
+                for i in range(task_content[0]):
+                    dis_data_identifier = f'用户类型:{task_content[pos]}'
+                    FrameFun.add_data(ms_result, f"<第{i+1}组>用户类型",FrameFun.to_hex_string_with_space(task_content[pos:pos + 1]),dis_data_identifier,[start_pos + pos, start_pos + pos + 1])
+                    pos += 1
+                dis_data_identifier = f"用户类型个数:{task_content[0]}"
+                FrameFun.add_data(sub_result, f"用户类型个数",FrameFun.to_hex_string_with_space(task_content[0]),dis_data_identifier,[start_pos, start_pos + 1],ms_result)
+                dis_data_identifier = "一组重点用户类型区分端口(300<=任务号<=500:载波，其他：非载波)"
+                return pos, dis_data_identifier
+            
+            if ms_type == MS_TYPE_A_SET_OF_USER_BY_PORT:
+                pos += 1
+                ms_result = []
+                for i in range(task_content[0]):
+                    dis_data_identifier = f'用户类型:{task_content[pos]}'
+                    FrameFun.add_data(ms_result, f"<第{i+1}组>用户类型",FrameFun.to_hex_string_with_space(task_content[pos:pos + 1]),dis_data_identifier,[start_pos + pos, start_pos + pos + 1])
+                    pos += 1
+                dis_data_identifier = f"用户类型个数:{task_content[0]}"
+                FrameFun.add_data(sub_result, f"用户类型个数",FrameFun.to_hex_string_with_space(task_content[0]),dis_data_identifier,[start_pos, start_pos + 1],ms_result)
+                dis_data_identifier = "一组用户类型区分端口(300<=任务号<=500:载波，其他：非载波)"
+                return pos, dis_data_identifier
+            
             if ms_type == MS_TYPE_A_GROUP_OF_VIP_USER_TYPES:
+                dis_data_identifier = f"用户类型:{task_content[pos]:02d}"
+                FrameFun.add_data(sub_result, f"用户类型",FrameFun.to_hex_string_with_space(task_content[0]),dis_data_identifier,[start_pos + pos, start_pos + pos + 1])
+                pos += 1
                 dis_data_identifier = "一组重点用户类型"
-                return 0,dis_data_identifier
+                return pos,dis_data_identifier
             
             if ms_type == MS_TYPE_A_SET_OF_USER_EVENT_LEVELS:
                 pos += 1

@@ -12,7 +12,25 @@ from ..plugins.frame_fun import FrameFun as frame_fun
 from ..common.signal_bus import signalBus
 from ..components.state_tools import DateTimePicker
 
-class ParamFrameInterface(QWidget):
+
+class CustomframeResult(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+
+        self.qvlayout = QVBoxLayout(self)
+
+
+        self.framearea = PlainTextEdit()
+        self.framearea.setPlaceholderText("报文生成区...")
+
+        self.qvlayout.addWidget(self.framearea)
+
+    def set_frame(self, frame):
+        self.framearea.setPlainText(frame)
+    def clear_frame(self):
+        self.framearea.clear()
+
+class ParamFrame(QWidget):
     frame_finfish = pyqtSignal(list, int)
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -47,12 +65,6 @@ class ParamFrameInterface(QWidget):
 
         self.button = PrimaryPushButton(self.tr('生成报文'))
         self.button.clicked.connect(self.create_frame)
-        self.framearea = PlainTextEdit()
-        self.framearea.setPlaceholderText("报文生成区...")
-        self.framearea.setFixedHeight(200)
-
-        self.sendbutton = PrimaryPushButton(self.tr('发送报文'))
-        self.sendbutton.clicked.connect(self.sendframe)
 
         self.qvlayout = QVBoxLayout(self)  # 使用垂直布局
         self.qvlayout.addLayout(self.pnlayout, 1)
@@ -64,15 +76,10 @@ class ParamFrameInterface(QWidget):
         self.qvlayout.addWidget(self.switchButton, 1)
         self.qvlayout.addSpacing(5)
         self.qvlayout.addWidget(self.button)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addWidget(self.framearea, 1)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addWidget(self.sendbutton)
 
         self.qvlayout.setContentsMargins(0,0,0,5)
         self.qvlayout.setSpacing(2)
 
-        StyleSheet.CUSTOM_INTERFACE.apply(self)
     def get_size(self):
         return self.qvlayout.sizeHint() + QSize(0, 50)
     
@@ -173,15 +180,28 @@ class ParamFrameInterface(QWidget):
         frame_csg.set_frame_len(frame_len - FramePos.POS_CTRL.value, frame)
 
         self.frame_finfish.emit(frame, frame_len)
-        self.display_frame(frame, frame_len)
 
+
+class ParamFrameInterface(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+
+        self.qhlayout = QHBoxLayout(self)  # 使用水平布局
+
+        self.framearea = ParamFrame()
+        self.result = CustomframeResult()
+        self.framearea.frame_finfish.connect(self.display_frame)
+        self.qhlayout.addWidget(self.framearea, 1)
+        self.qhlayout.addWidget(self.result, 1)
+
+        StyleSheet.CUSTOM_INTERFACE.apply(self)
+    
     def display_frame(self, frame, length):
-        self.framearea.clear()
+        self.result.clear_frame()
         text = frame_fun.get_data_str_with_space(frame)
-        self.framearea.setPlainText(text)
+        self.result.set_frame(text)
 
-
-class ReadCurInterface(QWidget):
+class ReadCurFrame(QWidget):
     frame_finfish = pyqtSignal(list, int)
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -204,11 +224,6 @@ class ReadCurInterface(QWidget):
 
         self.button = PrimaryPushButton(self.tr('生成报文'))
         self.button.clicked.connect(self.create_frame)
-        self.framearea = PlainTextEdit()
-        self.framearea.setPlaceholderText("报文生成区...")
-        self.framearea.setFixedHeight(200)
-        self.sendbutton = PrimaryPushButton(self.tr('发送报文'))
-        self.sendbutton.clicked.connect(self.sendframe)
 
         self.qvlayout = QVBoxLayout(self)  # 使用垂直布局
         self.qvlayout.addLayout(self.pnlayout, 1)
@@ -216,13 +231,8 @@ class ReadCurInterface(QWidget):
         self.qvlayout.addLayout(self.itemlayout, 1)
         self.qvlayout.addSpacing(5)
         self.qvlayout.addWidget(self.button, 1)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addWidget(self.framearea, 1)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addWidget(self.sendbutton, 1)
 
         self.qvlayout.setContentsMargins(0,0,0,5)
-        StyleSheet.CUSTOM_INTERFACE.apply(self)
 
     def get_size(self):
         return self.qvlayout.sizeHint() + QSize(0, 50)
@@ -298,14 +308,27 @@ class ReadCurInterface(QWidget):
         frame_csg.set_frame_len(frame_len - FramePos.POS_CTRL.value, frame)
 
         self.frame_finfish.emit(frame, frame_len)
-        self.display_frame(frame, frame_len)
 
+class ReadCurInterface(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+
+        self.qhlayout = QHBoxLayout(self)  # 使用水平布局
+
+        self.framearea = ReadCurFrame()
+        self.result = CustomframeResult()
+        self.framearea.frame_finfish.connect(self.display_frame)
+        self.qhlayout.addWidget(self.framearea, 1)
+        self.qhlayout.addWidget(self.result, 1)
+
+        StyleSheet.CUSTOM_INTERFACE.apply(self)
+    
     def display_frame(self, frame, length):
-        self.framearea.clear()
+        self.result.clear_frame()
         text = frame_fun.get_data_str_with_space(frame)
-        self.framearea.setPlainText(text)
-   
-class ReadHistoryInterface(QWidget):
+        self.result.set_frame(text)
+
+class ReadHistoryFrame(QWidget):
     frame_finfish = pyqtSignal(list, int)
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -343,12 +366,6 @@ class ReadHistoryInterface(QWidget):
         self.datakindlayout.addWidget(self.datakindInput, 1, Qt.AlignLeft)
 
         self.button = PrimaryPushButton(self.tr('生成报文'))
-        self.framearea = PlainTextEdit()
-        self.framearea.setPlaceholderText("报文生成区...")
-        self.framearea.setFixedHeight(200)
-
-        self.sendbutton = PrimaryPushButton(self.tr('发送报文'))
-        self.sendbutton.clicked.connect(self.sendframe)
 
         self.qvlayout = QVBoxLayout(self)  # 使用垂直布局
         self.qvlayout.addLayout(self.pnlayout, 1)
@@ -362,15 +379,10 @@ class ReadHistoryInterface(QWidget):
         self.qvlayout.addLayout(self.datakindlayout, 1)
         self.qvlayout.addSpacing(5)
         self.qvlayout.addWidget(self.button, 1)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addWidget(self.framearea, 1)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addWidget(self.sendbutton, 1)
 
         self.qvlayout.setContentsMargins(0,0,0,5)
 
         self.init_widget()
-        StyleSheet.CUSTOM_INTERFACE.apply(self)
 
     def get_size(self):
         return self.qvlayout.sizeHint() + QSize(0, 50)
@@ -468,14 +480,27 @@ class ReadHistoryInterface(QWidget):
         frame_csg.set_frame_len(frame_len - FramePos.POS_CTRL.value, frame)
 
         self.frame_finfish.emit(frame, frame_len)
-        self.display_frame(frame, frame_len)
+        
+class ReadHistoryInterface(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
 
+        self.qhlayout = QHBoxLayout(self)  # 使用水平布局
+
+        self.framearea = ReadHistoryFrame()
+        self.result = CustomframeResult()
+        self.framearea.frame_finfish.connect(self.display_frame)
+        self.qhlayout.addWidget(self.framearea, 1)
+        self.qhlayout.addWidget(self.result, 1)
+
+        StyleSheet.CUSTOM_INTERFACE.apply(self)
+    
     def display_frame(self, frame, length):
-        self.framearea.clear()
+        self.result.clear_frame()
         text = frame_fun.get_data_str_with_space(frame)
-        self.framearea.setPlainText(text)
+        self.result.set_frame(text)
 
-class ReadEventAlarmInterface(QWidget):
+class ReadEventAlarmFrame(QWidget):
     frame_finfish = pyqtSignal(list, int)
     def __init__(self, type, parent=None):
         super().__init__(parent=parent)
@@ -524,12 +549,6 @@ class ReadEventAlarmInterface(QWidget):
         self.readtypelayout.addWidget(self.radioWidget, 1, Qt.AlignLeft)
 
         self.button = PrimaryPushButton(self.tr('生成报文'))
-        self.framearea = PlainTextEdit()
-        self.framearea.setPlaceholderText("报文生成区...")
-        self.framearea.setFixedHeight(200)
-
-        self.sendbutton = PrimaryPushButton(self.tr('发送报文'))
-        self.sendbutton.clicked.connect(self.sendframe)
 
         self.qvlayout = QVBoxLayout(self)  # 使用垂直布局
         self.qvlayout.addLayout(self.pnlayout, 1)
@@ -543,14 +562,9 @@ class ReadEventAlarmInterface(QWidget):
         self.qvlayout.addLayout(self.readtypelayout, 1)
         self.qvlayout.addSpacing(5)
         self.qvlayout.addWidget(self.button, 1)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addWidget(self.framearea, 1)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addWidget(self.sendbutton, 1)
 
         self.qvlayout.setContentsMargins(0,0,0,5)
         self.init_widget()
-        StyleSheet.CUSTOM_INTERFACE.apply(self)
 
     def get_size(self):
         return self.qvlayout.sizeHint() + QSize(0, 50)
@@ -650,14 +664,27 @@ class ReadEventAlarmInterface(QWidget):
         frame_csg.set_frame_len(frame_len - FramePos.POS_CTRL.value, frame)
 
         self.frame_finfish.emit(frame, frame_len)
-        self.display_frame(frame, frame_len)
 
+class ReadEventAlarmInterface(QWidget):
+    def __init__(self, type, parent=None):
+        super().__init__(parent=parent)
+
+        self.qhlayout = QHBoxLayout(self)  # 使用水平布局
+
+        self.framearea = ReadEventAlarmFrame(type=type, parent=None)
+        self.result = CustomframeResult()
+        self.framearea.frame_finfish.connect(self.display_frame)
+        self.qhlayout.addWidget(self.framearea, 1)
+        self.qhlayout.addWidget(self.result, 1)
+
+        StyleSheet.CUSTOM_INTERFACE.apply(self)
+    
     def display_frame(self, frame, length):
-        self.framearea.clear()
+        self.result.clear_frame()
         text = frame_fun.get_data_str_with_space(frame)
-        self.framearea.setPlainText(text)
+        self.result.set_frame(text)
 
-class MeterTaskInterface(QWidget):
+class MeterTaskFrame(QWidget):
     frame_finfish = pyqtSignal(list, int)
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -842,11 +869,6 @@ class MeterTaskInterface(QWidget):
         self.itemlayout.addWidget(self.itemInput, 1, Qt.AlignRight)
 
         self.button = PrimaryPushButton(self.tr('生成报文'))
-        self.framearea = PlainTextEdit(self)
-        self.framearea.setPlaceholderText("报文生成区...")
-        self.framearea.setFixedHeight(200)
-        self.sendbutton = PrimaryPushButton(self.tr('发送报文'))
-        self.sendbutton.clicked.connect(self.sendframe)
 
         self.qvlayout = QVBoxLayout(self)  # 使用垂直布局
         self.qvlayout.addLayout(self.tasklayout)
@@ -866,8 +888,6 @@ class MeterTaskInterface(QWidget):
         self.qvlayout.addLayout(self.pnlayout)
         self.qvlayout.addLayout(self.itemlayout)
         self.qvlayout.addWidget(self.button)
-        self.qvlayout.addWidget(self.framearea)
-        self.qvlayout.addWidget(self.sendbutton)
         self.qvlayout.setContentsMargins(0,0,0,5)
 
         self.init_widget()
@@ -880,7 +900,6 @@ class MeterTaskInterface(QWidget):
         self.readtimeInput.setDateTime(current_date, current_time)
         self.ertureadtimeInput.setDateTime(current_date, current_time)
         self.button.clicked.connect(self.create_frame)
-        StyleSheet.CUSTOM_INTERFACE.apply(self)
 
     def sendframe(self):
         text = self.framearea.toPlainText()
@@ -1202,15 +1221,27 @@ class MeterTaskInterface(QWidget):
         frame_csg.set_frame_len(frame_len - FramePos.POS_CTRL.value, frame)
 
         self.frame_finfish.emit(frame, frame_len)
-        self.display_frame(frame, frame_len)
 
+class MeterTaskInterface(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+
+        self.qhlayout = QHBoxLayout(self)  # 使用水平布局
+
+        self.framearea = MeterTaskFrame()
+        self.result = CustomframeResult()
+        self.framearea.frame_finfish.connect(self.display_frame)
+        self.qhlayout.addWidget(self.framearea, 1)
+        self.qhlayout.addWidget(self.result, 1)
+
+        StyleSheet.CUSTOM_INTERFACE.apply(self)
+    
     def display_frame(self, frame, length):
-        self.framearea.clear()
+        self.result.clear_frame()
         text = frame_fun.get_data_str_with_space(frame)
-        self.framearea.setPlainText(text)
+        self.result.set_frame(text)
 
-
-class NoramlTaskInterface(QWidget):
+class NoramlTaskFrame(QWidget):
     frame_finfish = pyqtSignal(list, int)
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -1359,11 +1390,6 @@ class NoramlTaskInterface(QWidget):
         self.itemlayout.addWidget(self.itemInput, 1, Qt.AlignRight)
 
         self.button = PrimaryPushButton(self.tr('生成报文'))
-        self.framearea = PlainTextEdit(self)
-        self.framearea.setPlaceholderText("报文生成区...")
-        self.framearea.setFixedHeight(200)
-        self.sendbutton = PrimaryPushButton(self.tr('发送报文'))
-        self.sendbutton.clicked.connect(self.sendframe)
 
         self.qvlayout = QVBoxLayout(self)  # 使用垂直布局
         self.qvlayout.addLayout(self.tasklayout)
@@ -1380,8 +1406,6 @@ class NoramlTaskInterface(QWidget):
         self.qvlayout.addLayout(self.pnlayout)
         self.qvlayout.addLayout(self.itemlayout)
         self.qvlayout.addWidget(self.button)
-        self.qvlayout.addWidget(self.framearea)
-        self.qvlayout.addWidget(self.sendbutton)
         self.qvlayout.setContentsMargins(0,0,0,5)
 
         self.init_widget()
@@ -1393,7 +1417,6 @@ class NoramlTaskInterface(QWidget):
         self.reportbasetimeInput.setDateTime(current_date, current_time)
         self.readtimeInput.setDateTime(current_date, current_time)
         self.button.clicked.connect(self.create_frame)
-        StyleSheet.CUSTOM_INTERFACE.apply(self)
 
     def sendframe(self):
         text = self.framearea.toPlainText()
@@ -1679,6 +1702,26 @@ class NoramlTaskInterface(QWidget):
         text = frame_fun.get_data_str_with_space(frame)
         self.framearea.setPlainText(text)
 
+class NoramlTaskInterface(QWidget):
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+
+        self.qhlayout = QHBoxLayout(self)  # 使用水平布局
+
+        self.framearea = NoramlTaskFrame()
+        self.result = CustomframeResult()
+        self.framearea.frame_finfish.connect(self.display_frame)
+        self.qhlayout.addWidget(self.framearea, 1)
+        self.qhlayout.addWidget(self.result, 1)
+
+        StyleSheet.CUSTOM_INTERFACE.apply(self)
+    
+    def display_frame(self, frame, length):
+        self.result.clear_frame()
+        text = frame_fun.get_data_str_with_space(frame)
+        self.result.set_frame(text)
+
+
 class FrameInterface(QWidget):
     """ Pivot interface """
 
@@ -1735,7 +1778,10 @@ class FrameInterface(QWidget):
         widget = self.stackedWidget.widget(index)
         self.pivot.setCurrentItem(widget.objectName())
         qrouter.push(self.stackedWidget, widget.objectName())
-        self.setFixedHeight(widget.get_size().height() + self.vBoxLayout.spacing())
+
+        self.stackedWidget.setMinimumSize(widget.sizeHint())
+        self.stackedWidget.setMaximumSize(widget.sizeHint())
+        self.stackedWidget.resize(widget.sizeHint())
 
 class CustomFrameInterface(FrameInterface):
 

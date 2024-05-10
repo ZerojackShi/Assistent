@@ -4,7 +4,11 @@ ToastToolTip {
     border: none;
     border-radius: 7px;
 }
-
+CustomStateTool {
+    background-color: --ThemeColorDark1;
+    border: none;
+    border-radius: 1px;
+}
 QLabel {
     color: black;
     background-color: transparent;
