@@ -121,7 +121,7 @@ def add_point_and_item_and_time_to_frame(point_arrray:list, item_array:list, sta
 def add_point_array_to_frame(frame, point_array):
     pos = 0
     count = 0
-    if point_array[0] == 0xFF and point_array[1] == 0xff:
+    if point_array[0] == 0xFFFF:
         frame.append(0xff)
         frame.append(0xff)
         count = 1
@@ -129,10 +129,15 @@ def add_point_array_to_frame(frame, point_array):
     else:
         count = len(point_array)
         for meter_point in point_array:
-            da1, da2 = toDA(meter_point)
-            frame.append(da1)
-            frame.append(da2)
-            pos += 2
+            if meter_point == 0xFFFF:
+                frame.append(0xff)
+                frame.append(0xff)
+                pos += 2
+            else:
+                da1, da2 = toDA(meter_point)
+                frame.append(da1)
+                frame.append(da2)
+                pos += 2
 
     return count, pos
 def add_pw_to_frame(frame:list):

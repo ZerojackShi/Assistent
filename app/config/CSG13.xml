@@ -43320,7 +43320,7 @@
 	<dataItem id="E0000300" protocol="csg13" region="南网">
 		<name>有效的普通任务总数</name>
 		<length>1</length>
-		<type>bin</type>
+		<type>BCD</type>
 	</dataItem>
 	<dataItem id="E0000301" protocol="csg13" region="南网">
 		<name>普通任务</name>
@@ -46130,6 +46130,11 @@
 		<type>ASCII</type>
 	</dataItem>
 	<!--表端任务-->
+	<dataItem id="E0001500" protocol="csg13" region="南网">
+		<name>有效的普通任务总数</name>
+		<length>1</length>
+		<type>BCD</type>
+	</dataItem>
 	<dataItem id="E0001501" protocol="csg13" region="南网">
 		<name>表端任务</name>
 		<length>unknown</length>

@@ -784,22 +784,27 @@ class FrameFun:
         ranges = set()
         pattern = r'(\d+)-(\d+)|(\d+)'
         matches = re.finditer(pattern, input_text)
-        sorted_result = bytearray()
+        sorted_result = []
         if input_text.upper() == "FFFF":
-            sorted_result.append(0xff)
-            sorted_result.append(0xff)
+            sorted_result.append(0xFFFF)
         else:
-            for match in matches:
-                start, end, single = match.groups()
-                if start and end:
-                    # 处理范围表示，将范围内的整数添加到集合中
-                    start, end = int(start), int(end)
-                    ranges.update(range(start, end + 1))
-                elif single:
-                    # 处理单个整数，将其添加到集合中
-                    single = int(single)
-                    integers.add(single)
-        
+            parts = input_text.split(',')
+            for part in parts:
+                if part.upper() == "FFFF":
+                    integers.add(0xFFFF)
+                    continue
+                matches = re.finditer(pattern, part)
+                for match in matches:
+                    start, end, single = match.groups()
+                    if start and end:
+                        # 处理范围表示，将范围内的整数添加到集合中
+                        start, end = int(start), int(end)
+                        ranges.update(range(start, end + 1))
+                    elif single:
+                        # 处理单个整数，将其添加到集合中
+                        single = int(single)
+                        integers.add(single)
+                
             # 合并整数和范围
             integers.update(ranges)
         
