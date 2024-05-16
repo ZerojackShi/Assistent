@@ -324,12 +324,13 @@ class FrameFun:
         #for subitem, value in splitlength.items():
         #    if value[0] == target_subitem_name:
         #        break
-        matching_subitems = [value for subitem, value in splitlength.items() if value[0] == target_subitem_name]
+        matching_subitems = [(idx, value) for idx, (subitem, value) in enumerate(splitlength.items()) if value[0] == target_subitem_name]
 
         # 如果有多个匹配项，matching_subitems 将包含它们
-        for subitem in matching_subitems:
+        for idx, subitem in matching_subitems:
             subitem_name, subitem_content, subitem_value, subitem_indices = subitem
-            return subitem_value
+            return subitem_value, idx, subitem
+        
     @staticmethod
     def get_subitem_length(data_subitem_elem, splitlength, key, data_segment):
         """获取子项的长度"""
@@ -340,9 +341,34 @@ class FrameFun:
         '*': '*',
         '/': '/'
         }
-        sub_length = 0;
+        pattern = r'^RANGE\(([^)]+)\)$'
+        
+        # 获取长度规则
         if relues is not None:
             relues = relues.text
+            # 使用 re.match 函数进行匹配
+            match = re.match(pattern, relues)
+            # 如果匹配成功，返回 True，否则返回 False
+            if bool(match):
+                # 获取匹配到的字符串
+                match_string = match.group(1)
+                vaule, index, subitem = FrameFun.get_sublength_caculate_base(splitlength, match_string)
+                # 使用正则表达式提取前面的数字
+                match = re.match(r"(\d+)", vaule)
+                if index > 0:
+                    before_item = splitlength[index-1]
+                    pos = before_item[3][0]
+                else:
+                    pos = 0
+
+                cur_pos = subitem[3][0]
+                target_data = subitem[1][0]
+                if cur_pos > pos:
+                    sub_length = cur_pos - pos
+                sub_length += 1
+                for i, data in enumerate(data_segment[sub_length:]):
+                    if data == target_data:
+                        return i,i
             # 使用正则表达式进行拆分
             components = re.split(r'\s*([*])\s*', relues)
 
@@ -355,7 +381,7 @@ class FrameFun:
             if text_part.isdigit():
                 vaule = int(text_part)
             else:
-                vaule = FrameFun.get_sublength_caculate_base(splitlength, text_part)
+                vaule, index, subitem = FrameFun.get_sublength_caculate_base(splitlength, text_part)
                 # 使用正则表达式提取前面的数字
                 match = re.match(r"(\d+)", vaule)
                 if match:

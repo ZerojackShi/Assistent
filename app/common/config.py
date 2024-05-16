@@ -334,9 +334,11 @@ class OadFinder:
         if not Path(self.file_path).exists():
             print(f"File not found: {file_path}")
             return
-
-        with open(self.file_path, 'r', encoding="utf-8") as file:
-            self.data = yaml.full_load(file)
+        try:
+            with open(self.file_path, 'r', encoding="utf-8") as file:
+                self.data = yaml.full_load(file)
+        except Exception as e:
+            log_config.log_error(f"load yaml error: {e}")
 
     def find_oad_info(self, master_oad_id, virtual_oad_id):
         if self.data is None:

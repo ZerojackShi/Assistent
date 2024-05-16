@@ -240,17 +240,30 @@ class ReadCurFrame(QWidget):
         text = self.framearea.toPlainText()
         signalBus.sendmessage.emit(text)
     def create_frame(self, frame):
-        afn = 0x0c
-        frame_len = 0
-        frame = [0x00] * FramePos.POS_DATA.value
-        input_text = self.pnInput.toPlainText()
-        if input_text:   
-            try:                                    
-                point_array =  frame_fun.parse_meterpoint_input(input_text)
-            except Exception as e:
+        try:
+            afn = 0x0c
+            frame_len = 0
+            frame = [0x00] * FramePos.POS_DATA.value
+            input_text = self.pnInput.toPlainText()
+            if input_text:   
+                try:                                    
+                    point_array =  frame_fun.parse_meterpoint_input(input_text)
+                except Exception as e:
+                    InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("测量点错误!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                    return
+                
+            else:
                 InfoBar.warning(
                 title=self.tr('告警'),
-                content=self.tr("测量点错误!"),
+                content=self.tr("请输入测量点!"),
                 orient=Qt.Horizontal,
                 isClosable=True,
                 position=InfoBarPosition.TOP,
@@ -258,28 +271,27 @@ class ReadCurFrame(QWidget):
                 parent=self
             )
                 return
-            
-        else:
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("请输入测量点!"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
-            return
 
-        item_array = []
-        input_text = self.itemInput.toPlainText()
-        if input_text:
-            try:
-                item_array = frame_fun.prase_item_by_input_text(input_text)
-            except Exception as e:
+            item_array = []
+            input_text = self.itemInput.toPlainText()
+            if input_text:
+                try:
+                    item_array = frame_fun.prase_item_by_input_text(input_text)
+                except Exception as e:
+                    InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("数据标识错误!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                    return
+            else:
                 InfoBar.warning(
                 title=self.tr('告警'),
-                content=self.tr("数据标识错误!"),
+                content=self.tr("请输入数据标识!"),
                 orient=Qt.Horizontal,
                 isClosable=True,
                 position=InfoBarPosition.TOP,
@@ -287,27 +299,28 @@ class ReadCurFrame(QWidget):
                 parent=self
             )
                 return
-        else:
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("请输入数据标识!"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
-            return
-            
-        adress = [0xff] * 6  # Fix the initialization of adress
-        msa = 0x10
-        frame_csg.init_frame(0x4a, afn, adress, msa, 0x60, frame)
-        frame_len += FramePos.POS_DATA.value
-        frame_len += frame_csg.add_point_and_item_to_frame(point_array, item_array, frame)
-        frame_len += frame_csg.set_frame_finish(frame[FramePos.POS_CTRL.value:frame_len], frame)
-        frame_csg.set_frame_len(frame_len - FramePos.POS_CTRL.value, frame)
+                
+            adress = [0xff] * 6  # Fix the initialization of adress
+            msa = 0x10
+            frame_csg.init_frame(0x4a, afn, adress, msa, 0x60, frame)
+            frame_len += FramePos.POS_DATA.value
+            frame_len += frame_csg.add_point_and_item_to_frame(point_array, item_array, frame)
+            frame_len += frame_csg.set_frame_finish(frame[FramePos.POS_CTRL.value:frame_len], frame)
+            frame_csg.set_frame_len(frame_len - FramePos.POS_CTRL.value, frame)
 
-        self.frame_finfish.emit(frame, frame_len)
+            self.frame_finfish.emit(frame, frame_len)
+        except Exception as e:
+            InfoBar.warning(
+                title=self.tr('告警'),
+                content=self.tr("生成报文失败!"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+            return
+
 
 class ReadCurInterface(QWidget):
     def __init__(self, parent=None):
@@ -409,17 +422,29 @@ class ReadHistoryFrame(QWidget):
         self.endtimeInput.setDateTime(new_datetime.date(), new_datetime.time())
         self.button.clicked.connect(self.create_frame)
     def create_frame(self, frame):
-        afn = 0x0d
-        frame_len = 0
-        frame = [0x00] * FramePos.POS_DATA.value
-        input_text = self.pnInput.toPlainText()
-        if input_text: 
-            try:                                      
-                point_array =  frame_fun.parse_meterpoint_input(input_text)
-            except Exception as e:
+        try:
+            afn = 0x0d
+            frame_len = 0
+            frame = [0x00] * FramePos.POS_DATA.value
+            input_text = self.pnInput.toPlainText()
+            if input_text: 
+                try:                                      
+                    point_array =  frame_fun.parse_meterpoint_input(input_text)
+                except Exception as e:
+                    InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("测量点错误!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                    return
+            else:
                 InfoBar.warning(
                 title=self.tr('告警'),
-                content=self.tr("测量点错误!"),
+                content=self.tr("请输入测量点!"),
                 orient=Qt.Horizontal,
                 isClosable=True,
                 position=InfoBarPosition.TOP,
@@ -427,27 +452,27 @@ class ReadHistoryFrame(QWidget):
                 parent=self
             )
                 return
-        else:
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("请输入测量点!"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
-            return
 
-        item_array = []
-        input_text = self.itemInput.toPlainText()
-        if input_text:
-            try:
-                item_array = frame_fun.prase_item_by_input_text(input_text)
-            except Exception as e:
+            item_array = []
+            input_text = self.itemInput.toPlainText()
+            if input_text:
+                try:
+                    item_array = frame_fun.prase_item_by_input_text(input_text)
+                except Exception as e:
+                    InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("数据标识错误!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                    return
+            else:
                 InfoBar.warning(
                 title=self.tr('告警'),
-                content=self.tr("数据标识错误!"),
+                content=self.tr("请输入数据标识!"),
                 orient=Qt.Horizontal,
                 isClosable=True,
                 position=InfoBarPosition.TOP,
@@ -455,32 +480,31 @@ class ReadHistoryFrame(QWidget):
                 parent=self
             )
                 return
-        else:
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("请输入数据标识!"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
-            return
-        start_date, start_time = self.starttimeInput.getDateTime() 
-        start_time_array = frame_fun.get_time_bcd_array(start_date, start_time)
-        end_date, end_time = self.endtimeInput.getDateTime() 
-        end_time_array = frame_fun.get_time_bcd_array(end_date, end_time)
-        adress = [0xff] * 6  # Fix the initialization of adress
-        msa = 0x10
-        datakind = self.datakindInput.currentIndex() + 1
-        frame_csg.init_frame(0x4a, afn, adress, msa, 0x60, frame)
-        frame_len += FramePos.POS_DATA.value
-        frame_len += frame_csg.add_point_and_item_and_time_to_frame(point_array, item_array, start_time_array[:6], end_time_array[:6],datakind,frame)
-        frame_len += frame_csg.set_frame_finish(frame[FramePos.POS_CTRL.value:frame_len], frame)
-        frame_csg.set_frame_len(frame_len - FramePos.POS_CTRL.value, frame)
+            start_date, start_time = self.starttimeInput.getDateTime() 
+            start_time_array = frame_fun.get_time_bcd_array(start_date, start_time)
+            end_date, end_time = self.endtimeInput.getDateTime() 
+            end_time_array = frame_fun.get_time_bcd_array(end_date, end_time)
+            adress = [0xff] * 6  # Fix the initialization of adress
+            msa = 0x10
+            datakind = self.datakindInput.currentIndex() + 1
+            frame_csg.init_frame(0x4a, afn, adress, msa, 0x60, frame)
+            frame_len += FramePos.POS_DATA.value
+            frame_len += frame_csg.add_point_and_item_and_time_to_frame(point_array, item_array, start_time_array[:6], end_time_array[:6],datakind,frame)
+            frame_len += frame_csg.set_frame_finish(frame[FramePos.POS_CTRL.value:frame_len], frame)
+            frame_csg.set_frame_len(frame_len - FramePos.POS_CTRL.value, frame)
 
-        self.frame_finfish.emit(frame, frame_len)
-        
+            self.frame_finfish.emit(frame, frame_len)
+        except Exception as e:
+            InfoBar.warning(
+                title=self.tr('告警'),
+                content=self.tr("生成报文失败!"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+            return
 class ReadHistoryInterface(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -589,22 +613,34 @@ class ReadEventAlarmFrame(QWidget):
         self.button.clicked.connect(self.create_frame)
      
     def create_frame(self, frame):
-        selected_button = self.buttonGroup.checkedButton()
-        selected_index = self.buttonGroup.id(selected_button)
-        if selected_index == 1:
-            afn = 0x13
-        else:
-            afn = 0x0e
-        frame_len = 0
-        frame = [0x00] * FramePos.POS_DATA.value
-        input_text = self.pnInput.toPlainText()
-        if input_text: 
-            try:                                      
-                point_array =  frame_fun.parse_meterpoint_input(input_text)
-            except Exception as e:
+        try:
+            selected_button = self.buttonGroup.checkedButton()
+            selected_index = self.buttonGroup.id(selected_button)
+            if selected_index == 1:
+                afn = 0x13
+            else:
+                afn = 0x0e
+            frame_len = 0
+            frame = [0x00] * FramePos.POS_DATA.value
+            input_text = self.pnInput.toPlainText()
+            if input_text: 
+                try:                                      
+                    point_array =  frame_fun.parse_meterpoint_input(input_text)
+                except Exception as e:
+                    InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("测量点错误!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                    return
+            else:
                 InfoBar.warning(
                 title=self.tr('告警'),
-                content=self.tr("测量点错误!"),
+                content=self.tr("请输入测量点!"),
                 orient=Qt.Horizontal,
                 isClosable=True,
                 position=InfoBarPosition.TOP,
@@ -612,27 +648,27 @@ class ReadEventAlarmFrame(QWidget):
                 parent=self
             )
                 return
-        else:
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("请输入测量点!"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
-            return
 
-        item_array = []
-        input_text = self.itemInput.toPlainText()
-        if input_text:
-            try:
-                item_array = frame_fun.prase_item_by_input_text(input_text)
-            except Exception as e:
+            item_array = []
+            input_text = self.itemInput.toPlainText()
+            if input_text:
+                try:
+                    item_array = frame_fun.prase_item_by_input_text(input_text)
+                except Exception as e:
+                    InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("数据标识错误!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                    return
+            else:
                 InfoBar.warning(
                 title=self.tr('告警'),
-                content=self.tr("数据标识错误!"),
+                content=self.tr("请输入数据标识!"),
                 orient=Qt.Horizontal,
                 isClosable=True,
                 position=InfoBarPosition.TOP,
@@ -640,30 +676,30 @@ class ReadEventAlarmFrame(QWidget):
                 parent=self
             )
                 return
-        else:
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("请输入数据标识!"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
-            return
-        start_date, start_time = self.starttimeInput.getDateTime() 
-        start_time_array = frame_fun.get_time_bcd_array(start_date, start_time)
-        end_date, end_time = self.endtimeInput.getDateTime() 
-        end_time_array = frame_fun.get_time_bcd_array(end_date, end_time)
-        adress = [0xff] * 6  # Fix the initialization of adress
-        msa = 0x10
-        frame_csg.init_frame(0x4a, afn, adress, msa, 0x60, frame)
-        frame_len += FramePos.POS_DATA.value
-        frame_len += frame_csg.add_point_and_item_and_time_to_frame(point_array, item_array, start_time_array[:6], end_time_array[:6],None,frame)
-        frame_len += frame_csg.set_frame_finish(frame[FramePos.POS_CTRL.value:frame_len], frame)
-        frame_csg.set_frame_len(frame_len - FramePos.POS_CTRL.value, frame)
+            start_date, start_time = self.starttimeInput.getDateTime() 
+            start_time_array = frame_fun.get_time_bcd_array(start_date, start_time)
+            end_date, end_time = self.endtimeInput.getDateTime() 
+            end_time_array = frame_fun.get_time_bcd_array(end_date, end_time)
+            adress = [0xff] * 6  # Fix the initialization of adress
+            msa = 0x10
+            frame_csg.init_frame(0x4a, afn, adress, msa, 0x60, frame)
+            frame_len += FramePos.POS_DATA.value
+            frame_len += frame_csg.add_point_and_item_and_time_to_frame(point_array, item_array, start_time_array[:6], end_time_array[:6],None,frame)
+            frame_len += frame_csg.set_frame_finish(frame[FramePos.POS_CTRL.value:frame_len], frame)
+            frame_csg.set_frame_len(frame_len - FramePos.POS_CTRL.value, frame)
 
-        self.frame_finfish.emit(frame, frame_len)
+            self.frame_finfish.emit(frame, frame_len)
+        except Exception as e:
+            InfoBar.warning(
+                title=self.tr('告警'),
+                content=self.tr("生成报文失败!"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+            return
 
 class ReadEventAlarmInterface(QWidget):
     def __init__(self, type, parent=None):
@@ -907,26 +943,38 @@ class MeterTaskFrame(QWidget):
     def get_size(self):
         return self.qvlayout.sizeHint() + QSize(0, 50)
     def create_frame(self, frame):
-        afn = 0x04
-        frame_len = 0
-        frame = [0x00] * FramePos.POS_DATA.value
+        try:
+            afn = 0x04
+            frame_len = 0
+            frame = [0x00] * FramePos.POS_DATA.value
 
-        adress = [0xff] * 6  # Fix the initialization of adress
-        msa = 0x10
-        frame_csg.init_frame(0x4a, afn, adress, msa, 0x60, frame)
-        frame_len += FramePos.POS_DATA.value
+            adress = [0xff] * 6  # Fix the initialization of adress
+            msa = 0x10
+            frame_csg.init_frame(0x4a, afn, adress, msa, 0x60, frame)
+            frame_len += FramePos.POS_DATA.value
 
-        frame.extend([0x00,0x00])
-        frame_len += 2
+            frame.extend([0x00,0x00])
+            frame_len += 2
 
-        input_text = self.taskNumberInput.text()
-        if input_text: 
-            try:                                      
-                task_item = 0xE0001500 + int(input_text, 10)
-            except Exception as e:
+            input_text = self.taskNumberInput.text()
+            if input_text: 
+                try:                                      
+                    task_item = 0xE0001500 + int(input_text, 10)
+                except Exception as e:
+                    InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("任务号错误!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                    return
+            else:
                 InfoBar.warning(
                 title=self.tr('告警'),
-                content=self.tr("任务号错误!"),
+                content=self.tr("请输入任务号!"),
                 orient=Qt.Horizontal,
                 isClosable=True,
                 position=InfoBarPosition.TOP,
@@ -934,94 +982,45 @@ class MeterTaskFrame(QWidget):
                 parent=self
             )
                 return
-        else:
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("请输入任务号!"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
-            return
-        frame_len += frame_fun.item_to_di(task_item, frame)
+            frame_len += frame_fun.item_to_di(task_item, frame)
 
-        #有效性标志
-        selected_button = self.validbuttonGroup.checkedButton()
-        selected_index = self.validbuttonGroup.id(selected_button)
-        frame.append(selected_index - 1)
-        frame_len += 1
-        #上报基准时间
-        time_date, time_time = self.reportbasetimeInput.getDateTime()
-        time_array = frame_fun.get_time_bcd_array(time_date, time_time)
-        frame.extend(time_array[1:6][::-1])
-        frame_len += 5
-        
-        #定时上报周期单位
-        selected_button = self.reportunitbuttonGroup.checkedButton()
-        selected_index = self.reportunitbuttonGroup.id(selected_button)
-        frame.append(selected_index - 1)
-        frame_len += 1
-
-        #定时上报周期
-        data = self.reportcycleInput.text()
-        if data is not None and data != "":
-            try:
-                cycle = int(data, 10)
-            except Exception as e:
-                InfoBar.warning(
-                title=self.tr('告警'),
-                content=self.tr("定时上报周期错误!"),
-                orient=Qt.Horizontal,
-                isClosable=True,
-                position=InfoBarPosition.TOP,
-                duration=2000,
-                parent=self
-            )
-                return
-        else:
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("请输入定时上报周期!"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
-            return
+            #有效性标志
+            selected_button = self.validbuttonGroup.checkedButton()
+            selected_index = self.validbuttonGroup.id(selected_button)
+            frame.append(selected_index - 1)
+            frame_len += 1
+            #上报基准时间
+            time_date, time_time = self.reportbasetimeInput.getDateTime()
+            time_array = frame_fun.get_time_bcd_array(time_date, time_time)
+            frame.extend(time_array[1:6][::-1])
+            frame_len += 5
             
-        frame.append(cycle)
-        frame_len += 1
+            #定时上报周期单位
+            selected_button = self.reportunitbuttonGroup.checkedButton()
+            selected_index = self.reportunitbuttonGroup.id(selected_button)
+            frame.append(selected_index - 1)
+            frame_len += 1
 
-        #数据结构方式
-        selected_button = self.tasktypebuttonGroup.checkedButton()
-        selected_index = self.tasktypebuttonGroup.id(selected_button)
-        frame.append(selected_index - 1)
-        frame_len += 1
-
-        #采样基准时间
-        time_date, time_time = self.readtimeInput.getDateTime()
-        time_array = frame_fun.get_time_bcd_array(time_date, time_time)
-        frame.extend(time_array[1:6][::-1])
-        frame_len += 5
-
-        #采样周期单位
-        selected_button = self.meterunitbuttonGroup.checkedButton()
-        selected_index = self.meterunitbuttonGroup.id(selected_button)
-        frame.append(selected_index - 1)
-        frame_len += 1
-
-        #采样周期
-        data = self.metercycleInput.text()
-        if data is not None and data != "":
-            try:
-                cycle = int(data, 10)
-            except Exception as e:
+            #定时上报周期
+            data = self.reportcycleInput.text()
+            if data is not None and data != "":
+                try:
+                    cycle = int(data, 10)
+                except Exception as e:
+                    InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("定时上报周期错误!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                    return
+            else:
                 InfoBar.warning(
                 title=self.tr('告警'),
-                content=self.tr("表端定时采样周期错误!"),
+                content=self.tr("请输入定时上报周期!"),
                 orient=Qt.Horizontal,
                 isClosable=True,
                 position=InfoBarPosition.TOP,
@@ -1029,198 +1028,247 @@ class MeterTaskFrame(QWidget):
                 parent=self
             )
                 return
-        else:
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("请输入表端定时采样周期周期!"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
-            return
+                
+            frame.append(cycle)
+            frame_len += 1
+
+            #数据结构方式
+            selected_button = self.tasktypebuttonGroup.checkedButton()
+            selected_index = self.tasktypebuttonGroup.id(selected_button)
+            frame.append(selected_index - 1)
+            frame_len += 1
+
+            #采样基准时间
+            time_date, time_time = self.readtimeInput.getDateTime()
+            time_array = frame_fun.get_time_bcd_array(time_date, time_time)
+            frame.extend(time_array[1:6][::-1])
+            frame_len += 5
+
+            #采样周期单位
+            selected_button = self.meterunitbuttonGroup.checkedButton()
+            selected_index = self.meterunitbuttonGroup.id(selected_button)
+            frame.append(selected_index - 1)
+            frame_len += 1
+
+            #采样周期
+            data = self.metercycleInput.text()
+            if data is not None and data != "":
+                try:
+                    cycle = int(data, 10)
+                except Exception as e:
+                    InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("表端定时采样周期错误!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                    return
+            else:
+                InfoBar.warning(
+                title=self.tr('告警'),
+                content=self.tr("请输入表端定时采样周期周期!"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+                return
+            
+            frame.append(cycle)
+            frame_len += 1
+
+            #数据抽取倍率
+            data = self.datafreqInput.text()
+            if data is not None and data != "":
+                try:
+                    cycle = int(data, 10)
+                except Exception as e:
+                    InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("数据抽取倍率错误!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                    return
+            else:
+                InfoBar.warning(
+                title=self.tr('告警'),
+                content=self.tr("请输入数据抽取倍率!"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+                return
+            
+            frame.append(cycle)
+            frame_len += 1
+
+            #终端查询基准时间
+            time_date, time_time = self.ertureadtimeInput.getDateTime()
+            time_array = frame_fun.get_time_bcd_array(time_date, time_time)
+            frame.extend(time_array[1:6][::-1])
+            frame_len += 5
+
+            #终端定时查询周期单位
+            selected_button = self.ertureadunitbuttonGroup.checkedButton()
+            selected_index = self.ertureadunitbuttonGroup.id(selected_button)
+            frame.append(selected_index - 1)
+            frame_len += 1
+
+            #终端定时查询周期
+            data = self.ertureadcycleInput.text()
+            if data is not None and data != "":
+                try:
+                    cycle = int(data, 10)
+                except Exception as e:
+                    InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("终端定时查询周期错误!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                    return
+            else:
+                InfoBar.warning(
+                title=self.tr('告警'),
+                content=self.tr("请输入终端定时查询周期!"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+                return
+            
+            frame.append(cycle)
+            frame_len += 1
+
+            #执行次数
+            data = self.taskexeccountInput.text()
+            if data is not None and data != "":
+                try:
+                    cycle = int(data, 10)
+                except Exception as e:
+                    InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("执行次数错误!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                    return
+            else:
+                InfoBar.warning(
+                title=self.tr('告警'),
+                content=self.tr("请输入执行次数!"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+                return
+            
+            cycle_array = frame_fun.int16_to_bcd(cycle)
+            frame.extend(cycle_array)
+            frame_len += 2
+
+            #测量点组
+            input_text = self.pnInput.toPlainText()
+            if input_text: 
+                try:                                      
+                    point_array =  frame_fun.parse_meterpoint_input(input_text)
+                except Exception as e:
+                    InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("测量点错误!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                    return
+            else:
+                InfoBar.warning(
+                title=self.tr('告警'),
+                content=self.tr("请输入测量点!"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+                return
+            
+            pn_frame = []
+            count, pos = frame_csg.add_point_array_to_frame(pn_frame, point_array)
+            frame.append(count)
+            frame.extend(pn_frame)
+            frame_len += pos + 1
+
+            #数据标识组
+            item_array = []
+            input_text = self.itemInput.toPlainText()
+            if input_text:
+                try:
+                    item_array = frame_fun.prase_item_by_input_text(input_text)
+                except Exception as e:
+                    InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("数据标识错误!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                    return
+            else:
+                InfoBar.warning(
+                title=self.tr('告警'),
+                content=self.tr("请输入数据标识!"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+                return
         
-        frame.append(cycle)
-        frame_len += 1
+            frame.append(len(item_array))
+            frame_len += 1
+            frame_len += frame_csg.add_item_array_to_frame(frame, item_array)
 
-        #数据抽取倍率
-        data = self.datafreqInput.text()
-        if data is not None and data != "":
-            try:
-                cycle = int(data, 10)
-            except Exception as e:
-                InfoBar.warning(
+            frame_len += frame_csg.set_frame_finish(frame[FramePos.POS_CTRL.value:frame_len], frame)
+            frame_csg.set_frame_len(frame_len - FramePos.POS_CTRL.value, frame)
+
+            self.frame_finfish.emit(frame, frame_len)
+        except Exception as e:
+            InfoBar.warning(
                 title=self.tr('告警'),
-                content=self.tr("数据抽取倍率错误!"),
+                content=self.tr("生成报文失败!"),
                 orient=Qt.Horizontal,
                 isClosable=True,
                 position=InfoBarPosition.TOP,
                 duration=2000,
                 parent=self
             )
-                return
-        else:
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("请输入数据抽取倍率!"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
             return
-        
-        frame.append(cycle)
-        frame_len += 1
-
-        #终端查询基准时间
-        time_date, time_time = self.ertureadtimeInput.getDateTime()
-        time_array = frame_fun.get_time_bcd_array(time_date, time_time)
-        frame.extend(time_array[1:6][::-1])
-        frame_len += 5
-
-        #终端定时查询周期单位
-        selected_button = self.ertureadunitbuttonGroup.checkedButton()
-        selected_index = self.ertureadunitbuttonGroup.id(selected_button)
-        frame.append(selected_index - 1)
-        frame_len += 1
-
-        #终端定时查询周期
-        data = self.ertureadcycleInput.text()
-        if data is not None and data != "":
-            try:
-                cycle = int(data, 10)
-            except Exception as e:
-                InfoBar.warning(
-                title=self.tr('告警'),
-                content=self.tr("终端定时查询周期错误!"),
-                orient=Qt.Horizontal,
-                isClosable=True,
-                position=InfoBarPosition.TOP,
-                duration=2000,
-                parent=self
-            )
-                return
-        else:
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("请输入终端定时查询周期!"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
-            return
-        
-        frame.append(cycle)
-        frame_len += 1
-
-        #执行次数
-        data = self.taskexeccountInput.text()
-        if data is not None and data != "":
-            try:
-                cycle = int(data, 10)
-            except Exception as e:
-                InfoBar.warning(
-                title=self.tr('告警'),
-                content=self.tr("执行次数错误!"),
-                orient=Qt.Horizontal,
-                isClosable=True,
-                position=InfoBarPosition.TOP,
-                duration=2000,
-                parent=self
-            )
-                return
-        else:
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("请输入执行次数!"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
-            return
-        
-        cycle_array = frame_fun.int16_to_bcd(cycle)
-        frame.extend(cycle_array)
-        frame_len += 2
-
-        #测量点组
-        input_text = self.pnInput.toPlainText()
-        if input_text: 
-            try:                                      
-                point_array =  frame_fun.parse_meterpoint_input(input_text)
-            except Exception as e:
-                InfoBar.warning(
-                title=self.tr('告警'),
-                content=self.tr("测量点错误!"),
-                orient=Qt.Horizontal,
-                isClosable=True,
-                position=InfoBarPosition.TOP,
-                duration=2000,
-                parent=self
-            )
-                return
-        else:
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("请输入测量点!"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
-            return
-        
-        pn_frame = []
-        count, pos = frame_csg.add_point_array_to_frame(pn_frame, point_array)
-        frame.append(count)
-        frame.extend(pn_frame)
-        frame_len += pos + 1
-
-        #数据标识组
-        item_array = []
-        input_text = self.itemInput.toPlainText()
-        if input_text:
-            try:
-                item_array = frame_fun.prase_item_by_input_text(input_text)
-            except Exception as e:
-                InfoBar.warning(
-                title=self.tr('告警'),
-                content=self.tr("数据标识错误!"),
-                orient=Qt.Horizontal,
-                isClosable=True,
-                position=InfoBarPosition.TOP,
-                duration=2000,
-                parent=self
-            )
-                return
-        else:
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("请输入数据标识!"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
-            return
-    
-        frame.append(len(item_array))
-        frame_len += 1
-        frame_len += frame_csg.add_item_array_to_frame(frame, item_array)
-
-        frame_len += frame_csg.set_frame_finish(frame[FramePos.POS_CTRL.value:frame_len], frame)
-        frame_csg.set_frame_len(frame_len - FramePos.POS_CTRL.value, frame)
-
-        self.frame_finfish.emit(frame, frame_len)
 
 class MeterTaskInterface(QWidget):
     def __init__(self, parent=None):
@@ -1424,26 +1472,38 @@ class NoramlTaskFrame(QWidget):
     def get_size(self):
         return self.qvlayout.sizeHint() + QSize(0, 50)
     def create_frame(self, frame):
-        afn = 0x04
-        frame_len = 0
-        frame = [0x00] * FramePos.POS_DATA.value
+        try:
+            afn = 0x04
+            frame_len = 0
+            frame = [0x00] * FramePos.POS_DATA.value
 
-        adress = [0xff] * 6  # Fix the initialization of adress
-        msa = 0x10
-        frame_csg.init_frame(0x4a, afn, adress, msa, 0x60, frame)
-        frame_len += FramePos.POS_DATA.value
+            adress = [0xff] * 6  # Fix the initialization of adress
+            msa = 0x10
+            frame_csg.init_frame(0x4a, afn, adress, msa, 0x60, frame)
+            frame_len += FramePos.POS_DATA.value
 
-        frame.extend([0x00,0x00])
-        frame_len += 2
+            frame.extend([0x00,0x00])
+            frame_len += 2
 
-        input_text = self.taskNumberInput.text()
-        if input_text: 
-            try:                                      
-                task_item = 0xE0000300 + int(input_text, 10)
-            except Exception as e:
+            input_text = self.taskNumberInput.text()
+            if input_text: 
+                try:                                      
+                    task_item = 0xE0000300 + int(input_text, 10)
+                except Exception as e:
+                    InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("任务号错误!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                    return
+            else:
                 InfoBar.warning(
                 title=self.tr('告警'),
-                content=self.tr("任务号错误!"),
+                content=self.tr("请输入任务号!"),
                 orient=Qt.Horizontal,
                 isClosable=True,
                 position=InfoBarPosition.TOP,
@@ -1451,94 +1511,45 @@ class NoramlTaskFrame(QWidget):
                 parent=self
             )
                 return
-        else:
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("请输入任务号!"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
-            return
-        frame_len += frame_fun.item_to_di(task_item, frame)
+            frame_len += frame_fun.item_to_di(task_item, frame)
 
-        #有效性标志
-        selected_button = self.validbuttonGroup.checkedButton()
-        selected_index = self.validbuttonGroup.id(selected_button)
-        frame.append(selected_index - 1)
-        frame_len += 1
-        #上报基准时间
-        time_date, time_time = self.reportbasetimeInput.getDateTime()
-        time_array = frame_fun.get_time_bcd_array(time_date, time_time)
-        frame.extend(time_array[1:6][::-1])
-        frame_len += 5
-        
-        #定时上报周期单位
-        selected_button = self.reportunitbuttonGroup.checkedButton()
-        selected_index = self.reportunitbuttonGroup.id(selected_button)
-        frame.append(selected_index - 1)
-        frame_len += 1
-
-        #定时上报周期
-        data = self.reportcycleInput.text()
-        if data is not None and data != "":
-            try:
-                cycle = int(data, 10)
-            except Exception as e:
-                InfoBar.warning(
-                title=self.tr('告警'),
-                content=self.tr("定时上报周期错误!"),
-                orient=Qt.Horizontal,
-                isClosable=True,
-                position=InfoBarPosition.TOP,
-                duration=2000,
-                parent=self
-            )
-                return
-        else:
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("请输入定时上报周期!"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
-            return
+            #有效性标志
+            selected_button = self.validbuttonGroup.checkedButton()
+            selected_index = self.validbuttonGroup.id(selected_button)
+            frame.append(selected_index - 1)
+            frame_len += 1
+            #上报基准时间
+            time_date, time_time = self.reportbasetimeInput.getDateTime()
+            time_array = frame_fun.get_time_bcd_array(time_date, time_time)
+            frame.extend(time_array[1:6][::-1])
+            frame_len += 5
             
-        frame.append(cycle)
-        frame_len += 1
+            #定时上报周期单位
+            selected_button = self.reportunitbuttonGroup.checkedButton()
+            selected_index = self.reportunitbuttonGroup.id(selected_button)
+            frame.append(selected_index - 1)
+            frame_len += 1
 
-        #数据结构方式
-        selected_button = self.tasktypebuttonGroup.checkedButton()
-        selected_index = self.tasktypebuttonGroup.id(selected_button)
-        frame.append(selected_index - 1)
-        frame_len += 1
-
-        #采样基准时间
-        time_date, time_time = self.readtimeInput.getDateTime()
-        time_array = frame_fun.get_time_bcd_array(time_date, time_time)
-        frame.extend(time_array[1:6][::-1])
-        frame_len += 5
-
-        #采样周期单位
-        selected_button = self.meterunitbuttonGroup.checkedButton()
-        selected_index = self.meterunitbuttonGroup.id(selected_button)
-        frame.append(selected_index - 1)
-        frame_len += 1
-
-        #采样周期
-        data = self.metercycleInput.text()
-        if data is not None and data != "":
-            try:
-                cycle = int(data, 10)
-            except Exception as e:
+            #定时上报周期
+            data = self.reportcycleInput.text()
+            if data is not None and data != "":
+                try:
+                    cycle = int(data, 10)
+                except Exception as e:
+                    InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("定时上报周期错误!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                    return
+            else:
                 InfoBar.warning(
                 title=self.tr('告警'),
-                content=self.tr("定时采样周期错误!"),
+                content=self.tr("请输入定时上报周期!"),
                 orient=Qt.Horizontal,
                 isClosable=True,
                 position=InfoBarPosition.TOP,
@@ -1546,30 +1557,48 @@ class NoramlTaskFrame(QWidget):
                 parent=self
             )
                 return
-        else:
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("请输入定时采样周期周期!"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
-            return
-        
-        frame.append(cycle)
-        frame_len += 1
+                
+            frame.append(cycle)
+            frame_len += 1
 
-        #数据抽取倍率
-        data = self.datafreqInput.text()
-        if data is not None and data != "":
-            try:
-                cycle = int(data, 10)
-            except Exception as e:
+            #数据结构方式
+            selected_button = self.tasktypebuttonGroup.checkedButton()
+            selected_index = self.tasktypebuttonGroup.id(selected_button)
+            frame.append(selected_index - 1)
+            frame_len += 1
+
+            #采样基准时间
+            time_date, time_time = self.readtimeInput.getDateTime()
+            time_array = frame_fun.get_time_bcd_array(time_date, time_time)
+            frame.extend(time_array[1:6][::-1])
+            frame_len += 5
+
+            #采样周期单位
+            selected_button = self.meterunitbuttonGroup.checkedButton()
+            selected_index = self.meterunitbuttonGroup.id(selected_button)
+            frame.append(selected_index - 1)
+            frame_len += 1
+
+            #采样周期
+            data = self.metercycleInput.text()
+            if data is not None and data != "":
+                try:
+                    cycle = int(data, 10)
+                except Exception as e:
+                    InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("定时采样周期错误!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                    return
+            else:
                 InfoBar.warning(
                 title=self.tr('告警'),
-                content=self.tr("数据抽取倍率错误!"),
+                content=self.tr("请输入定时采样周期周期!"),
                 orient=Qt.Horizontal,
                 isClosable=True,
                 position=InfoBarPosition.TOP,
@@ -1577,30 +1606,30 @@ class NoramlTaskFrame(QWidget):
                 parent=self
             )
                 return
-        else:
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("请输入数据抽取倍率!"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
-            return
-        
-        frame.append(cycle)
-        frame_len += 1
+            
+            frame.append(cycle)
+            frame_len += 1
 
-        #执行次数
-        data = self.taskexeccountInput.text()
-        if data is not None and data != "":
-            try:
-                cycle = int(data, 10)
-            except Exception as e:
+            #数据抽取倍率
+            data = self.datafreqInput.text()
+            if data is not None and data != "":
+                try:
+                    cycle = int(data, 10)
+                except Exception as e:
+                    InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("数据抽取倍率错误!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                    return
+            else:
                 InfoBar.warning(
                 title=self.tr('告警'),
-                content=self.tr("执行次数错误!"),
+                content=self.tr("请输入数据抽取倍率!"),
                 orient=Qt.Horizontal,
                 isClosable=True,
                 position=InfoBarPosition.TOP,
@@ -1608,31 +1637,30 @@ class NoramlTaskFrame(QWidget):
                 parent=self
             )
                 return
-        else:
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("请输入执行次数!"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
-            return
-        
-        cycle_array = frame_fun.int16_to_bcd(cycle)
-        frame.extend(cycle_array)
-        frame_len += 2
+            
+            frame.append(cycle)
+            frame_len += 1
 
-        #测量点组
-        input_text = self.pnInput.toPlainText()
-        if input_text: 
-            try:                                      
-                point_array =  frame_fun.parse_meterpoint_input(input_text)
-            except Exception as e:
+            #执行次数
+            data = self.taskexeccountInput.text()
+            if data is not None and data != "":
+                try:
+                    cycle = int(data, 10)
+                except Exception as e:
+                    InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("执行次数错误!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                    return
+            else:
                 InfoBar.warning(
                 title=self.tr('告警'),
-                content=self.tr("测量点错误!"),
+                content=self.tr("请输入执行次数!"),
                 orient=Qt.Horizontal,
                 isClosable=True,
                 position=InfoBarPosition.TOP,
@@ -1640,34 +1668,31 @@ class NoramlTaskFrame(QWidget):
                 parent=self
             )
                 return
-        else:
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("请输入测量点!"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
-            return
-        
-        pn_frame = []
-        count, pos = frame_csg.add_point_array_to_frame(pn_frame, point_array)
-        frame.append(count)
-        frame.extend(pn_frame)
-        frame_len += pos + 1
+            
+            cycle_array = frame_fun.int16_to_bcd(cycle)
+            frame.extend(cycle_array)
+            frame_len += 2
 
-        #数据标识组
-        item_array = []
-        input_text = self.itemInput.toPlainText()
-        if input_text:
-            try:
-                item_array = frame_fun.prase_item_by_input_text(input_text)
-            except Exception as e:
+            #测量点组
+            input_text = self.pnInput.toPlainText()
+            if input_text: 
+                try:                                      
+                    point_array =  frame_fun.parse_meterpoint_input(input_text)
+                except Exception as e:
+                    InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("测量点错误!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                    return
+            else:
                 InfoBar.warning(
                 title=self.tr('告警'),
-                content=self.tr("数据标识错误!"),
+                content=self.tr("请输入测量点!"),
                 orient=Qt.Horizontal,
                 isClosable=True,
                 position=InfoBarPosition.TOP,
@@ -1675,32 +1700,62 @@ class NoramlTaskFrame(QWidget):
                 parent=self
             )
                 return
-        else:
+            
+            pn_frame = []
+            count, pos = frame_csg.add_point_array_to_frame(pn_frame, point_array)
+            frame.append(count)
+            frame.extend(pn_frame)
+            frame_len += pos + 1
+
+            #数据标识组
+            item_array = []
+            input_text = self.itemInput.toPlainText()
+            if input_text:
+                try:
+                    item_array = frame_fun.prase_item_by_input_text(input_text)
+                except Exception as e:
+                    InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("数据标识错误!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                    return
+            else:
+                InfoBar.warning(
+                title=self.tr('告警'),
+                content=self.tr("请输入数据标识!"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+                return
+
+            frame.append(len(item_array))
+            frame_len += 1
+            frame_len += frame_csg.add_item_array_to_frame(frame, item_array)
+
+            frame_len += frame_csg.set_frame_finish(frame[FramePos.POS_CTRL.value:frame_len], frame)
+            frame_csg.set_frame_len(frame_len - FramePos.POS_CTRL.value, frame)
+
+            self.frame_finfish.emit(frame, frame_len)
+        except Exception as e:
             InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("请输入数据标识!"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
+                title=self.tr('告警'),
+                content=self.tr("生成报文失败!"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
             return
 
-        frame.append(len(item_array))
-        frame_len += 1
-        frame_len += frame_csg.add_item_array_to_frame(frame, item_array)
-
-        frame_len += frame_csg.set_frame_finish(frame[FramePos.POS_CTRL.value:frame_len], frame)
-        frame_csg.set_frame_len(frame_len - FramePos.POS_CTRL.value, frame)
-
-        self.frame_finfish.emit(frame, frame_len)
-        self.display_frame(frame, frame_len)
-
-    def display_frame(self, frame, length):
-        self.framearea.clear()
-        text = frame_fun.get_data_str_with_space(frame)
-        self.framearea.setPlainText(text)
 
 class NoramlTaskInterface(QWidget):
     def __init__(self, parent=None):

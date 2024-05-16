@@ -8,8 +8,24 @@ def caculate_unknown_length(data_subitem_elem, data_segment, length_maap):
     '*': '*',
     '/': '/'
     }
-    sub_length = 0;
+    sub_length = 0
+    pattern = r'^RANGE\(([^)]+)\)$'
+    
+    # 获取长度规则
     if relues is not None:
+        # 使用 re.match 函数进行匹配
+        match = re.match(pattern, relues)
+        # 如果匹配成功，返回 True，否则返回 False
+        if bool(match):
+            # 获取匹配到的字符串
+            match_string = match.group(1)
+            vaule = length_maap[match_string]
+            vaule_data = data_segment[vaule[0] - vaule[1] : vaule[0]][0]
+            find_data = data_segment[vaule[0]: ]
+            for i, data in enumerate(find_data):
+                if data == vaule_data:
+                    return i
+
         # 使用正则表达式进行拆分
         components = re.split(r'\s*([*])\s*', relues)
 
@@ -97,10 +113,11 @@ def caculate_item_length(sub_element, data_segment, all_length_items=None):
 def parse_bitwise_data(splitbit_elem, data_segment,index,need_delete):
     # 解析使用splitbit拆分的数据段
     result = {}
-
+    pos = 0
     for bit_elem in splitbit_elem.findall('.//bit'):
         bit_id_attr = bit_elem.get('id')
         bit_name_elem = bit_elem.find('name')
+
 
         if '-' in bit_id_attr:
             # If the bit ID is a range (e.g., "6-15")
@@ -108,6 +125,9 @@ def parse_bitwise_data(splitbit_elem, data_segment,index,need_delete):
         else:
             start_bit = int(bit_id_attr)
             end_bit = start_bit
+
+        start_pos = start_bit // 8
+        end_pos = end_bit // 8 + 1
 
         bit_value = frame_fun.extract_bits(start_bit, end_bit,frame_fun.hex_array_to_int(data_segment,need_delete))
 
@@ -128,7 +148,7 @@ def parse_bitwise_data(splitbit_elem, data_segment,index,need_delete):
             else:
                 bit_value_name = ""
         bit_id_attr = "bit"+bit_id_attr
-        result[bit_id_attr] = [bit_name, bit_value, bit_value_name,[index, index + len(data_segment)]]
+        result[bit_id_attr] = [bit_name, bit_value, bit_value_name,[index + start_pos, index + end_pos]]
     return result
 def prase_type_item(data_item_elem, data_segment, index, need_delete, singal_length):
     from ..plugins.frame_csg import FrameCsg
@@ -152,6 +172,7 @@ def prase_type_item(data_item_elem, data_segment, index, need_delete, singal_len
         new_data = frame_fun.frame_delete_33H(data_segment)
     else:
         new_data = data_segment
+    need_delete = False
     ret = prase_simple_type_data(data_item_elem, data_segment,index, need_delete)
     if ret is not False:
         result = ret
@@ -950,11 +971,16 @@ def analyze_read_response_frame(frame, result_list,indx):
     if data_item_elem is not None:
         sub_result = []
         sublength_ele = data_item_elem.find('length')
-        all_length = len(data_content)
         if sublength_ele is not None:
-            sublength = int(sublength_ele.text)
+            sub_length_cont = sublength_ele.text
+            if sub_length_cont.upper() in "UNKNOWN":
+                sublength = prase_data.caculate_item_length(data_item_elem, data_content)
+            else:
+                sublength = int(sub_length_cont)
         else:
             sublength = len(data_content)
+
+        all_length = len(data_content)
         if len(data_content) % sublength != 0 and len(data_content) > sublength:
             time = data_content[:5]
             time_str = frame_fun.parse_time_data(time,"YYMMDDhhmm",True)
