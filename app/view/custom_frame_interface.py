@@ -1,8 +1,11 @@
-from PyQt5.QtCore import Qt, QEasingCurve,pyqtSignal,QSize,QDate,QTime,QDateTime
-from PyQt5.QtWidgets import QWidget, QStackedWidget, QVBoxLayout, QLabel, QHBoxLayout, QFrame, QButtonGroup
+from PyQt5.QtCore import Qt, QEasingCurve,pyqtSignal,QSize,QDate,QTime,QDateTime,QTimer,QEvent,QRectF,QCoreApplication
+from PyQt5.QtWidgets import (QWidget, QStackedWidget, QVBoxLayout, QLabel, QHBoxLayout, QFrame, QButtonGroup,
+                             QAbstractItemView, QTableWidgetItem,QHeaderView,QToolTip,QSplitter,QApplication,QSplitterHandle,
+                             QAction,QStyledItemDelegate,QGridLayout,QSizePolicy)
 from qfluentwidgets import (Pivot, qrouter, SegmentedWidget, InfoBar, InfoBarPosition, ComboBox,
-                            RadioButton, SpinBox, BreadcrumbBar,LineEdit,SwitchButton,PrimaryPushButton,PlainTextEdit)
-from PyQt5.QtGui import QFont
+                            RadioButton, ToolButton, ToolTip,LineEdit,SwitchButton,PrimaryPushButton,PlainTextEdit,
+                            RoundMenu,TableWidget,CheckBox,ToolTipFilter,ScrollArea)
+from PyQt5.QtGui import QFont, QResizeEvent,QPainter,QCursor,QBrush
 from .gallery_interface import GalleryInterface
 from ..common.translator import Translator
 from ..common.style_sheet import StyleSheet
@@ -11,7 +14,302 @@ from ..plugins import frame_csg
 from ..plugins.frame_fun import FrameFun as frame_fun
 from ..common.signal_bus import signalBus
 from ..components.state_tools import DateTimePicker
+from .view_interface import Frame
+from qfluentwidgets import FluentIcon as FIF
+from ..components.Splitter import Splitter
+from ..components.messageBox import Comwidget    
+from ..plugins.protocol_channel import CsgProtocolChannel,AsyncWorker,SendReceiveThread
+import string
 
+class CheckableHeader(QFrame):
+    checkBoxClicked = pyqtSignal(bool)
+
+    def __init__(self, parent=None):
+        super(CheckableHeader, self).__init__(parent)
+        self.checkBox = CheckBox(self)
+        self.checkBox.setTristate(False)
+        self.checkBox.stateChanged.connect(self.onStateChanged)
+
+        layout = QHBoxLayout(self)
+        layout.addWidget(self.checkBox)
+        layout.setAlignment(Qt.AlignCenter)
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(layout)
+        self.setStyleSheet("QHeaderView { border: none; }")
+
+    def onStateChanged(self, state):
+        self.checkBoxClicked.emit(state == Qt.Checked)
+
+class CusTableWidget(TableWidget):
+    def resizeEvent(self, event):
+        super(CusTableWidget, self).resizeEvent(event)
+        self.resizeColumns()
+
+    def resizeColumns(self):
+        table_width = self.viewport().width()
+        self.setColumnWidth(0, 30)
+        self.setColumnWidth(1, 80)
+        remaining_width = table_width - 110
+        if remaining_width > 0:
+            self.setColumnWidth(2, remaining_width)
+        else:
+            self.setColumnWidth(2, 0)
+
+class BaseTaskTable(QFrame):
+    cell_clicked = pyqtSignal(str, str)
+    itemChange = pyqtSignal(int, str)
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.task_list = {}
+        self.checkboxes = []
+        self.qvlayout = QVBoxLayout(self)
+        self.table = CusTableWidget(self)
+        self.qvlayout.addWidget(self.table)
+
+        self.table.verticalHeader().hide()
+        self.table.setColumnCount(3)
+        self.table.setRowCount(0)
+
+        self.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.table.horizontalHeader().setSectionResizeMode(0, QHeaderView.Fixed)
+        self.table.horizontalHeader().setSectionResizeMode(1, QHeaderView.Fixed)
+        # self.table.horizontalHeader().setSectionResizeMode(2, QHeaderView.Fixed)
+        self.table.horizontalHeader().resizeSection(0, 30)
+        self.table.horizontalHeader().resizeSection(1, 80)
+
+        self.table.setMouseTracking(True)
+        self.table.viewport().installEventFilter(self)
+        self.hover_timer = QTimer(self)
+        self.hover_timer.setSingleShot(True)
+        self.hover_timer.timeout.connect(self.showCopyTooltip)
+        self.hovered_row = -1
+
+        # 移除表头
+        self.table.horizontalHeader().hide()
+
+        self.addHeaderRow()
+
+    def addHeaderRow(self):
+        self.table.insertRow(0)
+
+        checkable_header = CheckableHeader(self)
+        checkable_header.checkBoxClicked.connect(self.handleHeaderClick)
+        self.table.setCellWidget(0, 0, checkable_header)
+
+        header_task_number = QTableWidgetItem("任务号")
+        header_task_number.setFlags(header_task_number.flags() & ~Qt.ItemIsEnabled & ~Qt.ItemIsSelectable)
+        header_task_number.setTextAlignment(Qt.AlignCenter)
+        self.table.setItem(0, 1, header_task_number)
+
+        header_task_param = QTableWidgetItem("任务参数")
+        header_task_param.setTextAlignment(Qt.AlignCenter)
+        header_task_param.setFlags(header_task_param.flags() & ~Qt.ItemIsEnabled & ~Qt.ItemIsSelectable)
+        self.table.setItem(0, 2, header_task_param)
+        self.table.setColumnWidth(0, 30)
+        self.table.setColumnWidth(1, 80)
+        self.table.cellClicked.connect(self.handleCellClick)
+        self.table.setEditTriggers(QAbstractItemView.DoubleClicked | QAbstractItemView.SelectedClicked)
+        self.table.itemChanged.connect(self.item_change)
+        self.table.cellChanged.connect(self.cell_change)
+
+    def add_table(self, task_list):
+        task_id = task_list[0]
+        if task_id != '' and (task_id in self.task_list):
+            row = self.task_list[task_id]
+        else:
+            rows = self.table.rowCount()
+            if 0 == rows:
+                self.table.insertRow(rows)
+                row = rows
+                checkbox = CheckBox()
+                self.table.setCellWidget(row, 0, checkbox)
+                self.checkboxes.append(checkbox)
+            else:
+                for row in range(rows):
+                    item = self.table.item(row, 1)
+                    if item is None or item.text() == "":
+                        if task_id != "":
+                            break
+                        else:
+                            row = rows
+                            self.table.insertRow(row)
+                            checkbox = CheckBox()
+                            self.table.setCellWidget(row, 0, checkbox)
+                            self.checkboxes.append(checkbox)
+                            break
+                    elif row == rows - 1:
+                        self.table.insertRow(rows)
+                        row += 1
+                        checkbox = CheckBox()
+                        self.table.setCellWidget(row, 0, checkbox)
+                        self.checkboxes.append(checkbox)
+
+        for i, task in enumerate(task_list):
+            item = QTableWidgetItem(str(task))
+            if i == 0:
+                item.setFlags(item.flags() | Qt.ItemIsEditable)
+                item.setTextAlignment(Qt.AlignCenter)
+            else:
+                item.setFlags(item.flags() & ~Qt.ItemIsEditable)
+            self.table.setItem(row, i + 1, item)
+            self.table.setRowHeight(row, 40)
+            if (i == 0) and task != '':
+                self.task_list[task] = row
+                
+    def get_task_parm(self):
+        task_param = {}
+        for row in range(1, self.table.rowCount()):
+            widget = self.table.cellWidget(row, 0)
+            if widget:
+                if widget.checkState() == Qt.Checked:
+                    content1 = self.table.item(row, 1)
+                    content2 = self.table.item(row, 2)
+                    if content1:
+                        task_id = int(content1.text())
+                        task_param[task_id] = ""
+                    elif content2:
+                        task_param[task_id] = content2.text()
+        return task_param
+
+    def handleHeaderClick(self, checked):
+        for row in range(1, self.table.rowCount()):
+            widget = self.table.cellWidget(row, 0)
+            if widget:
+                widget.setChecked(checked)
+
+    def handleCellClick(self, row, column):
+        if row >= 1:
+            content1 = self.table.item(row, 1)
+            content2 = self.table.item(row, 2)
+            if content1 and content2:
+                content1 = content1.text()
+                content2 = content2.text()
+            print(content1, content2)
+            self.cell_clicked.emit(content1, content2)
+
+    def cell_change(self, row, column):
+    #     item = self.table.item(row, column)
+    #     text = item.text()
+    #     if column == 1 and text != '' and text.isdigit():
+    #         task_id = int(text)
+    #         if task_id in self.task_list:
+    #             InfoBar.error(
+    #                 title=self.tr('失败'),
+    #                 content=self.tr("不允许添加相同任务号!"),
+    #                 orient=Qt.Horizontal,
+    #                 isClosable=True,
+    #                 position=InfoBarPosition.TOP,
+    #                 duration=2000,
+    #                 parent=self
+    #             )
+    #             item.setText("")
+        pass
+
+
+    def item_change(self, item):
+        row = item.row()
+        column = item.column()
+        text = item.text()
+        if column == 1:  # Check if the changed item is in the second column
+            if text != '' and text.isdigit():
+                task_id = int(text)
+                if task_id <= 0 or task_id >= 255:
+                    InfoBar.error(
+                        title=self.tr('失败'),
+                        content=self.tr("任务号非法!"),
+                        orient=Qt.Horizontal,
+                        isClosable=True,
+                        position=InfoBarPosition.TOP,
+                        duration=2000,
+                        parent=self
+                    )
+                    item.setText("")
+                    return
+                result, orgin_task_id = self.is_row_in_task_list(row)
+                if task_id in self.task_list and self.task_list[task_id] != row:
+                    #相同任务号，但是不同列
+                    InfoBar.error(
+                        title=self.tr('失败'),
+                        content=self.tr("不允许添加相同任务号!"),
+                        orient=Qt.Horizontal,
+                        isClosable=True,
+                        position=InfoBarPosition.TOP,
+                        duration=2000,
+                        parent=self
+                    )
+                    item.setText("")
+                    return
+                self.task_list[task_id] = row
+                if result and orgin_task_id != task_id:
+                    if orgin_task_id is not None:
+                        self.task_list.pop(orgin_task_id)
+
+                    content2 = self.table.item(row, 2)
+                    if content2:
+                        self.table.itemChanged.disconnect(self.item_change)
+                        self.reset_task_frame(task_id, content2.text())
+                        self.table.itemChanged.connect(self.item_change)
+            
+
+
+    def is_row_in_task_list(self, row):
+        for task_id in self.task_list:
+            if row == self.task_list[task_id]:
+                return True, task_id
+        return False, None
+    def reset_task_frame(self, task_id, content):
+        self.itemChange.emit(task_id, content)
+
+    def eventFilter(self, source, event):
+        if event.type() == QEvent.MouseMove:
+            index = self.table.indexAt(event.pos())
+            if index.isValid():
+                row = index.row()
+                column = index.column()
+                if row != self.hovered_row or column != self.hovered_column:
+                    self.hovered_row = row
+                    self.hovered_column = column
+                    self.hover_timer.start(1000)  # Start the timer for 1 second
+            else:
+                self.hover_timer.stop()
+                self.hovered_row = -1
+                self.hovered_column = -1
+        elif event.type() == QEvent.Leave:
+            self.hover_timer.stop()
+            self.hovered_row = -1
+            self.hovered_column = -1
+        return super().eventFilter(source, event)
+
+    def showCopyTooltip(self):
+        if self.hovered_row >= 1 and self.hovered_column > 1:
+            widget = self.table.item(self.hovered_row, self.hovered_column)
+            if widget is None:
+                return 
+            cell_content = widget.text()  # Get content of the hovered cell
+            if len(cell_content) <= 0:
+                return
+            pos = self.table.viewport().mapToGlobal(self.table.visualRect(self.table.model().index(self.hovered_row, self.hovered_column)).center())
+            menu = RoundMenu(self)
+            self.copy_action = QAction("复制", self)
+            self.copy_action.triggered.connect(lambda: self.copyToClipboard(cell_content))
+            # self.copy_action.installEventFilter(ToolTipFilter(self.copy_action))
+            menu.addAction(self.copy_action)
+            menu.exec_(pos)
+
+    def copyToClipboard(self, text):
+        clipboard = QApplication.clipboard()
+        clipboard.setText(text)
+
+        InfoBar.success(
+            title=self.tr('成功'),
+            content=self.tr("已复制到剪贴板!"),
+            orient=Qt.Horizontal,
+            isClosable=True,
+            position=InfoBarPosition.TOP,
+            duration=2000,
+            parent=self.window()
+        )
 
 class CustomframeResult(QWidget):
     def __init__(self, parent=None):
@@ -29,6 +327,99 @@ class CustomframeResult(QWidget):
         self.framearea.setPlainText(frame)
     def clear_frame(self):
         self.framearea.clear()
+
+class CheckboxGrid(QWidget):
+    def __init__(self, total_checkboxes, parent=None):
+        super().__init__(parent)
+        self.total_checkboxes = total_checkboxes
+        self.selected_indexes = set()
+        self.init_ui()
+
+    def init_ui(self):
+        self.qvlayout = QVBoxLayout(self)
+
+        self.scroll_area = ScrollArea(self)
+        self.scroll_area.setWidgetResizable(True)
+
+        self.container = QWidget()
+        self.grid_layout = QGridLayout(self.container)
+
+        # Create checkboxes including "Select All"
+        self.select_all_checkbox = CheckBox("Select All")
+        self.select_all_checkbox.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        self.select_all_checkbox.stateChanged.connect(self.toggle_select_all)
+
+        self.checkboxes = [self.select_all_checkbox] + [CheckBox(f"Checkbox {i+1}") for i in range(self.total_checkboxes)]
+        for index, checkbox in enumerate(self.checkboxes):
+            checkbox.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+            if index > 0:  # Skip the "Select All" checkbox for individual stateChanged connections
+                checkbox.stateChanged.connect(self.on_checkbox_state_changed)
+
+        self.update_grid()
+        self.container.setLayout(self.grid_layout)
+        self.scroll_area.setWidget(self.container)
+
+        self.qvlayout.addWidget(self.scroll_area)
+        self.setLayout(self.qvlayout)
+
+    def resizeEvent(self, event):
+        super().resizeEvent(event)
+        self.update_grid()
+
+    def update_grid(self):
+        width = self.scroll_area.viewport().width()
+        column_count = max(1, width // 100)  # Assuming each checkbox needs 100px width
+
+        self.grid_layout.setSpacing(10)
+        for i in range(self.grid_layout.count()):
+            widget = self.grid_layout.itemAt(i).widget()
+            if widget:
+                widget.deleteLater()
+
+        for index, checkbox in enumerate(self.checkboxes):
+            row = index // column_count
+            col = index % column_count
+            self.grid_layout.addWidget(checkbox, row, col, Qt.AlignTop)
+
+    def toggle_select_all(self, state):
+        is_checked = state == Qt.Checked
+        for checkbox in self.checkboxes:
+            if checkbox == self.select_all_checkbox:
+                continue
+            if is_checked:
+                checkbox.setCheckState(Qt.Checked)
+            else:
+                checkbox.setCheckState(Qt.Unchecked)
+
+        if is_checked:
+            self.selected_indexes = set(range(1, len(self.checkboxes)))
+        else:
+            self.selected_indexes.clear()
+
+        print("Selected indexes:", self.selected_indexes)
+
+    def get_selected_indexes(self):
+        return self.selected_indexes.copy()
+
+    def on_checkbox_state_changed(self, state):
+        checkbox = self.sender()
+        index = self.checkboxes.index(checkbox)
+
+        if state == Qt.Checked:
+            self.selected_indexes.add(index)
+        else:
+            self.selected_indexes.discard(index)
+
+        print("Selected indexes:", self.selected_indexes)
+        # Update "Select All" checkbox state if necessary
+        self.select_all_checkbox.stateChanged.disconnect(self.toggle_select_all)
+        if len(self.selected_indexes) == len(self.checkboxes) - 1:
+            self.select_all_checkbox.setCheckState(Qt.Checked)
+        elif len(self.selected_indexes) == 0:
+            self.select_all_checkbox.setCheckState(Qt.Unchecked)
+        else:
+            self.select_all_checkbox.setCheckState(Qt.PartiallyChecked)
+        self.select_all_checkbox.stateChanged.connect(self.toggle_select_all)
 
 class ParamFrame(QWidget):
     frame_finfish = pyqtSignal(list, int)
@@ -50,6 +441,7 @@ class ParamFrame(QWidget):
         self.itemlayout.addWidget(self.itemlabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
         self.itemlayout.addWidget(self.itemInput, 1, Qt.AlignRight)
         self.itemInput.setPlaceholderText("使用英文','拆分,如05060100,05060101")
+        # self.itemInput.textChanged.connect(self.update_ui)
 
         self.datalayout = QHBoxLayout()  # 使用水平布局
         self.datalabel = QLabel('数据内容')
@@ -66,19 +458,52 @@ class ParamFrame(QWidget):
         self.button = PrimaryPushButton(self.tr('生成报文'))
         self.button.clicked.connect(self.create_frame)
 
+        # self.mask_layout = QVBoxLayout()
+        # self.mask_widget = CheckboxGrid(1)
+
+        # self.mask_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        # self.mask_layout.addWidget(self.mask_widget, alignment=Qt.AlignTop|Qt.AlignLeft)
+
         self.qvlayout = QVBoxLayout(self)  # 使用垂直布局
-        self.qvlayout.addLayout(self.pnlayout, 1)
+        self.qvlayout.addLayout(self.pnlayout)
         self.qvlayout.addSpacing(5)
-        self.qvlayout.addLayout(self.itemlayout, 1)
+        self.qvlayout.addLayout(self.itemlayout)
         self.qvlayout.addSpacing(5)
-        self.qvlayout.addLayout(self.datalayout, 1)
+        self.qvlayout.addLayout(self.datalayout)
         self.qvlayout.addSpacing(5)
-        self.qvlayout.addWidget(self.switchButton, 1)
+        self.qvlayout.addWidget(self.switchButton)
         self.qvlayout.addSpacing(5)
         self.qvlayout.addWidget(self.button)
+        # self.qvlayout.addLayout(self.mask_layout)
 
         self.qvlayout.setContentsMargins(0,0,0,5)
         self.qvlayout.setSpacing(2)
+
+        self.datalayout_index = self.qvlayout.indexOf(self.datalayout)
+
+    def update_ui(self):
+        text = self.itemInput.toPlainText()
+        if len(text) > 0 and all(c in string.hexdigits for c in text) and (int(text, 16) in (0xE0000150, 0xE0000151)):
+            self.replace_layout(self.mask_layout)
+        else:
+            old_layout_item = self.qvlayout.itemAt(self.datalayout_index)
+            if old_layout_item and old_layout_item.layout() == self.mask_layout:
+                self.replace_layout(self.datalayout)
+
+    def replace_layout(self, new_layout):
+        # 移除旧的布局
+        item = self.qvlayout.takeAt(self.datalayout_index)
+        if item and item.layout():
+            old_layout = item.layout()
+            while old_layout.count():
+                child = old_layout.takeAt(0)
+                if child.widget():
+                    child.widget().deleteLater()
+
+        # 在相同位置插入新布局
+        self.qvlayout.insertLayout(self.datalayout_index, new_layout)
+        self.qvlayout.update()
+        QCoreApplication.processEvents()
 
     def get_size(self):
         return self.qvlayout.sizeHint() + QSize(0, 50)
@@ -191,8 +616,8 @@ class ParamFrameInterface(QWidget):
         self.framearea = ParamFrame()
         self.result = CustomframeResult()
         self.framearea.frame_finfish.connect(self.display_frame)
-        self.qhlayout.addWidget(self.framearea, 1)
-        self.qhlayout.addWidget(self.result, 1)
+        self.qhlayout.addWidget(self.framearea, alignment=Qt.AlignLeft|Qt.AlignTop)
+        self.qhlayout.addWidget(self.result)
 
         StyleSheet.CUSTOM_INTERFACE.apply(self)
     
@@ -331,7 +756,7 @@ class ReadCurInterface(QWidget):
         self.framearea = ReadCurFrame()
         self.result = CustomframeResult()
         self.framearea.frame_finfish.connect(self.display_frame)
-        self.qhlayout.addWidget(self.framearea, 1)
+        self.qhlayout.addWidget(self.framearea, 1, alignment=Qt.AlignLeft|Qt.AlignTop)
         self.qhlayout.addWidget(self.result, 1)
 
         StyleSheet.CUSTOM_INTERFACE.apply(self)
@@ -514,7 +939,7 @@ class ReadHistoryInterface(QWidget):
         self.framearea = ReadHistoryFrame()
         self.result = CustomframeResult()
         self.framearea.frame_finfish.connect(self.display_frame)
-        self.qhlayout.addWidget(self.framearea, 1)
+        self.qhlayout.addWidget(self.framearea, 1, alignment=Qt.AlignLeft|Qt.AlignTop)
         self.qhlayout.addWidget(self.result, 1)
 
         StyleSheet.CUSTOM_INTERFACE.apply(self)
@@ -710,7 +1135,7 @@ class ReadEventAlarmInterface(QWidget):
         self.framearea = ReadEventAlarmFrame(type=type, parent=None)
         self.result = CustomframeResult()
         self.framearea.frame_finfish.connect(self.display_frame)
-        self.qhlayout.addWidget(self.framearea, 1)
+        self.qhlayout.addWidget(self.framearea, 1, alignment=Qt.AlignLeft|Qt.AlignTop)
         self.qhlayout.addWidget(self.result, 1)
 
         StyleSheet.CUSTOM_INTERFACE.apply(self)
@@ -721,7 +1146,7 @@ class ReadEventAlarmInterface(QWidget):
         self.result.set_frame(text)
 
 class MeterTaskFrame(QWidget):
-    frame_finfish = pyqtSignal(list, int)
+    frame_finfish = pyqtSignal(int, list, int)
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
@@ -958,8 +1383,11 @@ class MeterTaskFrame(QWidget):
 
             input_text = self.taskNumberInput.text()
             if input_text: 
-                try:                                      
-                    task_item = 0xE0001500 + int(input_text, 10)
+                try:          
+                    task_id = int(input_text, 10)                            
+                    task_item = 0xE0001500 + task_id
+                    if task_id <= 0 or task_id >= 255:
+                        raise ValueError("任务号错误")
                 except Exception as e:
                     InfoBar.warning(
                     title=self.tr('告警'),
@@ -1257,7 +1685,7 @@ class MeterTaskFrame(QWidget):
             frame_len += frame_csg.set_frame_finish(frame[FramePos.POS_CTRL.value:frame_len], frame)
             frame_csg.set_frame_len(frame_len - FramePos.POS_CTRL.value, frame)
 
-            self.frame_finfish.emit(frame, frame_len)
+            self.frame_finfish.emit(task_id, frame, frame_len)
         except Exception as e:
             InfoBar.warning(
                 title=self.tr('告警'),
@@ -1269,30 +1697,253 @@ class MeterTaskFrame(QWidget):
                 parent=self
             )
             return
+    def set_task(self, task_id:str, task_param:str):
+        if task_id is None or task_param is None:
+            return False
+        if 0 != len(task_id):
+            self.taskNumberInput.setText(task_id)
+        else:
+            return False
+        
+        if 0 == len(task_param):
+            return False
+        try:
+            self.taskNumberInput.setText(task_id)
+
+            param = frame_fun.get_frame_list_from_str(task_param)
+            valid_param = param[FramePos.POS_DATA.value:]
+            da = frame_fun.hex_array_to_int(valid_param[2:6], False)
+            task_id = da - 0xE0001500
+            self.taskNumberInput.setText(str(task_id))
+            valid_flag = valid_param[6]
+            if valid_flag == 0x1:
+                self.validradioButton2.click()
+            else:
+                self.validradioButton1.click()
+            
+            report_time = valid_param[7:12]
+            centry = (QDate.currentDate().year() // 100) * 100
+            
+            date = QDate(frame_fun.bcd2int(report_time[-1]) + centry, frame_fun.bcd2int(report_time[-2]), frame_fun.bcd2int(report_time[-3]))
+            time = QTime(frame_fun.bcd2int(report_time[1]), frame_fun.bcd2int(report_time[0]), 0, 0)
+            self.reportbasetimeInput.setDateTime(date, time)
+
+            report_unit = valid_param[12]
+            if 0x0 == report_unit:
+                self.reportunitradioButton1.click()
+            elif 0x1 == report_unit:
+                self.reportunitradioButton2.click()
+            elif 0x2 == report_unit:
+                self.reportunitradioButton3.click()
+            elif 0x3 == report_unit:
+                self.reportunitradioButton4.click()
+            else:
+                InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("报文上报周期非法!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                return False
+            
+            cycle = frame_fun.bcd2int(valid_param[13])
+            self.reportcycleInput.setText(str(cycle))
+
+            data_type = valid_param[14]
+            if data_type == 0x00:
+                self.tasktyperadioButton1.click()
+            else:
+                self.tasktyperadioButton2.click()
+
+
+            get_time = valid_param[15:20]
+            date = QDate(frame_fun.bcd2int(get_time[-1]) + centry, frame_fun.bcd2int(get_time[-2]), frame_fun.bcd2int(get_time[-3]))
+            time = QTime(frame_fun.bcd2int(get_time[1]), frame_fun.bcd2int(get_time[0]), 0, 0)
+            self.readtimeInput.setDateTime(date, time)
+
+            get_unit = valid_param[20]
+            if 0x0 == get_unit:
+                self.meterunitradioButton1.click()
+            elif 0x1 == get_unit:
+                self.meterunitradioButton2.click()
+            elif 0x2 == get_unit:
+                self.meterunitradioButton3.click()
+            elif 0x3 == get_unit:
+                self.meterunitradioButton4.click()
+            else:
+                InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("定时采样周期基本单位非法!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                return False
+
+            cycle = frame_fun.bcd2int(valid_param[21])
+            self.metercycleInput.setText(str(cycle))
+
+            data_cylce = valid_param[22]
+            data_cylce = frame_fun.bcd2int(data_cylce)
+            self.datafreqInput.setText(str(data_cylce))
+
+
+            get_time = valid_param[23:28]
+            date = QDate(frame_fun.bcd2int(get_time[-1]) + centry, frame_fun.bcd2int(get_time[-2]), frame_fun.bcd2int(get_time[-3]))
+            time = QTime(frame_fun.bcd2int(get_time[1]), frame_fun.bcd2int(get_time[0]), 0, 0)
+            self.ertureadtimeInput.setDateTime(date, time)
+
+            get_unit = valid_param[28]
+            if 0x0 == get_unit:
+                self.ertureadunitradioButton1.click()
+            elif 0x1 == get_unit:
+                self.ertureadunitradioButton2.click()
+            elif 0x2 == get_unit:
+                self.ertureadunitradioButton3.click()
+            elif 0x3 == get_unit:
+                self.ertureadunitradioButton4.click()
+            else:
+                InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("定时采样周期基本单位非法!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                return False
+            
+            cycle = frame_fun.bcd2int(valid_param[29])
+            self.ertureadcycleInput.setText(str(cycle))
+
+            exec_count = valid_param[30:32]
+            exec_count = frame_fun.hex_array_to_int(exec_count, False)
+            self.taskexeccountInput.setText(str(exec_count))
+
+            point_count = valid_param[32]
+            point_array = valid_param[33:33+point_count*2]
+            
+            point_str = []
+            for i in range(point_count):
+                total_measurement_points, measurement_points_array = frame_fun.calculate_measurement_points(point_array[i*2:i*2+2])
+                for point_id in measurement_points_array:
+                    point_str.append(str(point_id))
+                
+            point_str = ",".join(point_str)
+
+            self.pnInput.setPlainText(point_str)
+
+            item_count = valid_param[33+point_count*2]
+            item_array = valid_param[34+point_count*2:34+point_count*2+item_count*4]
+
+            items = []
+            for i in range(item_count):
+                item_id = item_array[i*4:i*4+4]
+                items.append(frame_fun.get_data_str_reverser(item_id))
+            item_str = ",".join(items)
+
+            self.itemInput.setPlainText(item_str)
+            return True
+        except Exception as e:
+            print({e}) 
+            InfoBar.warning(
+                title=self.tr('告警'),
+                content=self.tr("报文格式错误!"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+            return False
+
+    def reset_task(self, task_id:str, task_param:str):
+        if self.set_task(task_id, task_param):
+            self.taskNumberInput.setText(task_id)
+            frame = []
+            self.create_frame(frame)
 
 class MeterTaskInterface(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
-        self.qhlayout = QHBoxLayout(self)  # 使用水平布局
+        # 主布局：水平布局
+        self.qhlayout = QHBoxLayout(self)
 
+        # 创建拆分器
+        splitter = Splitter(Qt.Horizontal)
+
+        # 左侧区域布局
+        left_widget = QWidget()
+        left_layout = QVBoxLayout(left_widget)
+        self.tasktable = BaseTaskTable()
+        left_layout.addWidget(self.tasktable)
+
+        self.addbutton = ToolButton()
+        self.addbutton.setFixedSize(40, 40)
+        self.addbutton.setIcon(FIF.ADD)
+        self.addbutton.clicked.connect(self.add_task)        
+        left_layout.addWidget(self.addbutton, 0, Qt.AlignRight)
+
+        # 中间区域布局
+        middle_layout = QVBoxLayout()
         self.framearea = MeterTaskFrame()
-        self.result = CustomframeResult()
         self.framearea.frame_finfish.connect(self.display_frame)
-        self.qhlayout.addWidget(self.framearea, 1)
-        self.qhlayout.addWidget(self.result, 1)
+        self.framearea.setContentsMargins(10, 0, 5, 0)
+        middle_layout.addWidget(self.framearea)
 
-        StyleSheet.CUSTOM_INTERFACE.apply(self)
-    
-    def display_frame(self, frame, length):
-        self.result.clear_frame()
+        # 右侧区域布局
+        right_layout = QVBoxLayout()
+        self.result = CustomframeResult()
+        right_layout.addWidget(self.result)
+
+        # 将左侧、中间和右侧部分添加到拆分器中
+        splitter.addWidget(left_widget)
+        splitter.addWidget(self.framearea)
+        # splitter.addWidget(self.result)
+
+        # 设置拆分器大小策略
+        splitter.setStretchFactor(0, 7)
+        splitter.setStretchFactor(1, 3)
+        # splitter.setStretchFactor(2, 1)  # 右侧部分可伸缩
+
+        # 将拆分器添加到主布局中
+        self.qhlayout.addWidget(splitter)
+
+        StyleSheet.CUSTOM_INTERFACE.apply(self)       
+
+        self.tasktable.cell_clicked.connect(self.display_widget_frame)
+        self.tasktable.itemChange.connect(self.recreat_frame)
+
+    def display_frame(self, task_id, frame, length):
+        # self.result.clear_frame()
         text = frame_fun.get_data_str_with_space(frame)
-        self.result.set_frame(text)
+        # self.result.set_frame(text)
+        self.tasktable.add_table([task_id, frame_fun.get_data_str_order(frame)])
+
+    def recreat_frame(self, task_id, frame):
+        print("reset", task_id, frame)
+        self.framearea.reset_task(str(task_id), frame)
+
+    def add_task(self):
+        self.tasktable.add_table(["", ""])
+
+    def display_widget_frame(self, task_id:str, param:str):
+        self.framearea.set_task(task_id, param)
+        # self.result.clear_frame()
+        # self.result.set_frame(param)
 
 class NoramlTaskFrame(QWidget):
-    frame_finfish = pyqtSignal(list, int)
+    frame_finfish = pyqtSignal(int, list, int)
     def __init__(self, parent=None):
         super().__init__(parent=parent)
+        self.setObjectName("NormalTaskFrame")
 
         self.tasklayout = QHBoxLayout()  # 使用水平布局
         self.tasklabel = QLabel('普通任务号')
@@ -1466,9 +2117,6 @@ class NoramlTaskFrame(QWidget):
         self.readtimeInput.setDateTime(current_date, current_time)
         self.button.clicked.connect(self.create_frame)
 
-    def sendframe(self):
-        text = self.framearea.toPlainText()
-        signalBus.sendmessage.emit(text)
     def get_size(self):
         return self.qvlayout.sizeHint() + QSize(0, 50)
     def create_frame(self, frame):
@@ -1487,8 +2135,11 @@ class NoramlTaskFrame(QWidget):
 
             input_text = self.taskNumberInput.text()
             if input_text: 
-                try:                                      
-                    task_item = 0xE0000300 + int(input_text, 10)
+                try:      
+                    task_id = int(input_text, 10)                                
+                    if task_id <= 0 or task_id >= 255:
+                        raise ValueError("任务号错误")
+                    task_item = 0xE0000300 + task_id
                 except Exception as e:
                     InfoBar.warning(
                     title=self.tr('告警'),
@@ -1743,7 +2394,7 @@ class NoramlTaskFrame(QWidget):
             frame_len += frame_csg.set_frame_finish(frame[FramePos.POS_CTRL.value:frame_len], frame)
             frame_csg.set_frame_len(frame_len - FramePos.POS_CTRL.value, frame)
 
-            self.frame_finfish.emit(frame, frame_len)
+            self.frame_finfish.emit(task_id, frame, frame_len)
         except Exception as e:
             InfoBar.warning(
                 title=self.tr('告警'),
@@ -1755,36 +2406,287 @@ class NoramlTaskFrame(QWidget):
                 parent=self
             )
             return
+        
+    def set_task(self, task_id:str, task_param:str):
+        if task_id is None or task_param is None:
+            return False
+        if 0 != len(task_id):
+            self.taskNumberInput.setText(task_id)
+        else:
+            return False
+        
+        if 0 == len(task_param):
+            return False
+        try:
+            self.taskNumberInput.setText(task_id)
 
+            param = frame_fun.get_frame_list_from_str(task_param)
+            valid_param = param[FramePos.POS_DATA.value:]
+            da = frame_fun.hex_array_to_int(valid_param[2:6], False)
+            task_id = da - 0xE0000300
+            self.taskNumberInput.setText(str(task_id))
+            valid_flag = valid_param[6]
+            if valid_flag == 0x1:
+                self.validradioButton2.click()
+            else:
+                self.validradioButton1.click()
+            
+            report_time = valid_param[7:12]
+            date = QDate(frame_fun.bcd2int(report_time[-1]), frame_fun.bcd2int(report_time[-2]), frame_fun.bcd2int(report_time[-3]))
+            time = QTime(frame_fun.bcd2int(report_time[1]), frame_fun.bcd2int(report_time[0]), 0, 0)
+            self.reportbasetimeInput.setDateTime(date, time)
+
+            report_unit = valid_param[12]
+            if 0x0 == report_unit:
+                self.reportunitradioButton1.click()
+            elif 0x1 == report_unit:
+                self.reportunitradioButton2.click()
+            elif 0x2 == report_unit:
+                self.reportunitradioButton3.click()
+            elif 0x3 == report_unit:
+                self.reportunitradioButton4.click()
+            else:
+                InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("报文上报周期非法!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                return False
+            
+            cycle = frame_fun.bcd2int(valid_param[13])
+            self.reportcycleInput.setText(str(cycle))
+
+            data_type = valid_param[14]
+            if data_type == 0x00:
+                self.tasktyperadioButton1.click()
+            else:
+                self.tasktyperadioButton2.click()
+
+
+            get_time = valid_param[15:20]
+            date = QDate(frame_fun.bcd2int(get_time[-1]), frame_fun.bcd2int(get_time[-2]), frame_fun.bcd2int(get_time[-3]))
+            time = QTime(frame_fun.bcd2int(get_time[1]), frame_fun.bcd2int(get_time[0]), 0, 0)
+            self.readtimeInput.setDateTime(date, time)
+
+            get_unit = valid_param[20]
+            if 0x0 == get_unit:
+                self.meterunitradioButton1.click()
+            elif 0x1 == get_unit:
+                self.meterunitradioButton2.click()
+            elif 0x2 == get_unit:
+                self.meterunitradioButton3.click()
+            elif 0x3 == get_unit:
+                self.meterunitradioButton4.click()
+            else:
+                InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("定时采样周期基本单位非法!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                return False
+
+            cycle = frame_fun.bcd2int(valid_param[21])
+            self.metercycleInput.setText(str(cycle))
+
+            data_cylce = valid_param[22]
+            data_cylce = frame_fun.bcd2int(data_cylce)
+            self.datafreqInput.setText(str(data_cylce))
+
+            exec_count = valid_param[23:25]
+            exec_count = frame_fun.hex_array_to_int(exec_count, False)
+            self.taskexeccountInput.setText(str(exec_count))
+
+            point_count = valid_param[25]
+            point_array = valid_param[26:26+point_count*2]
+            
+            point_str = []
+            for i in range(point_count):
+                total_measurement_points, measurement_points_array = frame_fun.calculate_measurement_points(point_array[i*2:i*2+2])
+                for point_id in measurement_points_array:
+                    point_str.append(str(point_id))
+                
+            point_str = ",".join(point_str)
+
+            self.pnInput.setPlainText(point_str)
+
+            item_count = valid_param[26+point_count*2]
+            item_array = valid_param[27+point_count*2:27+point_count*2+item_count*4]
+
+            items = []
+            for i in range(item_count):
+                item_id = item_array[i*4:i*4+4]
+                items.append(frame_fun.get_data_str_reverser(item_id))
+            item_str = ",".join(items)
+
+            self.itemInput.setPlainText(item_str)
+            return True
+        except Exception as e:
+            print({e}) 
+            InfoBar.warning(
+                title=self.tr('告警'),
+                content=self.tr("报文格式错误!"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+            return False
+
+    def reset_task(self, task_id:str, task_param:str):
+        if self.set_task(task_id, task_param):
+            self.taskNumberInput.setText(task_id)
+            frame = []
+            self.create_frame(frame)
 
 class NoramlTaskInterface(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
-        self.qhlayout = QHBoxLayout(self)  # 使用水平布局
+        # 主布局：水平布局
+        self.qhlayout = QHBoxLayout(self)
 
+        # 创建拆分器
+        splitter = Splitter(Qt.Horizontal)
+
+        # 左侧区域布局
+        left_widget = QWidget()
+        left_layout = QVBoxLayout(left_widget)
+        self.chanel_box = Comwidget()
+        self.tasktable = BaseTaskTable()
+        left_layout.addWidget(self.chanel_box)
+        left_layout.addWidget(self.tasktable)
+        self.chanel_box.read_button.clicked.connect(self.read_click)
+        self.chanel_box.setbutton.clicked.connect(self.set_click)
+        self.addbutton = ToolButton()
+        self.addbutton.setFixedSize(40, 40)
+        self.addbutton.setIcon(FIF.ADD)
+        self.addbutton.clicked.connect(self.add_task)        
+        left_layout.addWidget(self.addbutton, 0, Qt.AlignRight)
+
+        # 中间区域布局
+        middle_layout = QVBoxLayout()
         self.framearea = NoramlTaskFrame()
-        self.result = CustomframeResult()
         self.framearea.frame_finfish.connect(self.display_frame)
-        self.qhlayout.addWidget(self.framearea, 1)
-        self.qhlayout.addWidget(self.result, 1)
+        self.framearea.setContentsMargins(10, 0, 5, 0)
+        middle_layout.addWidget(self.framearea)
 
-        StyleSheet.CUSTOM_INTERFACE.apply(self)
-    
-    def display_frame(self, frame, length):
-        self.result.clear_frame()
+        # 右侧区域布局
+        right_layout = QVBoxLayout()
+        self.result = CustomframeResult()
+        right_layout.addWidget(self.result)
+
+        # 将左侧、中间和右侧部分添加到拆分器中
+        splitter.addWidget(left_widget)
+        splitter.addWidget(self.framearea)
+        # splitter.addWidget(self.result)
+
+        # 设置拆分器大小策略
+        splitter.setStretchFactor(0, 7)
+        splitter.setStretchFactor(1, 3)
+        # splitter.setStretchFactor(2, 1)  # 右侧部分可伸缩
+
+        # 将拆分器添加到主布局中
+        self.qhlayout.addWidget(splitter)
+
+        StyleSheet.CUSTOM_INTERFACE.apply(self)       
+
+        self.tasktable.cell_clicked.connect(self.display_widget_frame)
+        self.tasktable.itemChange.connect(self.recreat_frame)
+
+
+    def read_click(self):
+        task_param_idc = {}
+        count = 0
+        task_id_list = self.tasktable.get_task_parm()
+        if task_id_list is None:
+            return
+        channel_info = self.chanel_box.get_channel()
+        if channel_info is None:
+            return
+        frame = bytearray()
+        # csg_protocol = CsgProtocolChannel(channel_info[1])
+        send_thread = SendReceiveThread(channel_info[1], 50)
+        print("init csg")
+        send_list = []
+        for taskid in task_id_list:
+            frame = [0x00] * FramePos.POS_DATA.value
+            adress = [0xff] * 6  # Fix the initialization of adress
+            msa = 0x10
+            frame_len = 0
+            frame_csg.init_frame(0x4a, 0x0A, adress, msa, 0x60, frame)
+            frame_len += FramePos.POS_DATA.value
+            frame_len += frame_csg.add_point_to_frame(0, frame)
+            frame_len += frame_fun.item_to_di(0xE0000300 + taskid, frame)
+            frame_len += frame_csg.set_frame_finish(frame[FramePos.POS_CTRL.value:frame_len], frame)
+            frame_csg.set_frame_len(frame_len - FramePos.POS_CTRL.value, frame)
+            send_frame = frame_fun.get_data_str_order(frame)
+            task_id_list[taskid] = send_frame
+            send_list.append(send_frame)
+            # asycwork = AsyncWorker(channel_info[1], send_frame)
+            # asycwork.start()
+            # result = asycwork.wait()
+            send_thread.send_and_receive(send_frame)
+            # print(result)
+
+
+        print("start call send")
+        # csg_protocol.worker_thread.start()
+        # receive_frame = csg_protocol.send_data_and_wait_for_reply(send_list, 10)
+        print("send call over")
+
+    def data_replay(self, data):
+        print("data_replay", data)
+
+
+
+    def set_click(self):
+        task_id_list = self.tasktable.get_task_parm()
+        if task_id_list is None:
+            return
+        channel_info = self.chanel_box.get_channel()
+        if channel_info is None:
+            return
+        for taskid in task_id_list:
+            send_frame = task_id_list[taskid]
+            self.chanel_box.send_message(channel_info[1], "HEX", send_frame)
+
+        
+    def display_frame(self, task_id, frame, length):
+        # self.result.clear_frame()
         text = frame_fun.get_data_str_with_space(frame)
-        self.result.set_frame(text)
+        # self.result.set_frame(text)
+        self.tasktable.add_table([task_id, frame_fun.get_data_str_order(frame)])
+
+    def recreat_frame(self, task_id, frame):
+        print("reset", task_id, frame)
+        self.framearea.reset_task(str(task_id), frame)
+
+    def add_task(self):
+        self.tasktable.add_table(["", ""])
+
+    def display_widget_frame(self, task_id:str, param:str):
+        self.framearea.set_task(task_id, param)
+        # self.result.clear_frame()
+        # self.result.set_frame(param)
 
 
-class FrameInterface(QWidget):
+class CusFrameInterface(QWidget):
     """ Pivot interface """
 
     Nav = Pivot
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
-        self.curwidget = None
+
         self.pivot = self.Nav(self)
         self.stackedWidget = QStackedWidget(self)
         self.vBoxLayout = QVBoxLayout(self)
@@ -1800,25 +2702,20 @@ class FrameInterface(QWidget):
         self.addSubInterface(self.paramInterface, 'paramInterface', self.tr('参数类'))
         self.addSubInterface(self.curdataInterface, 'curdataInterface', self.tr('当前数据类'))
         self.addSubInterface(self.historyDataInterface, 'histotyInterface', self.tr('历史数据类'))
-        self.addSubInterface(self.readAlarmInterface, 'readAlarmInterface', self.tr('读取报警类'))
+        self.addSubInterface(self.readAlarmInterface, 'readAlarmInterface', self.tr('事件告警类'))
         self.addSubInterface(self.normaltaskinterface, 'normaltaskinterface', self.tr('普通任务类'))
         self.addSubInterface(self.metertaskinterface, 'metertaskinterface', self.tr('表端任务类'))
-        
-        # self.button = PrimaryPushButton(self.tr('生成报文'))
-        self.vBoxLayout.addWidget(self.pivot)
-        self.vBoxLayout.addWidget(self.stackedWidget, 0, Qt.AlignLeft | Qt.AlignTop)
-        # self.vBoxLayout.addStretch(1)
-        self.vBoxLayout.setSpacing(5)
-        # self.vBoxLayout.addWidget(self.button)  
-        self.vBoxLayout.setContentsMargins(0, 0, 0, 0)
 
+        self.vBoxLayout.addWidget(self.pivot, 1)
+        self.vBoxLayout.addWidget(self.stackedWidget, 9)
         StyleSheet.NAVIGATION_VIEW_INTERFACE.apply(self)
 
         self.stackedWidget.currentChanged.connect(self.onCurrentIndexChanged)
         self.stackedWidget.setCurrentWidget(self.paramInterface)
-        self.onCurrentIndexChanged(0)
         self.pivot.setCurrentItem(self.paramInterface.objectName())
+
         qrouter.setDefaultRouteKey(self.stackedWidget, self.paramInterface.objectName())
+
 
     def addSubInterface(self, widget: QWidget, objectName, text):
         widget.setObjectName(objectName)
@@ -1834,18 +2731,14 @@ class FrameInterface(QWidget):
         self.pivot.setCurrentItem(widget.objectName())
         qrouter.push(self.stackedWidget, widget.objectName())
 
-        self.stackedWidget.setMinimumSize(widget.sizeHint())
-        self.stackedWidget.setMaximumSize(widget.sizeHint())
-        self.stackedWidget.resize(widget.sizeHint())
-
-class CustomFrameInterface(FrameInterface):
+class CustomFrameInterface(CusFrameInterface):
 
     Nav = SegmentedWidget
 
     def __init__(self, parent=None):
         super().__init__(parent)
         self.vBoxLayout.removeWidget(self.pivot)
-        self.vBoxLayout.insertWidget(0,self.pivot)
+        self.vBoxLayout.insertWidget(0, self.pivot)
 
 class CustomFrame(GalleryInterface):
     """ Icon interface """
@@ -1861,4 +2754,3 @@ class CustomFrame(GalleryInterface):
         self.qhlayout = QHBoxLayout(self)
         self.customframe = CustomFrameInterface()
         self.qhlayout.addWidget(self.customframe)
-        self.vBoxLayout.addWidget(self.customframe)

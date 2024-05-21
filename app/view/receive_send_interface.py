@@ -13,7 +13,7 @@ from ..common.style_sheet import StyleSheet
 from ..plugins import frame_csg,protocol
 from .gallery_interface import GalleryInterface
 from ..common.translator import Translator
-from ..common.signal_bus import signalBus
+from ..common.signal_bus import signalBus,DIR_UP,DIR_DOWN,DIR_UNKNOW
 from ..common.commodule import commmbus
 from ..components.custom_infoBay import CustomInfoBar
 from ..plugins.signalCommunication import SEND_ERR
@@ -27,9 +27,6 @@ import os, json, ast
 from PyQt5.QtNetwork import QTcpSocket
 from typing import Type
 import paho.mqtt.client as mqtt
-DIR_UP = 1
-DIR_DOWN = 2
-DIR_UNKNOW = 3
 
 class SendReceive(GalleryInterface):
     """ Icon interface """

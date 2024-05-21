@@ -41775,8 +41775,713 @@
 				<value key="1">上报</value>
 				<value key="0">屏蔽</value>
 			</bit>
-			<bit id="113-253">
-				<name>E2000072-E20000FE:保留</name>
+			<bit id="113">
+				<name>E2000072:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="114">
+				<name>E2000073:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="115">
+				<name>E2000074:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="116">
+				<name>E2000075:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="117">
+				<name>E2000076:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="118">
+				<name>E2000077:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="119">
+				<name>E2000078:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="120">
+				<name>E2000079:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="121">
+				<name>E200007A:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="122">
+				<name>E200007B:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="123">
+				<name>E200007C:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="124">
+				<name>E200007D:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="125">
+				<name>E200007E:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="126">
+				<name>E200007F:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="127">
+				<name>E2000080:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="128">
+				<name>E2000081:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="129">
+				<name>E2000082:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="130">
+				<name>E2000083:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="131">
+				<name>E2000084:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="132">
+				<name>E2000085:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="133">
+				<name>E2000086:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="134">
+				<name>E2000087:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="135">
+				<name>E2000088:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="136">
+				<name>E2000089:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="137">
+				<name>E200008A:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="138">
+				<name>E200008B:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="139">
+				<name>E200008C:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="140">
+				<name>E200008D:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="141">
+				<name>E200008E:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="142">
+				<name>E200008F:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="143">
+				<name>E2000090:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="144">
+				<name>E2000091:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="145">
+				<name>E2000092:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="146">
+				<name>E2000093:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="147">
+				<name>E2000094:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="148">
+				<name>E2000095:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="149">
+				<name>E2000096:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="150">
+				<name>E2000097:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="151">
+				<name>E2000098:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="152">
+				<name>E2000099:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="153">
+				<name>E200009A:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="154">
+				<name>E200009B:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="155">
+				<name>E200009C:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="156">
+				<name>E200009D:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="157">
+				<name>E200009E:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="158">
+				<name>E200009F:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="159">
+				<name>E20000A0:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="160">
+				<name>E20000A1:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="161">
+				<name>E20000A2:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="162">
+				<name>E20000A3:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="163">
+				<name>E20000A4:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="164">
+				<name>E20000A5:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="165">
+				<name>E20000A6:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="166">
+				<name>E20000A7:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="167">
+				<name>E20000A8:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="168">
+				<name>E20000A9:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="169">
+				<name>E20000AA:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="170">
+				<name>E20000AB:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="171">
+				<name>E20000AC:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="172">
+				<name>E20000AD:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="173">
+				<name>E20000AE:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="174">
+				<name>E20000AF:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="175">
+				<name>E20000B0:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="176">
+				<name>E20000B1:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="177">
+				<name>E20000B2:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="178">
+				<name>E20000B3:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="179">
+				<name>E20000B4:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="180">
+				<name>E20000B5:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="181">
+				<name>E20000B6:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="182">
+				<name>E20000B7:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="183">
+				<name>E20000B8:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="184">
+				<name>E20000B9:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="185">
+				<name>E20000BA:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="186">
+				<name>E20000BB:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="187">
+				<name>E20000BC:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="188">
+				<name>E20000BD:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="189">
+				<name>E20000BE:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="190">
+				<name>E20000BF:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="191">
+				<name>E20000C0:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="192">
+				<name>E20000C1:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="193">
+				<name>E20000C2:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="194">
+				<name>E20000C3:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="195">
+				<name>E20000C4:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="196">
+				<name>E20000C5:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="197">
+				<name>E20000C6:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="198">
+				<name>E20000C7:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="199">
+				<name>E20000C8:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="200">
+				<name>E20000C9:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="201">
+				<name>E20000CA:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="202">
+				<name>E20000CB:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="203">
+				<name>E20000CC:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="204">
+				<name>E20000CD:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="205">
+				<name>E20000CE:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="206">
+				<name>E20000CF:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="207">
+				<name>E20000D0:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="208">
+				<name>E20000D1:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="209">
+				<name>E20000D2:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="210">
+				<name>E20000D3:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="211">
+				<name>E20000D4:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="212">
+				<name>E20000D5:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="213">
+				<name>E20000D6:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="214">
+				<name>E20000D7:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="215">
+				<name>E20000D8:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="216">
+				<name>E20000D9:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="217">
+				<name>E20000DA:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="218">
+				<name>E20000DB:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="219">
+				<name>E20000DC:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="220">
+				<name>E20000DD:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="221">
+				<name>E20000DE:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="222">
+				<name>E20000DF:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="223">
+				<name>E20000E0:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="224">
+				<name>E20000E1:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="225">
+				<name>E20000E2:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="226">
+				<name>E20000E3:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="227">
+				<name>E20000E4:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="228">
+				<name>E20000E5:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="229">
+				<name>E20000E6:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="230">
+				<name>E20000E7:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="231">
+				<name>E20000E8:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="232">
+				<name>E20000E9:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="233">
+				<name>E20000EA:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="234">
+				<name>E20000EB:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="235">
+				<name>E20000EC:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="236">
+				<name>E20000ED:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="237">
+				<name>E20000EE:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="238">
+				<name>E20000EF:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="239">
+				<name>E20000F0:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="240">
+				<name>E20000F1:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="241">
+				<name>E20000F2:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="242">
+				<name>E20000F3:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="243">
+				<name>E20000F4:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="244">
+				<name>E20000F5:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="245">
+				<name>E20000F6:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="246">
+				<name>E20000F7:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="247">
+				<name>E20000F8:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="248">
+				<name>E20000F9:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="249">
+				<name>E20000FA:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="250">
+				<name>E20000FB:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="251">
+				<name>E20000FC:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="252">
+				<name>E20000FD:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="253">
+				<name>E20000FE:保留</name>
+				<value key="1">上报</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="254">
+				<name>E20000FF:保留</name>
 				<value key="1">上报</value>
 				<value key="0">屏蔽</value>
 			</bit>
@@ -42352,9 +43057,714 @@
 				<value key="1">判断</value>
 				<value key="0">屏蔽</value>
 			</bit>
-			<bit id="113-253">
-				<name>E2000072-E20000FE:保留</name>
+			<bit id="113">
+				<name>E2000072:保留</name>
 				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="114">
+				<name>E2000073:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="115">
+				<name>E2000074:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="116">
+				<name>E2000075:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="117">
+				<name>E2000076:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="118">
+				<name>E2000077:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="119">
+				<name>E2000078:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="120">
+				<name>E2000079:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="121">
+				<name>E200007A:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="122">
+				<name>E200007B:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="123">
+				<name>E200007C:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="124">
+				<name>E200007D:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="125">
+				<name>E200007E:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="126">
+				<name>E200007F:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="127">
+				<name>E2000080:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="128">
+				<name>E2000081:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="129">
+				<name>E2000082:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="130">
+				<name>E2000083:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="131">
+				<name>E2000084:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="132">
+				<name>E2000085:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="133">
+				<name>E2000086:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="134">
+				<name>E2000087:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="135">
+				<name>E2000088:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="136">
+				<name>E2000089:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="137">
+				<name>E200008A:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="138">
+				<name>E200008B:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="139">
+				<name>E200008C:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="140">
+				<name>E200008D:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="141">
+				<name>E200008E:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="142">
+				<name>E200008F:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="143">
+				<name>E2000090:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="144">
+				<name>E2000091:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="145">
+				<name>E2000092:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="146">
+				<name>E2000093:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="147">
+				<name>E2000094:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="148">
+				<name>E2000095:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="149">
+				<name>E2000096:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="150">
+				<name>E2000097:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="151">
+				<name>E2000098:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="152">
+				<name>E2000099:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="153">
+				<name>E200009A:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="154">
+				<name>E200009B:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="155">
+				<name>E200009C:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="156">
+				<name>E200009D:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="157">
+				<name>E200009E:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="158">
+				<name>E200009F:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="159">
+				<name>E20000A0:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="160">
+				<name>E20000A1:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="161">
+				<name>E20000A2:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="162">
+				<name>E20000A3:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="163">
+				<name>E20000A4:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="164">
+				<name>E20000A5:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="165">
+				<name>E20000A6:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="166">
+				<name>E20000A7:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="167">
+				<name>E20000A8:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="168">
+				<name>E20000A9:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="169">
+				<name>E20000AA:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="170">
+				<name>E20000AB:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="171">
+				<name>E20000AC:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="172">
+				<name>E20000AD:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="173">
+				<name>E20000AE:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="174">
+				<name>E20000AF:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="175">
+				<name>E20000B0:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="176">
+				<name>E20000B1:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="177">
+				<name>E20000B2:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="178">
+				<name>E20000B3:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="179">
+				<name>E20000B4:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="180">
+				<name>E20000B5:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="181">
+				<name>E20000B6:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="182">
+				<name>E20000B7:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="183">
+				<name>E20000B8:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="184">
+				<name>E20000B9:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="185">
+				<name>E20000BA:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="186">
+				<name>E20000BB:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="187">
+				<name>E20000BC:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="188">
+				<name>E20000BD:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="189">
+				<name>E20000BE:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="190">
+				<name>E20000BF:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="191">
+				<name>E20000C0:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="192">
+				<name>E20000C1:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="193">
+				<name>E20000C2:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="194">
+				<name>E20000C3:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="195">
+				<name>E20000C4:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="196">
+				<name>E20000C5:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="197">
+				<name>E20000C6:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="198">
+				<name>E20000C7:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="199">
+				<name>E20000C8:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="200">
+				<name>E20000C9:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="201">
+				<name>E20000CA:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="202">
+				<name>E20000CB:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="203">
+				<name>E20000CC:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="204">
+				<name>E20000CD:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="205">
+				<name>E20000CE:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="206">
+				<name>E20000CF:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="207">
+				<name>E20000D0:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="208">
+				<name>E20000D1:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="209">
+				<name>E20000D2:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="210">
+				<name>E20000D3:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="211">
+				<name>E20000D4:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="212">
+				<name>E20000D5:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="213">
+				<name>E20000D6:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="214">
+				<name>E20000D7:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="215">
+				<name>E20000D8:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="216">
+				<name>E20000D9:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="217">
+				<name>E20000DA:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="218">
+				<name>E20000DB:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="219">
+				<name>E20000DC:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="220">
+				<name>E20000DD:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="221">
+				<name>E20000DE:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="222">
+				<name>E20000DF:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="223">
+				<name>E20000E0:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="224">
+				<name>E20000E1:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="225">
+				<name>E20000E2:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="226">
+				<name>E20000E3:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="227">
+				<name>E20000E4:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="228">
+				<name>E20000E5:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="229">
+				<name>E20000E6:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="230">
+				<name>E20000E7:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="231">
+				<name>E20000E8:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="232">
+				<name>E20000E9:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="233">
+				<name>E20000EA:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="234">
+				<name>E20000EB:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="235">
+				<name>E20000EC:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="236">
+				<name>E20000ED:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="237">
+				<name>E20000EE:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="238">
+				<name>E20000EF:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="239">
+				<name>E20000F0:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="240">
+				<name>E20000F1:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="241">
+				<name>E20000F2:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="242">
+				<name>E20000F3:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="243">
+				<name>E20000F4:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="244">
+				<name>E20000F5:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="245">
+				<name>E20000F6:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="246">
+				<name>E20000F7:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="247">
+				<name>E20000F8:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="248">
+				<name>E20000F9:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="249">
+				<name>E20000FA:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="250">
+				<name>E20000FB:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="251">
+				<name>E20000FC:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="252">
+				<name>E20000FD:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="253">
+				<name>E20000FE:保留</name>
+				<value key="1">判断</value>
+				<value key="0">屏蔽</value>
+			</bit>
+			<bit id="254">
+				<name>E20000FF:保留</name>
+				<value key="1">上报</value>
 				<value key="0">屏蔽</value>
 			</bit>
 		</splitbit>
@@ -48799,7 +50209,7 @@
 		<splitByLength>
 			<name>信息点标识组数</name>
 			<length>1</length>
-			<type>BIN</type>
+			<type>BIN_FF</type>
 		</splitByLength>
 		<splitByLength>
 			<name>信息点标识</name>

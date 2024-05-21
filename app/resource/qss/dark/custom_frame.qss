@@ -36,3 +36,36 @@ ScrollArea{
 MessageConfig {
     background-color: transparent;
 }
+QSplitter {
+    background-color: transparent;
+}
+QSplitter::handle {
+    background-color: transparent;
+}
+QSplitter::handle:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+QSplitter::handle:pressed {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+QSplitter::handle:horizontal {
+    width: 8px;
+    margin: -2px 0;
+}
+QSplitter::handle:vertical {
+    height: 8px;
+    margin: 0 -2px;
+}
+
+QSplitter::handle:vertical:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+QSplitter::handle:horizontal:pressed {
+    background-color: red;
+}
+QSplitter::handle:horizontal:hover {
+    background-color: green;
+}
+QSplitter::handle:vertical:pressed {
+    background-color: rgba(255, 255, 255, 0.12);
+}

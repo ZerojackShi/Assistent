@@ -130,7 +130,7 @@ class TreeFrame(Frame):
         item2 = QTreeWidgetItem([self.tr('JoJo 3 - Stardust Crusaders')])
         item21 = QTreeWidgetItem([self.tr('Jotaro Kujo')])
         item21.addChildren([
-            QTreeWidgetItem(['空条承太郎']),
+            QTreeWidgetItem(['空条承太郎',"2]"]),
             QTreeWidgetItem(['空条蕉太狼']),
             QTreeWidgetItem(['阿强']),
             QTreeWidgetItem(['卖鱼强']),

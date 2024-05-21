@@ -60,7 +60,14 @@ def get_frame(point_arrray:list, itemData:dict, frame:list=None):
             frame_len += push_item_data_into_frame(itemData, frame)
 
     return frame_len
- 
+def add_point_to_frame(point, frame:list):
+    if point == 0xFFFF:
+        frame.extend([0xFF, 0XFF])
+    else:
+        da1, da2 = toDA(point)
+        frame.extend([da1, da2])
+    return 2
+
 def add_point_and_item_to_frame(point_arrray:list, item_array:list, frame:list=None):
     if frame is None:
         frame = bytearray()
@@ -167,24 +174,45 @@ def set_frame_len(length, frame):
     frame[FramePos.POS_DATALEN.value + 2] = length & 0X00ff
     frame[FramePos.POS_DATALEN.value + 3] = length >> 8
 def is_csg_frame(frame):
-        if len(frame) < 24:
+    if len(frame) < 24:
+        return False
+    if frame[0] != 0x68 or frame[5] != 0x68:
+        return False
+    if frame[1] != frame[3] or frame[2] != frame[4]:
+        print("frame err")
+        return False
+    frame_length = ((frame[2] << 8) | frame[1])
+    if frame_length + 8 != len(frame):
+        print("length err")
+        return False
+    if frame[-1] != 0x16:
+        return False
+    return True
+
+def is_contoine_custom_head(frame):
+    if frame[0] != 0x66 and frame[47] != 0x66:
+        return False
+    if frame[3] != frame[-3] and frame[4] != frame[-2]:
+        return False
+    return True
+
+class FrameCsg():
+    def is_contoine_custom_head(self, frame):
+        if frame[0] != 0x66 and frame[47] != 0x66:
             return False
-        if frame[0] != 0x68 or frame[5] != 0x68:
-            return False
-        if frame[1] != frame[3] or frame[2] != frame[4]:
-            print("frame err")
-            return False
-        frame_length = ((frame[2] << 8) | frame[1])
-        if frame_length + 8 != len(frame):
-            print("length err")
-            return False
-        if frame[-1] != 0x16:
+        if frame[3] != frame[-3] and frame[4] != frame[-2]:
             return False
         return True
-class FrameCsg():
-    def is_csg_frame(self,frame):
+        
+    def is_csg_frame(self,data):
+        frame = data.copy()
         if len(frame) < 24:
             return False
+        
+        if len(frame) > 84:
+            if self.is_contoine_custom_head(frame[:84]):
+                frame = frame[84:]
+
         if frame[0] != 0x68 or frame[5] != 0x68:
             return False
         if frame[1] != frame[3] or frame[2] != frame[4]:
@@ -198,6 +226,13 @@ class FrameCsg():
             return False
         return True
     def Analysis_csg_frame_by_afn(self,frame,result_list,index):
+        
+        if len(frame) > 84:
+            if self.is_contoine_custom_head(frame[:84]):
+                Analysic_csg_custom_head_frame(frame,result_list,index)
+                frame = frame[84:]
+                index += 84
+
         afn = frame[14]
         dir, prm = Analysic_csg_head_frame(frame,result_list,index)
 
@@ -246,6 +281,17 @@ def get_csg_adress(frame):
     adress_data = frame[7:14]
     adress_result, ertu_adress = get_adress_result(adress_data, 7)
     return ertu_adress
+
+def get_frame_info(frame):
+    control_data = frame[6]
+    adress_data = frame[7:14]
+    A3 = adress_data[6]
+    seq = A3 & 0xf0
+    afn = frame[14]
+    contro_result, result_str,dir, prm = get_control_code_str(control_data,0)
+    adress_result, ertu_adress = get_adress_result(adress_data, 7)
+
+    return dir, prm, seq, afn, ertu_adress
 
 def Analysic_csg_end_frame(frame, result_list, start_pos):
     cs = frame[-2]
@@ -705,6 +751,58 @@ def get_data_dinsty(dinsty):
     else:
         dinsty_str = "备用"
     return dinsty_str
+
+def Analysic_csg_custom_head_frame(frame, result_list, start_pos):
+    try:
+        dir = frame[2]
+        receive_time = frame[5:9]
+        head_point_start = frame[15]
+        head_point_end = frame[20:22]
+        head_point_port = frame[24:26]
+        ip = frame[26:30][::-1]
+        port = frame[30:32]
+        regesit_addr = frame[32:44]
+        logic_addr = frame[44:57]
+        regsit_time = frame[58:62]
+        process_label = frame[75]
+        begin_time = frame[76:80]
+
+        timestamp = frame_fun.hex_array_to_int(receive_time, False)
+        dt_object = datetime.fromtimestamp(timestamp)
+        # 将datetime对象格式化为可读字符串
+        receive_time_str = f"接收时间[{dt_object.strftime('%Y-%m-%d %H:%M:%S')}]"
+        head_point_str = f"前置节点[{head_point_start}:{frame_fun.hex_array_to_int(head_point_end, False)}]"
+        head_point_port_str = f"前置端口号[{frame_fun.hex_array_to_int(head_point_port, False)}]"
+        ip_str = f"终端IP[{frame_fun.prase_ip_str(ip)}:{frame_fun.prase_port(port)}]"
+        regesit_addr_str = f"注册地址[{frame_fun.ascii_to_str(regesit_addr)}]"
+        logic_addr_str = f"逻辑地址[{frame_fun.ascii_to_str(logic_addr)}]"
+
+        timestamp = frame_fun.hex_array_to_int(regsit_time, False)
+        dt_object = datetime.fromtimestamp(timestamp)
+        regsit_time_str = f"注册时间[{dt_object.strftime('%Y-%m-%d %H:%M:%S')}]"
+        process_label_str = f"处理标志[{'YES' if process_label == 1 else 'NO'}]"
+
+        timestamp = frame_fun.hex_array_to_int(begin_time, False)
+        if timestamp > 0:
+            dt_object = datetime.fromtimestamp(timestamp)
+            begin_time_str = f"开始时间[{dt_object.strftime('%Y-%m-%d %H:%M:%S')}]"
+        else:
+            begin_time_str = "开始时间[无]"
+
+        if dir & 0x01:
+            dir_str = "从终端接收报文"
+        else:
+            dir_str = "向终端接收报文"
+
+        restlt_str = f"{dir_str}:{receive_time_str} {regsit_time_str} {head_point_str} {ip_str} {head_point_port_str} {regesit_addr_str} {logic_addr_str} {process_label_str} {begin_time_str}"
+
+        print(restlt_str)
+
+        frame_fun.add_data(result_list, "内部规约", frame_fun.get_data_str_with_space(frame[:48]), restlt_str,[start_pos,start_pos + 84])
+    except Exception as e:
+        print(e)
+        CustomMessageBox("告警",'解析数据失败！')
+        return
 
 def Analysic_csg_ack_frame(frame, dir, prm, result_list,start_pos):
     data_segment = frame[16:-2]

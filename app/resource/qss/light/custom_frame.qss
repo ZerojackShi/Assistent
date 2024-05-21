@@ -6,7 +6,8 @@ QLabel {
 }
 QHeaderView {
     background-color: transparent;
-    border: 1px solid transparent;
+    /* border: 0px solid transparent; */
+    border: none;
     font-size: 13px;
 }
 QTreeWidget {
@@ -15,21 +16,21 @@ QTreeWidget {
 
     border-radius: 5px; /* 设置圆角半径 */
     background-color: transparent; /* 设置背景颜色 */
-    border: 1px solid rgba(0, 0, 0, 13);
+    border: none;
+    /* border: 0px solid rgba(0, 0, 0, 13); */
 }
 QHeaderView::section { 
-    background-color: transparent;
-    border-top: 1px solid transparent;
-    color: black;
+    /* background-color: transparent;           */
+    /* border-top: 0px solid transparent;*/
+    /* border-left: 0px solid transparent;*/
+    /* border-right: 0px solid transparent;*/
+    /* border: 0px solid transparent;*/
+    /* color: black;*/
 
-    border-top-left-radius: 5px; /* 左上角圆角半径 */
-    border-top-right-radius: 5px; /* 右上角圆角半径 */
-    border-bottom-left-radius: 0px; /* 左下角圆角半径，设置为0以保持直角 */
-    border-bottom-right-radius: 0px; /* 右下角圆角半径，设置为0以保持直角 */
-}
-QHeaderView {
-    background-color: transparent;
-    border: 1px solid transparent;
+    /* border-top-left-radius: 5px; /* 左上角圆角半径 */                        */
+    /* border-top-right-radius: 5px; /* 右上角圆角半径 */*/
+    /* border-bottom-left-radius: 5px; /* 左下角圆角半径，设置为0以保持直角 */*/
+    /* border-bottom-right-radius: 5px; /* 右下角圆角半径，设置为0以保持直角 */*/
 }
 ScrollArea {
     border: none;
@@ -37,4 +38,37 @@ ScrollArea {
 }
 MessageConfig {
     background-color: transparent;
+}
+QSplitter {
+    background-color: transparent;
+}
+QSplitter::handle {
+    background-color: transparent;
+}
+QSplitter::handle:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+QSplitter::handle:pressed {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+QSplitter::handle:horizontal {
+    width: 8px;
+    margin: -2px 0;
+}
+QSplitter::handle:vertical {
+    height: 8px;
+    margin: 0 -2px;
+}
+
+QSplitter::handle:vertical:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+QSplitter::handle:horizontal:pressed {
+    background-color: red;
+}
+QSplitter::handle:horizontal:hover {
+    background-color: green;
+}
+QSplitter::handle:vertical:pressed {
+    background-color: rgba(255, 255, 255, 0.12);
 }

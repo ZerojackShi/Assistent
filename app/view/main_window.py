@@ -105,7 +105,7 @@ class MainWindow(FluentWindow):
         self.addSubInterface(self.dataBaseView, FIF.ZOOM, t.dataBaseView, pos)
         self.addSubInterface(self.appmessage, FIF.MESSAGE, t.appmessage, pos)
         self.addSubInterface(self.problam, FIF.CHAT, t.problam, pos)
-        # self.addSubInterface(self.param_interface, FIF.SCROLL, t.param, pos) 
+        # self.addSubInterface(self.viewInterface, FIF.SCROLL, t.param, pos) 
 
         # add custom widget to bottom
         # self.navigationInterface.addWidget(
@@ -149,6 +149,7 @@ class MainWindow(FluentWindow):
     def resizeEvent(self, e):
         super().resizeEvent(e)
         self.splashScreen.resize(self.size())
+        print('mainwindow resize', self.size())
 
     def switchToSample(self, routeKey, index):
         """ switch to sample """

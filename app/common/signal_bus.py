@@ -2,6 +2,11 @@
 from PyQt5.QtCore import QObject, pyqtSignal,QSize
 from enum import Enum
 from ..common.commodule import CommType
+
+DIR_UP = 1
+DIR_DOWN = 2
+DIR_UNKNOW = 3
+
 class SignalBus(QObject):
     """ Signal bus """
 

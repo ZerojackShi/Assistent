@@ -42,7 +42,7 @@ def caculate_unknown_length(data_subitem_elem, data_segment, length_maap):
             vaule_data = data_segment[vaule[0] - vaule[1] : vaule[0]]
             value_element = vaule[2]
             result = parse_data_item(value_element, vaule_data, 0, False)
-            sub_value = frame_fun.get_sublength_caculate_base(result,text_part)
+            sub_value, index, subitem = frame_fun.get_sublength_caculate_base(result,text_part)
             # 使用正则表达式提取前面的数字
             match = re.match(r"(\d+)", sub_value)
 
@@ -406,7 +406,9 @@ def prase_simple_type_data(data_item_elem, data_segment,index, need_delete):
     if data_type in ("BCD","Bcd","bcd"):
          subitem_value = frame_fun.bcd_to_decimal(data_segment,decimal,need_delete,sign)
     elif data_type in ("BIN","Bin","bin"):
-         subitem_value = frame_fun.bin_to_decimal(data_segment,decimal,need_delete,sign)
+         subitem_value = frame_fun.bin_to_decimal(data_segment,decimal,need_delete,sign, True)
+    elif data_type in ("BIN_FF"):
+         subitem_value = frame_fun.bin_to_decimal(data_segment,decimal,need_delete,sign, False)
     elif data_type in ("ASCII","ascii"):
          subitem_value = frame_fun.ascii_to_str(data_segment)
     elif data_type == "PORT":
@@ -951,7 +953,7 @@ def Alalysis_read_frame(frame, result_list,indx):
     elif read_type == 6:
         block_num = frame[14] - 0x33
         frame_fun.add_data(data_list, "负荷记录块数", f"{frame[14]:02X}",f"负荷记录块数={block_num}",[indx+14,indx+15])
-        frame_fun.add_data(data_list, "给定时间", frame_fun.get_data_str_with_space(frame[15:-2]),frame_fun.parse_time_data(frame[15:-2],"YYMMDDhhmm",True),[indx+15,length + indx-2])
+        frame_fun.add_data(data_list, "给定时间", frame_fun.get_data_str_with_space(frame[15:-2]),frame_fun.parse_time_data(frame[15:-2],"mmhhDDMMYY",True),[indx+15,length + indx-2])
     elif read_type > 0:
         frame_fun.add_data(data_list, "液晶查看命令"," ".join(f"{b:02X}" for b in frame[14:-2]),"",[indx + 14,length + indx-2])
 

@@ -44,6 +44,7 @@ class ClientWorker(QThread):
     receive_data = pyqtSignal(QTcpSocket, bytes)
     data_sended = pyqtSignal(bytes)
     stopsingal = pyqtSignal()
+    send_with_replay = pyqtSignal(bytes, bytes, int)
 
     """Worker that executes tasks in a thread."""
     def __init__(self, socket: QTcpSocket, parent=None):
@@ -67,6 +68,7 @@ class ClientWorker(QThread):
     def send_data_to_client(self, data: bytes):
         if self.socket.state() == QAbstractSocket.SocketState.ConnectedState:
             self.socket.write(data)
+                
     def run(self):
         while self.runingstatus:
             # 在这里调用事件循环
@@ -194,7 +196,7 @@ class TcpServer(QTcpServer):
         self.clients.remove(client_socket)
         self.client_dic.pop(client_socket)
         self.tcpSocketChange.emit(self.clients)
-        signalBus.channel_connected.emit(CommType.TCP_SERVICE, worker)
+        signalBus.channel_disconnected.emit(CommType.TCP_SERVICE, worker)
     
     def get_socket_dic(self):
         return self.client_dic

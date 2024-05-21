@@ -33,6 +33,17 @@ class CustomMessageBox(QMessageBox):
 
 class FrameFun:
     @staticmethod
+    def get_hex_frame(text):
+        try:
+            hex_str = text.replace(' ', '')
+            # 去除换行符和空格
+            cleaned_string = hex_str.replace(' ', '').replace('\n', '')
+            # 将每两个字符转换为一个十六进制数
+            frame = [int(cleaned_string[i:i + 2], 16) for i in range(0, len(cleaned_string), 2)]
+            return frame
+        except ValueError:
+            return None
+    @staticmethod
     def add_data(data_list, frame, data, description, location,child_items=None):
         new_data = {"帧域": frame, "数据": data, "说明": description,"位置":location}
         if child_items is not None:
@@ -100,14 +111,16 @@ class FrameFun:
             return "-"+decimal_string
         return decimal_string
     @staticmethod
-    def bin_to_decimal(bcd_array, decimal_places, need_delete,sign):
+    def bin_to_decimal(bcd_array, decimal_places, need_delete,sign, judge_ff):
         # 将BCD数组转换为整数
         int_value = 0
         is_sign = False
         trans_array = bcd_array.copy()
         new_array = trans_array.copy()
-        if FrameFun.is_array_all_ffs(bcd_array):
-            return "无效数据"
+
+        if judge_ff:
+            if FrameFun.is_array_all_ffs(bcd_array):
+                return "无效数据"
 
         if need_delete:
             new_array = FrameFun.frame_delete_33H(trans_array)
@@ -226,6 +239,12 @@ class FrameFun:
         else:
             return FrameFun.get_data_str_reverser(data)
         
+    @staticmethod
+    def get_frame_list_from_str(input_text):
+        hex_str = input_text.replace(' ', '').replace('\n', '')
+        # 将每两个字符转换为一个十六进制数
+        frame = [int(hex_str[i:i + 2], 16) for i in range(0, len(hex_str), 2)]
+        return frame
     @staticmethod
     def extract_bits(start_bit, end_bit, value):
         # Mask to extract the desired bits

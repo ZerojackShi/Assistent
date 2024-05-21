@@ -36,7 +36,9 @@ class CustomDelegate(QtWidgets.QStyledItemDelegate):
         super().paint(painter, option, index)
 
 class CustomTreeWidget(QtWidgets.QTreeWidget):
-    custom_signal = QtCore.pyqtSignal(QtWidgets.QTreeWidgetItem)  # Define a custom signal
+    custom_header = QtCore.pyqtSignal(str)  # Define a custom signal
+    custom_signal = QtCore.pyqtSignal(QtWidgets.QTreeWidgetItem)
+
     def __init__(self):
         super().__init__()
         self.expend_status = True
@@ -120,6 +122,11 @@ class CustomTreeWidget(QtWidgets.QTreeWidget):
             data_value = item_data.get("数据", "")
             description = item_data.get("说明", "")
             position = item_data.get("位置")
+
+            if frame == "内部规约":
+                print(description)
+                self.custom_header.emit(description)
+                description = "参见窗口内部规约说明"
             column_texts = [frame, data_value, description]
 
             item = CustomTreeWidgetItem(parent_item, column_texts)
@@ -244,6 +251,7 @@ class Alalysic(QWidget):
         self.frame_len  = 0
         self.tools_window = None
         self.current_screen_number = 0xFF
+        self.custom_textinput = None
 
         self.__initWidget()
 
@@ -266,6 +274,27 @@ class Alalysic(QWidget):
         StyleSheet.HOME_INTERFACE.apply(self)
         self.reconnect_text_changed()
         self.tree_widget.custom_signal.connect(self.highlight_text)
+        self.tree_widget.custom_header.connect(self.display_custom_header)
+
+    def display_custom_header(self, text):
+        if self.custom_textinput is None:
+            self.custom_textinput = LineEdit()
+            self.set_custom_textinput_font_size(10)
+        
+        self.custom_textinput.setText(text)
+        self.custom_textinput.setReadOnly(True)
+        self.vBoxLayout.addWidget(self.input_text, 3)
+        self.vBoxLayout.addWidget(self.tree_widget, 6)
+        self.vBoxLayout.addWidget(self.custom_textinput, 1)
+    
+    def set_custom_textinput_font_size(self, size):
+        font = self.custom_textinput.font()
+        font.setPointSize(size)
+        self.custom_textinput.setFont(font)
+
+    def change_layout(self):
+        self.vBoxLayout.addWidget(self.input_text, 3)
+        self.vBoxLayout.addWidget(self.tree_widget, 7)
 
     def highlight_text(self, item):
         self.disconnect_text_changed()
@@ -318,8 +347,15 @@ class Alalysic(QWidget):
         # 将连接状态设置为 True
         self.is_connected = True
 
+    def remove_layout(self):
+        if self.custom_textinput is not None:
+            self.custom_textinput.deleteLater()
+            self.vBoxLayout.removeWidget(self.custom_textinput)
+            self.custom_textinput =None
+
     def display_tree(self):
         self.tree_widget.clear()
+        self.remove_layout()
         input_text = self.input_text.toPlainText()
         if input_text == '':
             return
