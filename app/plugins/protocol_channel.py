@@ -5,191 +5,171 @@ import binascii,threading,queue
 from .frame_csg import *
 import asyncio
 
-class AsyncWorker(QThread):
-    finished = pyqtSignal(object)  # Signal to emit when the task is finished
-
-    def __init__(self, channel, data, parent=None):
-        super().__init__(parent)
-        self._future = None
+class AsyncCommunicator(QObject):
+    def __init__(self, channel,callback):
+        super().__init__()
+        self.callback = callback
         self.channel = channel
-        self.data = data
-        self.init_slot()
+        self.receive_event = asyncio.Event()
+        self.received_data = None
+        self.stop_flag = False
+        self.afn = 0
+        self.dir = 0
+        self.prm = 0
+        self.seq = 0
+        self.adress = None
+
+    async def send_and_receive(self, index, send_signal, timeout=10):
+        try:
+            print("send data", datetime.now())
+            await self.send_signal(send_signal)
+            received_data = await self.receive_signal(timeout)
+            if self.callback and received_data is not None:
+                print("receive data", datetime.now())
+                self.callback(index, received_data)
+        except asyncio.TimeoutError:
+            if not self.stop_flag:
+                print("Operation timed out")
+        except asyncio.CancelledError:
+            print("send_and_receive Operation cancelled")
+
+    async def send_signal(self, frame):
+        frame_bytearray = bytearray(frame)
+        message = bytes(frame_bytearray)
+        print("send_message", frame, message)
+        self.dir, self.prm, self.seq, self.afn, self.adress = get_frame_info(frame)
+        print("send dir, prm, seq, afn, adress", self.dir, self.prm,self.seq,self.afn, self.adress)
+        if self.channel is None:
+            return
+        if isinstance(self.channel, SerialPortThread):
+            self.channel.data_sended.emit(message)
+        elif isinstance(self.channel, TcpClient):
+            self.channel.data_sended.emit(message)
+        elif isinstance(self.channel, ClientWorker):
+            self.channel.data_sended.emit(message)
+
+    async def receive_signal(self, timeout):
+        print("Waiting to receive signal...")
+        try:
+            await asyncio.wait_for(self._wait_for_event_or_stop(), timeout)
+            if self.stop_flag:
+                print("Operation cancelled")
+                self.received_data = None
+                raise asyncio.CancelledError
+            return self.received_data
+        except asyncio.TimeoutError:
+            raise asyncio.TimeoutError
+        finally:
+            self.receive_event.clear()
+            print("quit receive signal...")
+
+    async def _wait_for_event_or_stop(self):
+        while not self.receive_event.is_set():
+            if self.stop_flag:
+                return
+            await asyncio.sleep(0.01)
+
+    def on_receive_data(self, data):
+        rec_frame = frame_fun.bytes_to_decimal_list(data)
+        if rec_frame is None:
+            return
+        dir, prm, seq, afn, adress = get_frame_info(rec_frame)
+        print("reveice dir, prm, seq, afn, adress", dir, prm, seq, afn, adress, datetime.now())
+        if dir == 1 and prm == 0 and self.seq == seq and self.afn == afn:
+            self.received_data = rec_frame
+            self.receive_event.set()
+
+    def stop(self):
+        self.stop_flag = True
+        self.receive_event.set()  # Unblock any waiting coroutines
+        print("AsyncCommunicator stopped.")
 
     def init_slot(self):
         if self.channel is not None:
+            print("init_slot")
             if isinstance(self.channel, SerialPortThread):
-                self.channel.data_received.connect(self.receive_message_process)
-            if isinstance(self.channel, TcpClient):
-                self.channel.data_received.connect(self.receive_message_process)
-            if isinstance(self.channel, ClientWorker):
-                self.channel.receive_data.connect(self.receive_message_process)
-
-    def run(self):
-        # Run the asynchronous operation in the thread's event loop
-        asyncio.get_event_loop().run_until_complete(self._async_operation())
-        self.finished.emit(self.result)
-
-    async def _async_operation(self):
-        # Placeholder for your asynchronous operation
-        self.result = await self.some_async_function()
-
-    def start(self):
-        super().start()
-
-    def wait(self):
-        self.finished.connect(lambda result: self.quit())
-        self.wait()
-        return self.result
+                self.channel.data_received.connect(self.on_receive_data)
+            elif isinstance(self.channel, TcpClient):
+                self.channel.data_received.connect(self.on_receive_data)
+            elif isinstance(self.channel, ClientWorker):
+                self.channel.receive_data.connect(self.on_receive_data)
     
-    async def some_async_function(self):
-        self.send_message(self.channel, "HEX", self.data)
-        return await self.receive_message_process()
+    def close_slot(self):
+        if self.channel is not None:
+            print("close_slot")
+            if isinstance(self.channel, SerialPortThread):
+                self.channel.data_received.disconnect(self.on_receive_data)
+            elif isinstance(self.channel, TcpClient):
+                self.channel.data_received.disconnect(self.on_receive_data)
+            elif isinstance(self.channel, ClientWorker):
+                self.channel.receive_data.disconnect(self.on_receive_data)
 
-        
-    def get_modify_text(self, type, input_text:str):
-        if type == 'ASCII':
-            return input_text
-        formatted_frame = ''
-        hex_str = input_text.replace(' ', '').replace('\n', '')
-        for i in range(0, len(hex_str), 2):
-            formatted_frame += hex_str[i:i + 2] + ' '
-        return formatted_frame.upper()
-    def is_valid_hex_string(self, input_string):
-        try:
-            bytes.fromhex(input_string)
-            return True
-        except ValueError:
-            return False    
-    def get_message_by_type(self, type, text):
-        try:
-            formatted_frame = self.get_modify_text(type, text)
-            if type== 'HEX':
-                if self.is_valid_hex_string(text):
-                    send_data = bytes.fromhex(text)
-                    return send_data,formatted_frame
-            elif type== 'ASCII':
-                if isinstance(text, bytes):
-                    send_data = text,text
-                elif isinstance(text, str):
-                    hex_message = binascii.hexlify(text.encode('ascii')).decode('ascii')
-                    if self.is_valid_hex_string(hex_message):
-                        send_data = bytes.fromhex(hex_message)
-                        return send_data,text
-                    
-            return None,None
-        except Exception as e:
-            print(e)
-            return None,None 
-    async def send_message(self, channel, type, text):
-        message, formatted_frame = self.get_message_by_type(type, text)
-        if message is None:
-            return
-        print("send_message", message, formatted_frame)
-        if isinstance(channel, SerialPortThread):
-            channel.data_sended.emit(message)
-        if isinstance(channel, TcpClient):
-            channel.data_sended.emit(message)
-        if isinstance(channel, ClientWorker):
-            channel.data_sended.emit(message)
+class WorkerThread(QThread):
+    result_signal = pyqtSignal(object)
 
-    async def receive_message_process(self, data):
-        print("receive_message_process", data)
-
-class CsgProtocolChannel(QObject):
-    done = pyqtSignal(bytes)
-    def __init__(self, channel, timeout, parent=None):
-        super().__init__()
+    def __init__(self, channel, timeout, callback=None, parent=None):
+        super().__init__(parent)
+        self.communicator = AsyncCommunicator(channel, callback)
         self.channel = channel
         self.timeout = timeout
-        self.received_data = None
-        self.init_slot()
-
-    def init_slot(self):
-        if self.channel is not None:
-            if isinstance(self.channel, SerialPortThread):
-                self.channel.data_received.connect(self.receive_message_process)
-            if isinstance(self.channel, TcpClient):
-                self.channel.data_received.connect(self.receive_message_process)
-            if isinstance(self.channel, ClientWorker):
-                self.channel.receive_data.connect(self.receive_message_process)
-
-    async def send_data_and_wait_for_reply(self, send_list, timeout=10):
-        # 发送数据
-        for data in send_list:
-            await self.send_message(self.channel, "HEX", data)
-        # 等待回复
-        try:
-            return await asyncio.wait_for(self.receive_message_process(), timeout=timeout)
-        except asyncio.TimeoutError:
-            print("Timeout occurred")
-            return None
-        
-    def get_modify_text(self, type, input_text:str):
-        if type == 'ASCII':
-            return input_text
-        formatted_frame = ''
-        hex_str = input_text.replace(' ', '').replace('\n', '')
-        for i in range(0, len(hex_str), 2):
-            formatted_frame += hex_str[i:i + 2] + ' '
-        return formatted_frame.upper()
-    def is_valid_hex_string(self, input_string):
-        try:
-            bytes.fromhex(input_string)
-            return True
-        except ValueError:
-            return False    
-    def get_message_by_type(self, type, text):
-        try:
-            formatted_frame = self.get_modify_text(type, text)
-            if type== 'HEX':
-                if self.is_valid_hex_string(text):
-                    send_data = bytes.fromhex(text)
-                    return send_data,formatted_frame
-            elif type== 'ASCII':
-                if isinstance(text, bytes):
-                    send_data = text,text
-                elif isinstance(text, str):
-                    hex_message = binascii.hexlify(text.encode('ascii')).decode('ascii')
-                    if self.is_valid_hex_string(hex_message):
-                        send_data = bytes.fromhex(hex_message)
-                        return send_data,text
-                    
-            return None,None
-        except Exception as e:
-            print(e)
-            return None,None 
-    def send_message(self, type, text):
-        message, formatted_frame = self.get_message_by_type(type, text)
-        if message is None:
-            return
-        print("send_message", message, formatted_frame)
-        channel = self.channel
-        if isinstance(channel, SerialPortThread):
-            channel.data_sended.emit(message)
-        if isinstance(channel, TcpClient):
-            channel.data_sended.emit(message)
-        if isinstance(channel, ClientWorker):
-            channel.data_sended.emit(message)
-
-    def receive_message_process(self, data):
-        print("receive_message_process", data)
-        self.done.emit(data)
-                
-
-class SendReceiveThread(QThread):
-    def __init__(self, channel, timeout=5000):
-        super().__init__()
-        self.worker = CsgProtocolChannel(channel, timeout)
-        self.worker.moveToThread(self)
-        self.worker.done.connect(self.on_done)
-
-    def send_and_receive(self, message):
-        self.start()
-        self.worker.send_message("HEX", message)
-
-    def on_done(self, message):
-        print("on_done", message)
-        self.exit()
+        self.callback = callback
+        self.loop = None
+        self.tasks = []
+        self.send_data_list = []
+        self.stop_flag = False
 
     def run(self):
-        self.exec_()  # 开始事件循环
+        self.loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(self.loop)
+        self.communicator.init_slot()
+        try:
+            self.loop.run_until_complete(self.process_send_list())
+        except Exception as e:
+            print(f"Exception in worker thread: {e}")
+        finally:
+            self.cleanup_tasks()
+            if self.loop.is_running():
+                self.loop.stop()
+            self.loop.close()
+            self.communicator.close_slot()
+
+
+    def stop(self):
+        self.stop_flag = True
+        self.communicator.stop()
+        if self.loop and self.loop.is_running():
+            self.loop.call_soon_threadsafe(self.loop.stop)
+        self.wait()
+        self.quit()
+        print("Worker thread stopped.")
+
+    def __del__(self):
+        if not self.loop.is_closed():
+            self.cleanup_tasks()
+            if self.loop.is_running():
+                self.loop.stop()
+            self.loop.close()
+        print("Worker thread destroyed.")
+
+    def cleanup_tasks(self):
+        if self.loop and not self.loop.is_closed():
+            pending = [task for task in asyncio.all_tasks(loop=self.loop) if not task.done()]
+            for task in pending:
+                task.cancel()
+            if pending:
+                try:
+                    self.loop.run_until_complete(asyncio.gather(*pending, return_exceptions=True))
+                except asyncio.CancelledError:
+                    pass  # Ignore exceptions due to cancellation
+
+    def set_send_data(self, data_list):
+        self.send_data_list = data_list
+
+    async def process_send_list(self):
+        for i, send_data in enumerate(self.send_data_list):
+            if self.stop_flag:
+                break
+            try:
+                await self.communicator.send_and_receive(i, send_data, self.timeout)
+            except asyncio.CancelledError:
+                break        

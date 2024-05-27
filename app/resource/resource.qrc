@@ -169,6 +169,7 @@
         <file>qss/dark/state_tool_tip.qss</file>
         <file>qss/dark/custom_frame.qss</file>
         <file>qss/dark/export.qss</file>
+        <file>qss/dark/gridbox.qss</file>
 
         <file>qss/light/gallery_interface.qss</file>
         <file>qss/light/home_interface.qss</file>
@@ -183,6 +184,7 @@
         <file>qss/light/state_tool_tip.qss</file>
         <file>qss/light/custom_frame.qss</file>
         <file>qss/light/export.qss</file>
+        <file>qss/light/gridbox.qss</file>
 
         <file>i18n/gallery.zh_CN.qm</file>
         <file>i18n/gallery.zh_HK.qm</file>

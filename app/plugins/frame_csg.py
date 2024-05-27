@@ -4,7 +4,7 @@ from ..plugins.frame_fun import FrameFun as frame_fun
 from ..plugins.frame_fun import CustomMessageBox
 from ..plugins.protocol import PraseFrameData, FRAME_645
 from PyQt5.QtWidgets import QMessageBox
-import re
+import re,threading
 from datetime import datetime, timedelta
 from enum import Enum
 ITEM_ACK_NAK=0xE0000000
@@ -28,6 +28,17 @@ class FramePos(Enum):
 ACK = 0x00        #全部确认
 NAK = 0x01        #全部否认
 
+# 全局变量
+global_var = 0
+# 线程锁
+lock = threading.Lock()
+def get_csg_pseq():
+    global global_var
+    with lock:
+        current_value = global_var
+        global_var = (global_var + 1) % 16
+        return current_value
+    
 def init_frame(ctrl, afn, adress, msa, seq, frame):
     frame[FramePos.POS_START0.value] = 0x68
     frame[FramePos.POS_START1.value] = 0x68
@@ -36,6 +47,16 @@ def init_frame(ctrl, afn, adress, msa, seq, frame):
     frame[FramePos.POS_MSA.value] = msa
     frame[FramePos.POS_AFN.value] = afn
     frame[FramePos.POS_SEQ.value] = seq
+    
+def get_frame_seq(tpv, fir, fin, con):
+    value = 0
+    value |= (tpv & 0x01) << 7  # TpV at D7
+    value |= (fir & 0x01) << 6  # FIR at D6
+    value |= (fin & 0x01) << 5  # FIN at D5
+    value |= (con & 0x01) << 4  # CON at D4
+    value |= get_csg_pseq() & 0x0F   # PSEQ/RSE at D3-D0
+    return value
+
 def get_frame(point_arrray:list, itemData:dict, frame:list=None):
     if frame is None:
         frame = bytearray()
@@ -268,7 +289,7 @@ def Analysic_csg_head_frame(frame,result_list,start_pos):
     control_data = frame[6]
     length = length_data[1] << 8 | length_data[0]
     adress_data = frame[7:14]
-    frame_fun.add_data(result_list, "起始符", f"{frame[0]:02X}", "起始符",[start_pos + 0,start_pos + 1])
+    frame_fun.add_data(result_list, "起始符", f"{frame[0]:02X}", "起始符", [start_pos + 0,start_pos + 1])
     frame_fun.add_data(result_list,"长度", frame_fun.get_data_str_with_space(length_data), f"长度={length}，总长度={length + 8}(总长度=长度+8)",[start_pos + 1,start_pos + 5])
     frame_fun.add_data(result_list,"起始符", f"{frame[5]:02X}", "起始符",[start_pos + 5,start_pos + 6])
     contro_result, result_str,dir, prm = get_control_code_str(control_data,start_pos)
@@ -286,8 +307,8 @@ def get_frame_info(frame):
     control_data = frame[6]
     adress_data = frame[7:14]
     A3 = adress_data[6]
-    seq = A3 & 0xf0
-    afn = frame[14]
+    afn = frame[FramePos.POS_AFN.value]
+    seq = frame[FramePos.POS_SEQ.value] & 0x0f
     contro_result, result_str,dir, prm = get_control_code_str(control_data,0)
     adress_result, ertu_adress = get_adress_result(adress_data, 7)
 
@@ -501,7 +522,7 @@ def get_afn_and_seq_result(data,index,result_list):
     frame_fun.add_data(seq_result, "D7帧时间标签有效位TpV", f"{tpv}", Tpv_str, [index + 1, index + 2])
     frame_fun.add_data(seq_result, "D6首帧标志FIR", f"{fir}", fir_str, [index + 1, index + 2])
     frame_fun.add_data(seq_result, "D5首帧标志FIN", f"{fin}", fin_str, [index + 1, index + 2])
-    frame_fun.add_data(seq_result, "D4首帧标志FIN", f"{con}", con_str, [index + 1, index + 2])
+    frame_fun.add_data(seq_result, "D4首帧标志CON", f"{con}", con_str, [index + 1, index + 2])
     frame_fun.add_data(seq_result, "D3~D0帧内序号", f"{pseq}", pseq_str, [index + 1, index + 2])
 
     frame_fun.add_data(result_list, "功能码AFN", f"{afn:02X}", afn_str, [index, index + 1])

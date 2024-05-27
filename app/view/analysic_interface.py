@@ -16,6 +16,7 @@ from ..common.signal_bus import signalBus
 import sys,os,time,copy
 from PyQt5.QtSvg import QSvgGenerator
 from functools import partial
+from ..plugins.frame_cco import FrameCCO
 
 class CustomTreeWidgetItem(QtWidgets.QTreeWidgetItem):
     def __init__(self, parent, text_list):
@@ -394,6 +395,10 @@ class Alalysic(QWidget):
                 framedis.Analysis_csg_frame_by_afn(frame,show_data,0)
             elif meter_task.is_meter_task(frame):
                 meter_task.analysic_meter_task(frame,show_data, 0)
+            elif FrameCCO.is_cco_frame(frame):
+                protocol.frame_fun.globalprotocol = "csg16"
+                FrameCCO.Analysis_cco_frame_by_afn(frame,show_data,0)
+                                
             self.tree_widget.create_tree(None, show_data, self.item_position)
             self.tree_widget.expandAll()
             self.reconnect_text_changed()

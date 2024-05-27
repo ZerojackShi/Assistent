@@ -476,6 +476,8 @@ class NormalSendReceive(BaseSendReceive):
     def slot_init(self):
         self.basesend.sendButton.clicked.connect(self.send_message)
         self.basesend.type_changed.connect(self.set_message_type)
+        signalBus.sendmessage.connect(self.global_send_message)
+
         if isinstance(self.chennel, SerialPortThread):
             self.chennel.data_received.connect(self.receive_message_process)
         if isinstance(self.chennel, TcpClient):
@@ -671,6 +673,7 @@ class NormalSendReceive(BaseSendReceive):
             return frame
         except ValueError:
             return None
+        
     def send_message(self):
         channel = self.chennel
         message, formatted_frame = self.get_message_by_type()
@@ -678,13 +681,19 @@ class NormalSendReceive(BaseSendReceive):
             return
         if isinstance(channel, SerialPortThread):
             channel.data_sended.emit(message)
-            self.sendandreceive.add_message(DIR_DOWN, formatted_frame)
+            # self.sendandreceive.add_message(DIR_DOWN, formatted_frame)
         if isinstance(channel, TcpClient):
             channel.data_sended.emit(message)
-            self.sendandreceive.add_message(DIR_DOWN, formatted_frame)
+            # self.sendandreceive.add_message(DIR_DOWN, formatted_frame)
         if isinstance(channel, ClientWorker):
             channel.data_sended.emit(message)
-            self.sendandreceive.add_message(DIR_DOWN, formatted_frame)
+            # self.sendandreceive.add_message(DIR_DOWN, formatted_frame)
+
+    def global_send_message(self, channel, data):
+        frame = frame_fun.bytes_to_decimal_list(data)
+        format_string = self.get_modify_text(frame_fun.get_data_str_order(frame))
+        self.sendandreceive.add_message(DIR_DOWN, format_string)
+    
     def resizeEvent(self, a0: QResizeEvent | None) -> None:
         return super().resizeEvent(a0)
     
@@ -886,10 +895,6 @@ class TabInterface(QWidget):
         self.tabView = QWidget(self)
 
         self.hBoxLayout = QHBoxLayout(self)
-        self.vBoxLayout = QVBoxLayout(self.tabView)
-        self.label = QLabel("请前往设置页面连接...")
-        self.vBoxLayout.addWidget(self.label)
-        self.label.setAlignment(Qt.AlignCenter)
         self.__initWidget()
 
     def __initWidget(self):
@@ -914,11 +919,15 @@ class TabInterface(QWidget):
 
     def initLayout(self):
         self.tabBar.setTabMaximumWidth(200)
+
+        self.vBoxLayout = QVBoxLayout(self.tabView)
         self.hBoxLayout.addWidget(self.tabView)
-
-
         self.vBoxLayout.addWidget(self.tabBar)
         self.vBoxLayout.addWidget(self.stackedWidget)
+        self.label = QLabel("请前往设置页面连接...")
+        self.label.setAlignment(Qt.AlignCenter)
+        self.vBoxLayout.addWidget(self.label)
+
         self.vBoxLayout.setContentsMargins(0, 0, 0, 0)
 
     def addSubInterface(self, widget: Type[BaseSendReceive], objectName, text, icon):
@@ -962,74 +971,91 @@ class TabInterface(QWidget):
         self.stackedWidget.removeWidget(widget)
         self.tabBar.removeTab(index)
         widget.deleteLater()
+
     def removeTab(self, index):
-        item = self.tabBar.tabItem(index)
-        widget = self.findChild(BaseSendReceive, item.routeKey())
-        self.stackedWidget.removeWidget(widget)
-        self.tabBar.removeTab(index)
-        widget.deleteLater()
-        self.disconnect_channel(widget.chennel)
-        self.widget_dict.pop(item.text())
+        try:
+            item = self.tabBar.tabItem(index)
+            widget = self.findChild(BaseSendReceive, item.routeKey())
+            self.disconnect_channel(widget.chennel)
+            self.stackedWidget.removeWidget(widget)
+            self.tabBar.removeTab(index)
+            widget.deleteLater()
+            self.widget_dict.pop(item.text())
+        except Exception as e:
+            return 
+
+        count = self.tabBar.count()
+        if count == 0:
+            self.label = QLabel("请前往设置页面连接...")
+            self.vBoxLayout.addWidget(self.label)
+            self.label.setAlignment(Qt.AlignCenter|Qt.AlignTop)
 
     def onChannelConnected(self, type, channel):
-        """连接成功后，将channel添加到tab栏上"""
-        if self.label is not None:
-            self.vBoxLayout.removeWidget(self.label)
-            self.label.deleteLater()
-            self.label = None
-        text = self.get_title_name(channel)
-        if text in self.widget_dict:
-            index, last_text, last_send = self.removeTabByName(text)
-        else:
-            index = None
-        if type != CommType.MQTT:
-            widget = NormalSendReceive(text, channel, self)
-        else:
-            widget = MqttSendReceive(text, channel, self)
-        if type == CommType.SERIAL:
-            if index is None:
-                self.addSubInterface(widget, text, text, ":/gallery/images/serial_connect.png")
-                self.tabCount += 1
+        try:
+            """连接成功后，将channel添加到tab栏上"""
+            if self.label is not None:
+                self.vBoxLayout.removeWidget(self.label)
+                self.label.deleteLater()
+                self.label = None
+            text = self.get_title_name(channel)
+            if text in self.widget_dict:
+                index, last_text, last_send = self.removeTabByName(text)
             else:
-                self.insertSubInterface(index, widget, text, text, ":/gallery/images/serial_connect.png")
-                widget.set_last_message(last_text)
-                widget.set_last_send_text(last_send)
-        elif type == CommType.TCP_CLIENT:
-            if index is None:
-                self.addSubInterface(widget, text, text, ':/gallery/images/tcp_connect.png')
-                self.tabCount += 1
+                index = None
+            if type != CommType.MQTT:
+                widget = NormalSendReceive(text, channel, self)
             else:
-                self.insertSubInterface(index, widget, text, text, ':/gallery/images/tcp_connect.png')
-                widget.set_last_message(last_text)
-                widget.set_last_send_text(last_send)
-        elif type == CommType.TCP_SERVICE:
-            if index is None:
-                self.addSubInterface(widget, text, text, ':/gallery/images/tcp_connect.png')
-                self.tabCount += 1
-            else:
-                self.insertSubInterface(index, widget, text, text, ':/gallery/images/tcp_connect.png')
-                widget.set_last_message(last_text)
-                widget.set_last_send_text(last_send)
-        elif type == CommType.MQTT:
-            if index is None:
-                self.addSubInterface(widget, text, text, ':/gallery/images/mqtt_connect.png')
-                self.tabCount += 1
-            else:
-                self.insertSubInterface(index, widget, text, text, ':/gallery/images/mqtt_connect.png')
-                widget.set_last_message(last_text)
-                widget.set_last_send_text(last_send)
-        
-        widget.set_info_to_log("online")
+                widget = MqttSendReceive(text, channel, self)
+            if type == CommType.SERIAL:
+                if index is None:
+                    self.addSubInterface(widget, text, text, ":/gallery/images/serial_connect.png")
+                    self.tabCount += 1
+                else:
+                    self.insertSubInterface(index, widget, text, text, ":/gallery/images/serial_connect.png")
+                    widget.set_last_message(last_text)
+                    widget.set_last_send_text(last_send)
+            elif type == CommType.TCP_CLIENT:
+                if index is None:
+                    self.addSubInterface(widget, text, text, ':/gallery/images/tcp_connect.png')
+                    self.tabCount += 1
+                else:
+                    self.insertSubInterface(index, widget, text, text, ':/gallery/images/tcp_connect.png')
+                    widget.set_last_message(last_text)
+                    widget.set_last_send_text(last_send)
+            elif type == CommType.TCP_SERVICE:
+                if index is None:
+                    self.addSubInterface(widget, text, text, ':/gallery/images/tcp_connect.png')
+                    self.tabCount += 1
+                else:
+                    self.insertSubInterface(index, widget, text, text, ':/gallery/images/tcp_connect.png')
+                    widget.set_last_message(last_text)
+                    widget.set_last_send_text(last_send)
+            elif type == CommType.MQTT:
+                if index is None:
+                    self.addSubInterface(widget, text, text, ':/gallery/images/mqtt_connect.png')
+                    self.tabCount += 1
+                else:
+                    self.insertSubInterface(index, widget, text, text, ':/gallery/images/mqtt_connect.png')
+                    widget.set_last_message(last_text)
+                    widget.set_last_send_text(last_send)
+            
+            widget.set_info_to_log("online")
+        except Exception as e:
+            pass
 
     def disconnect_channel(self, channel):
-        if isinstance(channel, SerialPortThread):
-            channel.stopsingal.emit()
-        elif isinstance(channel, TcpClient):
-            channel.stopsingal.emit()
-        elif isinstance(channel, ClientWorker):
-            channel.stopsingal.emit() 
-        elif isinstance(channel, MQTTClientThread):
-            channel.stopsingal.emit()       
+        try:
+            if isinstance(channel, SerialPortThread):
+                channel.stopsingal.emit()
+            elif isinstance(channel, TcpClient):
+                channel.stopsingal.emit()
+            elif isinstance(channel, ClientWorker):
+                channel.stopsingal.emit() 
+            elif isinstance(channel, MQTTClientThread):
+                channel.stopsingal.emit()      
+        except Exception as e:
+            pass
+
     def get_title_name(self, channel):
         if isinstance(channel, SerialPortThread):
             text = channel.port_name + ':' + str(channel.baud_rate)

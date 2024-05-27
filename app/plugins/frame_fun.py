@@ -5,10 +5,9 @@ from lxml import etree as ET
 from PyQt5.QtWidgets import QMessageBox,QDialogButtonBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt,pyqtSlot,QDateTime,QDate,QTime
-import re
-from ..common.config import config_645, config_csg13,log_config
+import re,binascii
+from ..common.config import config_645, config_csg13,log_config, config_csg16
 from qfluentwidgets import InfoBarIcon
-import traceback,sys
 
 class CustomMessageBox(QMessageBox):
     def __init__(self, title, message, parent=None):
@@ -32,6 +31,28 @@ class CustomMessageBox(QMessageBox):
             print("User clicked Cancel or closed the dialog")
 
 class FrameFun:
+
+    @staticmethod
+    def bytes_to_decimal_list(byte_data):
+        try:
+            return list(byte_data)
+        except Exception as e:
+            print(f"Error converting bytes to decimal list: {e}")
+            return None
+
+    @staticmethod
+    def get_frame_from_bytes(data):
+        try:
+            return binascii.hexlify(data).decode('utf-8')
+        except UnicodeDecodeError as e:
+            # 如果解码失败，你可以选择其他解码方式
+            try:
+                frame = data.hex()
+                return frame
+            except Exception as e:
+                print(f"Error decoding frame: {e}")
+                return None
+
     @staticmethod
     def get_hex_frame(text):
         try:
@@ -70,6 +91,37 @@ class FrameFun:
         bcd_byte = (tens_digit << 4) | ones_digit
 
         return bcd_byte
+    @staticmethod
+    def set_bit_value(bitstring, bitpos):
+        """
+        Set the bit at the specified position to 1.
+
+        :param bitstring: The bitstring (as a list of 32 integers, each 0-255) to modify.
+        :param bitpos: The position of the bit to set.
+        """
+        if bitpos >= 256:  # 32 bytes * 8 bits per byte
+            return
+
+        byte_no = bitpos // 8
+        bitpos = bitpos % 8
+
+        bitstring[byte_no] |= (1 << bitpos)
+
+    @staticmethod
+    def clr_bit_value(bitstring, bitpos):
+        """
+        Clear the bit at the specified position to 0.
+
+        :param bitstring: The bitstring (as a list of 32 integers, each 0-255) to modify.
+        :param bitpos: The position of the bit to clear.
+        """
+        if bitpos >= 256:  # 32 bytes * 8 bits per byte
+            return
+
+        byte_no = bitpos // 8
+        bitpos = bitpos % 8
+
+        bitstring[byte_no] &= ~(1 << bitpos)
     
     @staticmethod
     def is_array_all_ffs(arr):
@@ -554,6 +606,15 @@ class FrameFun:
                     return config_csg13.get_item(data_item_id.lower(), find_protocol, region, dir)
                 else:
                     return config_csg13.get_item(data_item_id.upper(), find_protocol, region, dir)
+        elif "CSG16" in find_protocol:
+            itemconfig = config_csg16.get_item(data_item_id, find_protocol, region)
+            if itemconfig is not None:
+                return itemconfig
+            else:
+                if data_item_id.isupper():
+                    return config_csg16.get_item(data_item_id.lower(), find_protocol, region, dir)
+                else:
+                    return config_csg16.get_item(data_item_id.upper(), find_protocol, region, dir)
         else:
             return None
     @staticmethod
@@ -578,6 +639,15 @@ class FrameFun:
                     return config_csg13.get_item(template.lower(), find_protocol, region)
                 else:
                     return config_csg13.get_item(template.upper(), find_protocol, region)
+        elif "CSG16" in find_protocol:
+            itemconfig = config_csg16.get_item(template, find_protocol, region)
+            if itemconfig is not None:
+                return itemconfig
+            else:
+                if template.isupper():
+                    return config_csg16.get_item(template.lower(), find_protocol, region)
+                else:
+                    return config_csg16.get_item(template.upper(), find_protocol, region)
         else:
             return None
             

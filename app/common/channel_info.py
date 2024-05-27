@@ -37,7 +37,7 @@ class Channel_info(QObject):
         print("Channel_info: 收到 channel_disconnected 信号")
         channel_name = self.get_title_name(channel)
         for key in list(self.all_channel.keys()):
-            if self.all_channel[key][1] == channel:
+            if self.all_channel[key][1] == channel or self.all_channel[key][2] == channel_name:
                 del self.all_channel[key]
                 break
 

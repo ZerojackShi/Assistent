@@ -1,10 +1,10 @@
-from PyQt5.QtCore import Qt, QEasingCurve,pyqtSignal,QSize,QDate,QTime,QDateTime,QTimer,QEvent,QRectF,QCoreApplication
+from PyQt5.QtCore import Qt, QEasingCurve,pyqtSignal,pyqtSlot,QSize,QDate,QTime,QDateTime,QTimer,QEvent,QRectF,QCoreApplication,QMetaObject,Q_ARG,QByteArray
 from PyQt5.QtWidgets import (QWidget, QStackedWidget, QVBoxLayout, QLabel, QHBoxLayout, QFrame, QButtonGroup,
                              QAbstractItemView, QTableWidgetItem,QHeaderView,QToolTip,QSplitter,QApplication,QSplitterHandle,
-                             QAction,QStyledItemDelegate,QGridLayout,QSizePolicy)
+                             QAction,QStyledItemDelegate,QGridLayout,QSizePolicy,QFormLayout,QMenu)
 from qfluentwidgets import (Pivot, qrouter, SegmentedWidget, InfoBar, InfoBarPosition, ComboBox,
                             RadioButton, ToolButton, ToolTip,LineEdit,SwitchButton,PrimaryPushButton,PlainTextEdit,
-                            RoundMenu,TableWidget,CheckBox,ToolTipFilter,ScrollArea)
+                            RoundMenu,TableWidget,CheckBox,ToolTipFilter,ScrollArea,menu, Action)
 from PyQt5.QtGui import QFont, QResizeEvent,QPainter,QCursor,QBrush
 from .gallery_interface import GalleryInterface
 from ..common.translator import Translator
@@ -18,7 +18,7 @@ from .view_interface import Frame
 from qfluentwidgets import FluentIcon as FIF
 from ..components.Splitter import Splitter
 from ..components.messageBox import Comwidget    
-from ..plugins.protocol_channel import CsgProtocolChannel,AsyncWorker,SendReceiveThread
+from ..plugins.protocol_channel import WorkerThread,AsyncCommunicator
 import string
 
 class CheckableHeader(QFrame):
@@ -90,6 +90,9 @@ class BaseTaskTable(QFrame):
 
         self.addHeaderRow()
 
+        self.table.setContextMenuPolicy(Qt.CustomContextMenu)
+        self.table.customContextMenuRequested.connect(self.show_context_menu)
+
     def addHeaderRow(self):
         self.table.insertRow(0)
 
@@ -111,11 +114,11 @@ class BaseTaskTable(QFrame):
         self.table.cellClicked.connect(self.handleCellClick)
         self.table.setEditTriggers(QAbstractItemView.DoubleClicked | QAbstractItemView.SelectedClicked)
         self.table.itemChanged.connect(self.item_change)
-        self.table.cellChanged.connect(self.cell_change)
 
     def add_table(self, task_list):
         task_id = task_list[0]
-        if task_id != '' and (task_id in self.task_list):
+        task_id = int(task_id)
+        if task_id != 0xFF and (task_id in self.task_list):
             row = self.task_list[task_id]
         else:
             rows = self.table.rowCount()
@@ -129,7 +132,7 @@ class BaseTaskTable(QFrame):
                 for row in range(rows):
                     item = self.table.item(row, 1)
                     if item is None or item.text() == "":
-                        if task_id != "":
+                        if task_id != 0xFF:
                             break
                         else:
                             row = rows
@@ -154,9 +157,50 @@ class BaseTaskTable(QFrame):
                 item.setFlags(item.flags() & ~Qt.ItemIsEditable)
             self.table.setItem(row, i + 1, item)
             self.table.setRowHeight(row, 40)
-            if (i == 0) and task != '':
+            if (i == 0) and task != 0xFF:
+                task = int(task)
                 self.task_list[task] = row
-                
+        v_scroll_bar = self.table.verticalScrollBar()
+        v_scroll_bar.setValue(v_scroll_bar.maximum())
+        self.qvlayout.update()
+    
+    def show_context_menu(self, position):
+        menu = RoundMenu(self)
+        self.export_action = Action("清除所有", self)
+        self.export_action.triggered.connect(self.clear_all_row)
+        self.copy_action = Action("清除选中", self)
+        self.copy_action.triggered.connect(self.clear_selected_row)
+        menu.addAction(self.export_action)
+        menu.addAction(self.copy_action)
+        menu.exec_(self.table.viewport().mapToGlobal(position))
+
+    def clear_selected_row(self):
+        selected_rows = []
+        for row in range(1, self.table.rowCount()):
+            widget = self.table.cellWidget(row, 0)
+            if widget and widget.checkState() == Qt.Checked:
+                selected_rows.append(row)
+
+        # 反向删除选中的行
+        for row in reversed(selected_rows):
+            self.table.removeRow(row)
+            self.update_task_list(row)
+
+    def update_task_list(self, selected_row):
+        for key, value in list(self.task_list.items()):
+            if value == selected_row:
+                del self.task_list[key]
+                break
+        # 更新剩余行的 task_list 映射
+        for key, value in self.task_list.items():
+            if value > selected_row:
+                self.task_list[key] = value - 1
+
+    def clear_all_row(self):
+        self.table.setRowCount(1)
+        self.task_list.clear()
+        
+
     def get_task_parm(self):
         task_param = {}
         for row in range(1, self.table.rowCount()):
@@ -166,10 +210,24 @@ class BaseTaskTable(QFrame):
                     content1 = self.table.item(row, 1)
                     content2 = self.table.item(row, 2)
                     if content1:
-                        task_id = int(content1.text())
+                        task_id = int(content1.text(), 10)
                         task_param[task_id] = ""
-                    elif content2:
+                    if content2:
                         task_param[task_id] = content2.text()
+        return task_param
+    
+    def get_exit_task_parm(self):
+        task_param = {}
+        for row in range(1, self.table.rowCount()):
+            widget = self.table.cellWidget(row, 0)
+            if widget:
+                content1 = self.table.item(row, 1)
+                content2 = self.table.item(row, 2)
+                if content1:
+                    task_id = int(content1.text(), 10)
+                    task_param[task_id] = ""
+                elif content2:
+                    task_param[task_id] = content2.text()
         return task_param
 
     def handleHeaderClick(self, checked):
@@ -188,32 +246,13 @@ class BaseTaskTable(QFrame):
             print(content1, content2)
             self.cell_clicked.emit(content1, content2)
 
-    def cell_change(self, row, column):
-    #     item = self.table.item(row, column)
-    #     text = item.text()
-    #     if column == 1 and text != '' and text.isdigit():
-    #         task_id = int(text)
-    #         if task_id in self.task_list:
-    #             InfoBar.error(
-    #                 title=self.tr('失败'),
-    #                 content=self.tr("不允许添加相同任务号!"),
-    #                 orient=Qt.Horizontal,
-    #                 isClosable=True,
-    #                 position=InfoBarPosition.TOP,
-    #                 duration=2000,
-    #                 parent=self
-    #             )
-    #             item.setText("")
-        pass
-
-
     def item_change(self, item):
         row = item.row()
         column = item.column()
         text = item.text()
         if column == 1:  # Check if the changed item is in the second column
             if text != '' and text.isdigit():
-                task_id = int(text)
+                task_id = int(text, 10)
                 if task_id <= 0 or task_id >= 255:
                     InfoBar.error(
                         title=self.tr('失败'),
@@ -258,6 +297,7 @@ class BaseTaskTable(QFrame):
             if row == self.task_list[task_id]:
                 return True, task_id
         return False, None
+    
     def reset_task_frame(self, task_id, content):
         self.itemChange.emit(task_id, content)
 
@@ -329,9 +369,11 @@ class CustomframeResult(QWidget):
         self.framearea.clear()
 
 class CheckboxGrid(QWidget):
-    def __init__(self, total_checkboxes, parent=None):
+    def __init__(self, list, parent=None):
         super().__init__(parent)
-        self.total_checkboxes = total_checkboxes
+        self.setObjectName("checkboxGrid")
+        self.list = list
+        self.total_checkboxes = len(self.list)
         self.selected_indexes = set()
         self.init_ui()
 
@@ -341,15 +383,21 @@ class CheckboxGrid(QWidget):
         self.scroll_area = ScrollArea(self)
         self.scroll_area.setWidgetResizable(True)
 
+        # Main container with border
+        self.main_container = QWidget()
+        self.main_container.setObjectName("mainContainer")
+
+        # Inner container for checkboxes
         self.container = QWidget()
+        self.container.setObjectName("container")
         self.grid_layout = QGridLayout(self.container)
 
         # Create checkboxes including "Select All"
-        self.select_all_checkbox = CheckBox("Select All")
+        self.select_all_checkbox = CheckBox("全选")
         self.select_all_checkbox.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         self.select_all_checkbox.stateChanged.connect(self.toggle_select_all)
 
-        self.checkboxes = [self.select_all_checkbox] + [CheckBox(f"Checkbox {i+1}") for i in range(self.total_checkboxes)]
+        self.checkboxes = [self.select_all_checkbox] + [CheckBox(f"{self.list[i]}") for i in range(self.total_checkboxes)]
         for index, checkbox in enumerate(self.checkboxes):
             checkbox.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
             if index > 0:  # Skip the "Select All" checkbox for individual stateChanged connections
@@ -357,29 +405,43 @@ class CheckboxGrid(QWidget):
 
         self.update_grid()
         self.container.setLayout(self.grid_layout)
+
+        # Add inner container to main container
+        layout = QVBoxLayout(self.main_container)
+        layout.addWidget(self.container)
+        self.main_container.setLayout(layout)
+
         self.scroll_area.setWidget(self.container)
 
         self.qvlayout.addWidget(self.scroll_area)
         self.setLayout(self.qvlayout)
 
+        StyleSheet.GRIDBOX.apply(self)
     def resizeEvent(self, event):
         super().resizeEvent(event)
-        self.update_grid()
 
     def update_grid(self):
         width = self.scroll_area.viewport().width()
-        column_count = max(1, width // 100)  # Assuming each checkbox needs 100px width
-
+        # column_count = max(1, width // 100)  # Assuming each checkbox needs 100px width
+        column_count = 3
         self.grid_layout.setSpacing(10)
-        for i in range(self.grid_layout.count()):
-            widget = self.grid_layout.itemAt(i).widget()
+        while self.grid_layout.count():
+            item = self.grid_layout.takeAt(0)
+            widget = item.widget()
             if widget:
                 widget.deleteLater()
+                widget.setParent(None)
 
+        
+        self.grid_layout.update()
+        QCoreApplication.processEvents()
         for index, checkbox in enumerate(self.checkboxes):
             row = index // column_count
             col = index % column_count
             self.grid_layout.addWidget(checkbox, row, col, Qt.AlignTop)
+        
+        self.grid_layout.update()
+        QCoreApplication.processEvents()
 
     def toggle_select_all(self, state):
         is_checked = state == Qt.Checked
@@ -410,7 +472,6 @@ class CheckboxGrid(QWidget):
         else:
             self.selected_indexes.discard(index)
 
-        print("Selected indexes:", self.selected_indexes)
         # Update "Select All" checkbox state if necessary
         self.select_all_checkbox.stateChanged.disconnect(self.toggle_select_all)
         if len(self.selected_indexes) == len(self.checkboxes) - 1:
@@ -425,30 +486,20 @@ class ParamFrame(QWidget):
     frame_finfish = pyqtSignal(list, int)
     def __init__(self, parent=None):
         super().__init__(parent=parent)
+        self.setObjectName("paramframe")
 
-        self.pnlayout = QHBoxLayout()  # 使用水平布局
         self.pnlabel = QLabel('测量点')
+        self.pnlabel.setAlignment(Qt.AlignVCenter)
         self.pnInput = PlainTextEdit()
-        self.pnInput.setFixedSize(400, 50)
-        self.pnlayout.addWidget(self.pnlabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.pnlayout.addWidget(self.pnInput, 1, Qt.AlignRight)
         self.pnInput.setPlaceholderText("使用英文','或'-'拆分,如1,3,5-6")
 
-        self.itemlayout = QHBoxLayout()  # 使用水平布局
         self.itemlabel = QLabel('数据标识')
         self.itemInput = PlainTextEdit()
-        self.itemInput.setFixedSize(400, 100)
-        self.itemlayout.addWidget(self.itemlabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.itemlayout.addWidget(self.itemInput, 1, Qt.AlignRight)
-        self.itemInput.setPlaceholderText("使用英文','拆分,如05060100,05060101")
-        # self.itemInput.textChanged.connect(self.update_ui)
+        self.itemInput.setPlaceholderText("使用英文','拆分,如E0000130,E0000131")
+        self.itemInput.textChanged.connect(self.update_ui)
 
-        self.datalayout = QHBoxLayout()  # 使用水平布局
         self.datalabel = QLabel('数据内容')
         self.dataInput = PlainTextEdit()
-        self.dataInput.setFixedSize(400, 100)
-        self.datalayout.addWidget(self.datalabel, 0,Qt.AlignLeft)
-        self.datalayout.addWidget(self.dataInput, 1, Qt.AlignRight)
 
         self.switchButton = SwitchButton(self.tr('设置'))
         self.switchButton.setChecked(True)
@@ -457,53 +508,53 @@ class ParamFrame(QWidget):
 
         self.button = PrimaryPushButton(self.tr('生成报文'))
         self.button.clicked.connect(self.create_frame)
+        # Use QFormLayout to align labels and inputs
+        self.form_layout = QFormLayout()
+        self.form_layout.addRow(self.pnlabel, self.pnInput)
+        self.form_layout.addRow(self.itemlabel, self.itemInput)
+        self.form_layout.addRow(self.datalabel, self.dataInput)
+        self.form_layout.addWidget(self.switchButton)
+        self.form_layout.addWidget(self.button)
 
-        # self.mask_layout = QVBoxLayout()
-        # self.mask_widget = CheckboxGrid(1)
-
-        # self.mask_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        # self.mask_layout.addWidget(self.mask_widget, alignment=Qt.AlignTop|Qt.AlignLeft)
-
-        self.qvlayout = QVBoxLayout(self)  # 使用垂直布局
-        self.qvlayout.addLayout(self.pnlayout)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addLayout(self.itemlayout)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addLayout(self.datalayout)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addWidget(self.switchButton)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addWidget(self.button)
-        # self.qvlayout.addLayout(self.mask_layout)
-
-        self.qvlayout.setContentsMargins(0,0,0,5)
-        self.qvlayout.setSpacing(2)
-
-        self.datalayout_index = self.qvlayout.indexOf(self.datalayout)
-
+        self.setLayout(self.form_layout)
+        
+        self.datalayout_index = 2
     def update_ui(self):
         text = self.itemInput.toPlainText()
-        if len(text) > 0 and all(c in string.hexdigits for c in text) and (int(text, 16) in (0xE0000150, 0xE0000151)):
-            self.replace_layout(self.mask_layout)
+        if len(text) > 0 and all(c in string.hexdigits for c in text) and (int(text, 16) in (0xE0000150, 0xE0000151, 0xE0000152)):
+            item_list = self.get_item_data_list(text)
+            self.mask_widget = CheckboxGrid(item_list)
+            self.replace_layout(self.datalabel, self.dataInput, self.mask_widget)
         else:
-            old_layout_item = self.qvlayout.itemAt(self.datalayout_index)
-            if old_layout_item and old_layout_item.layout() == self.mask_layout:
-                self.replace_layout(self.datalayout)
+            current_widget = self.form_layout.itemAt(self.datalayout_index, QFormLayout.FieldRole)
+            if current_widget and isinstance(current_widget.widget(), CheckboxGrid):
+                self.dataInput = PlainTextEdit()
+                self.replace_layout(self.datalabel, current_widget.widget(), self.dataInput)
 
-    def replace_layout(self, new_layout):
-        # 移除旧的布局
-        item = self.qvlayout.takeAt(self.datalayout_index)
-        if item and item.layout():
-            old_layout = item.layout()
-            while old_layout.count():
-                child = old_layout.takeAt(0)
-                if child.widget():
-                    child.widget().deleteLater()
+    def replace_layout(self, label, old_widget, new_widget):
+        # 移除旧的控件
+        self.form_layout.removeRow(self.datalayout_index)
 
-        # 在相同位置插入新布局
-        self.qvlayout.insertLayout(self.datalayout_index, new_layout)
-        self.qvlayout.update()
+        # 重新创建 datalabel
+        self.datalabel = QLabel('数据内容')
+
+        # 重新添加 datalabel 和新控件
+        self.form_layout.insertRow(self.datalayout_index, self.datalabel, new_widget)
+        self.form_layout.update()
         QCoreApplication.processEvents()
+
+    def get_item_data_list(self, text):
+        name_list = []
+        item = frame_fun.get_config_xml(text, "CSG13", "南网")
+        if item is not None:
+            allitem = item.findall('.//bit')
+            if allitem is not None:
+                for bit_elem in allitem:
+                    bit_id_attr = bit_elem.get('id')
+                    bit_name_elem = bit_elem.find('name')
+                    if bit_name_elem is not None:
+                        name_list.append(bit_name_elem.text)
+        return name_list.copy()
 
     def get_size(self):
         return self.qvlayout.sizeHint() + QSize(0, 50)
@@ -513,9 +564,14 @@ class ParamFrame(QWidget):
             self.switchButton.setText(self.tr('设置'))
         else:
             self.switchButton.setText(self.tr('读取'))
-    def sendframe(self):
-        text = self.framearea.toPlainText()
-        signalBus.sendmessage.emit(text)
+
+    def get_item_mask_data(self):
+        mask_data = self.mask_widget.get_selected_indexes()
+        data = [0] * 32
+        for mask in mask_data:
+            frame_fun.set_bit_value(data, mask - 1)
+        return data.copy()
+    
     def create_frame(self, frame):
         if self.switchButton.isChecked():
             afn = 0x04
@@ -577,33 +633,41 @@ class ParamFrame(QWidget):
                 parent=self
             )
             return
-        data = self.dataInput.toPlainText()
-        if self.switchButton.isChecked():
-            if data is not None and data != '':
-                item_dic[item] = data
+        if item in (0xE0000150, 0xE0000151,0xE0000152):
+            if self.switchButton.isChecked():
+                data = self.get_item_mask_data()
+                item_dic[item] = frame_fun.get_data_str_order(data)
             else:
-                InfoBar.warning(
-                title=self.tr('告警'),
-                content=self.tr("请输入数据内容!"),
-                orient=Qt.Horizontal,
-                isClosable=True,
-                position=InfoBarPosition.TOP,
-                duration=2000,
-                parent=self
-            )
-                return
+                data = None
+                item_dic[item] = data 
         else:
-            data = None
-            item_dic[item] = data
+            data = self.dataInput.toPlainText()
+            if self.switchButton.isChecked():
+                if data is not None and data != '':
+                    item_dic[item] = data
+                else:
+                    InfoBar.warning(
+                    title=self.tr('告警'),
+                    content=self.tr("请输入数据内容!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                    return
+            else:
+                data = None
+                item_dic[item] = data
             
         adress = [0xff] * 6  # Fix the initialization of adress
         msa = 0x10
-        frame_csg.init_frame(0x4a, afn, adress, msa, 0x60, frame)
+        seq = frame_csg.get_frame_seq(0, 1, False, False)
+        frame_csg.init_frame(0x4a, afn, adress, msa, seq, frame)
         frame_len += FramePos.POS_DATA.value
         frame_len += frame_csg.get_frame(point_array, item_dic, frame)
         frame_len += frame_csg.set_frame_finish(frame[FramePos.POS_CTRL.value:frame_len], frame)
         frame_csg.set_frame_len(frame_len - FramePos.POS_CTRL.value, frame)
-
         self.frame_finfish.emit(frame, frame_len)
 
 
@@ -616,8 +680,8 @@ class ParamFrameInterface(QWidget):
         self.framearea = ParamFrame()
         self.result = CustomframeResult()
         self.framearea.frame_finfish.connect(self.display_frame)
-        self.qhlayout.addWidget(self.framearea, alignment=Qt.AlignLeft|Qt.AlignTop)
-        self.qhlayout.addWidget(self.result)
+        self.qhlayout.addWidget(self.framearea, 6, alignment=Qt.AlignTop)
+        self.qhlayout.addWidget(self.result, 4)
 
         StyleSheet.CUSTOM_INTERFACE.apply(self)
     
@@ -631,39 +695,23 @@ class ReadCurFrame(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
-        self.pnlayout = QHBoxLayout()  # 使用水平布局
         self.pnlabel = QLabel('测量点')
         self.pnInput = PlainTextEdit()
-        self.pnInput.setFixedSize(400, 50)
-        self.pnlayout.addWidget(self.pnlabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.pnlayout.addWidget(self.pnInput, 1, Qt.AlignRight)
         self.pnInput.setPlaceholderText("使用英文','或'-'拆分,如1,3,5-6")
 
-        self.itemlayout = QHBoxLayout()  # 使用水平布局
         self.itemlabel = QLabel('数据标识')
         self.itemInput = PlainTextEdit()
-        self.itemInput.setFixedSize(400, 100)
-        self.itemlayout.addWidget(self.itemlabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.itemlayout.addWidget(self.itemInput, 1, Qt.AlignRight)
-        self.itemInput.setPlaceholderText("使用英文','拆分,如05060100,05060101")
+        self.itemInput.setPlaceholderText("使用英文','拆分,0201FF00,0202FF00")
 
         self.button = PrimaryPushButton(self.tr('生成报文'))
         self.button.clicked.connect(self.create_frame)
 
-        self.qvlayout = QVBoxLayout(self)  # 使用垂直布局
-        self.qvlayout.addLayout(self.pnlayout, 1)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addLayout(self.itemlayout, 1)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addWidget(self.button, 1)
+        self.form_layout = QFormLayout(self)
+        self.form_layout.addRow(self.pnlabel, self.pnInput)
+        self.form_layout.addRow(self.itemlabel, self.itemInput)
+        self.form_layout.addRow(self.button)
+        self.setLayout(self.form_layout)
 
-        self.qvlayout.setContentsMargins(0,0,0,5)
-
-    def get_size(self):
-        return self.qvlayout.sizeHint() + QSize(0, 50)
-    def sendframe(self):
-        text = self.framearea.toPlainText()
-        signalBus.sendmessage.emit(text)
     def create_frame(self, frame):
         try:
             afn = 0x0c
@@ -727,7 +775,8 @@ class ReadCurFrame(QWidget):
                 
             adress = [0xff] * 6  # Fix the initialization of adress
             msa = 0x10
-            frame_csg.init_frame(0x4a, afn, adress, msa, 0x60, frame)
+            seq = frame_csg.get_frame_seq(0, 1, False, False)
+            frame_csg.init_frame(0x4a, afn, adress, msa, seq, frame)
             frame_len += FramePos.POS_DATA.value
             frame_len += frame_csg.add_point_and_item_to_frame(point_array, item_array, frame)
             frame_len += frame_csg.set_frame_finish(frame[FramePos.POS_CTRL.value:frame_len], frame)
@@ -756,8 +805,8 @@ class ReadCurInterface(QWidget):
         self.framearea = ReadCurFrame()
         self.result = CustomframeResult()
         self.framearea.frame_finfish.connect(self.display_frame)
-        self.qhlayout.addWidget(self.framearea, 1, alignment=Qt.AlignLeft|Qt.AlignTop)
-        self.qhlayout.addWidget(self.result, 1)
+        self.qhlayout.addWidget(self.framearea, 5, alignment=Qt.AlignTop)
+        self.qhlayout.addWidget(self.result, 5)
 
         StyleSheet.CUSTOM_INTERFACE.apply(self)
     
@@ -771,62 +820,34 @@ class ReadHistoryFrame(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
-        self.pnlayout = QHBoxLayout()  # 使用水平布局
         self.pnlabel = QLabel('测量点')
         self.pnInput = PlainTextEdit()
-        self.pnInput.setFixedSize(400, 50)
-        self.pnlayout.addWidget(self.pnlabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.pnlayout.addWidget(self.pnInput, 1, Qt.AlignRight)
 
-        self.itemlayout = QHBoxLayout()  # 使用水平布局
         self.itemlabel = QLabel('数据标识')
         self.itemInput = PlainTextEdit()
-        self.itemInput.setFixedSize(400, 100)
-        self.itemlayout.addWidget(self.itemlabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.itemlayout.addWidget(self.itemInput, 1, Qt.AlignRight)
 
-        self.starttimelayout = QHBoxLayout()  # 使用水平布局
         self.starttimelabel = QLabel('开始时间')
         self.starttimeInput = DateTimePicker()
-        self.starttimelayout.addWidget(self.starttimelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.starttimelayout.addWidget(self.starttimeInput, 1, Qt.AlignLeft)
 
-        self.endtimelayout = QHBoxLayout()  # 使用水平布局
         self.endtimelabel = QLabel('结束时间')
         self.endtimeInput = DateTimePicker()
-        self.endtimelayout.addWidget(self.endtimelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.endtimelayout.addWidget(self.endtimeInput, 1, Qt.AlignLeft)
 
-        self.datakindlayout = QHBoxLayout()  # 使用水平布局
         self.datakindlabel = QLabel('数据密度')
         self.datakindInput = ComboBox()
-        self.datakindlayout.addWidget(self.datakindlabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.datakindlayout.addWidget(self.datakindInput, 1, Qt.AlignLeft)
 
         self.button = PrimaryPushButton(self.tr('生成报文'))
 
-        self.qvlayout = QVBoxLayout(self)  # 使用垂直布局
-        self.qvlayout.addLayout(self.pnlayout, 1)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addLayout(self.itemlayout, 1)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addLayout(self.starttimelayout, 1)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addLayout(self.endtimelayout, 1)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addLayout(self.datakindlayout, 1)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addWidget(self.button, 1)
-
-        self.qvlayout.setContentsMargins(0,0,0,5)
+        self.form_layout = QFormLayout(self)
+        self.form_layout.addRow(self.pnlabel, self.pnInput)
+        self.form_layout.addRow(self.itemlabel, self.itemInput)
+        self.form_layout.addRow(self.starttimelabel, self.starttimeInput)
+        self.form_layout.addRow(self.endtimelabel, self.endtimeInput)
+        self.form_layout.addRow(self.datakindlabel, self.datakindInput)
+        self.form_layout.addRow(self.button)
+        self.setLayout(self.form_layout)
 
         self.init_widget()
 
-    def get_size(self):
-        return self.qvlayout.sizeHint() + QSize(0, 50)
-    def sendframe(self):
-        text = self.framearea.toPlainText()
-        signalBus.sendmessage.emit(text)
     def init_widget(self):
         # self.setFixedHeight(300)
         self.pnInput.setPlaceholderText("使用英文','或'-'拆分,如1,3,5-6")
@@ -846,6 +867,7 @@ class ReadHistoryFrame(QWidget):
 
         self.endtimeInput.setDateTime(new_datetime.date(), new_datetime.time())
         self.button.clicked.connect(self.create_frame)
+
     def create_frame(self, frame):
         try:
             afn = 0x0d
@@ -912,7 +934,8 @@ class ReadHistoryFrame(QWidget):
             adress = [0xff] * 6  # Fix the initialization of adress
             msa = 0x10
             datakind = self.datakindInput.currentIndex() + 1
-            frame_csg.init_frame(0x4a, afn, adress, msa, 0x60, frame)
+            seq = frame_csg.get_frame_seq(0, 1, False, False)
+            frame_csg.init_frame(0x4a, afn, adress, msa, seq, frame)
             frame_len += FramePos.POS_DATA.value
             frame_len += frame_csg.add_point_and_item_and_time_to_frame(point_array, item_array, start_time_array[:6], end_time_array[:6],datakind,frame)
             frame_len += frame_csg.set_frame_finish(frame[FramePos.POS_CTRL.value:frame_len], frame)
@@ -930,6 +953,7 @@ class ReadHistoryFrame(QWidget):
                 parent=self
             )
             return
+        
 class ReadHistoryInterface(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
@@ -939,8 +963,8 @@ class ReadHistoryInterface(QWidget):
         self.framearea = ReadHistoryFrame()
         self.result = CustomframeResult()
         self.framearea.frame_finfish.connect(self.display_frame)
-        self.qhlayout.addWidget(self.framearea, 1, alignment=Qt.AlignLeft|Qt.AlignTop)
-        self.qhlayout.addWidget(self.result, 1)
+        self.qhlayout.addWidget(self.framearea, 5, alignment=Qt.AlignTop)
+        self.qhlayout.addWidget(self.result, 5)
 
         StyleSheet.CUSTOM_INTERFACE.apply(self)
     
@@ -953,33 +977,21 @@ class ReadEventAlarmFrame(QWidget):
     frame_finfish = pyqtSignal(list, int)
     def __init__(self, type, parent=None):
         super().__init__(parent=parent)
+
         self.type = type #1 告警类型 2事件类型
-        self.pnlayout = QHBoxLayout()  # 使用水平布局
         self.pnlabel = QLabel('测量点')
         self.pnInput = PlainTextEdit()
-        self.pnInput.setFixedSize(400, 50)
-        self.pnlayout.addWidget(self.pnlabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.pnlayout.addWidget(self.pnInput, 1, Qt.AlignRight)
 
-        self.itemlayout = QHBoxLayout()  # 使用水平布局
         self.itemlabel = QLabel('数据标识')
         self.itemInput = PlainTextEdit()
-        self.itemInput.setFixedSize(400, 100)
-        self.itemlayout.addWidget(self.itemlabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.itemlayout.addWidget(self.itemInput, 1, Qt.AlignRight)
 
-        self.starttimelayout = QHBoxLayout()  # 使用水平布局
         self.starttimelabel = QLabel('开始时间')
         self.starttimeInput = DateTimePicker()
-        self.starttimelayout.addWidget(self.starttimelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.starttimelayout.addWidget(self.starttimeInput, 1, Qt.AlignLeft)
 
-        self.endtimelayout = QHBoxLayout()  # 使用水平布局
         self.endtimelabel = QLabel('结束时间')
         self.endtimeInput = DateTimePicker()
-        self.endtimelayout.addWidget(self.endtimelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.endtimelayout.addWidget(self.endtimeInput, 1, Qt.AlignLeft)
 
+        self.readtypelabel = QLabel('读取类型')
         self.radioWidget = QWidget()
         self.radioLayout = QHBoxLayout(self.radioWidget)
         self.radioLayout.setContentsMargins(2, 0, 0, 0)
@@ -992,39 +1004,24 @@ class ReadEventAlarmFrame(QWidget):
         self.radioLayout.addWidget(self.radioButton1)
         self.radioLayout.addWidget(self.radioButton2)
         self.radioButton1.click()
-        self.readtypelayout = QHBoxLayout()  # 使用水平布局
-        self.readtypelabel = QLabel('读取类型')
-        self.readtypelayout.addWidget(self.readtypelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.readtypelayout.addWidget(self.radioWidget, 1, Qt.AlignLeft)
 
         self.button = PrimaryPushButton(self.tr('生成报文'))
 
-        self.qvlayout = QVBoxLayout(self)  # 使用垂直布局
-        self.qvlayout.addLayout(self.pnlayout, 1)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addLayout(self.itemlayout, 1)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addLayout(self.starttimelayout, 1)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addLayout(self.endtimelayout, 1)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addLayout(self.readtypelayout, 1)
-        self.qvlayout.addSpacing(5)
-        self.qvlayout.addWidget(self.button, 1)
+        self.form_layout = QFormLayout(self)
+        self.form_layout.addRow(self.pnlabel, self.pnInput)
+        self.form_layout.addRow(self.itemlabel, self.itemInput)
+        self.form_layout.addRow(self.starttimelabel, self.starttimeInput)
+        self.form_layout.addRow(self.endtimelabel, self.endtimeInput)
+        self.form_layout.addRow(self.readtypelabel, self.radioWidget)
+        self.form_layout.addRow(self.button)
+        self.setLayout(self.form_layout)
 
-        self.qvlayout.setContentsMargins(0,0,0,5)
         self.init_widget()
 
-    def get_size(self):
-        return self.qvlayout.sizeHint() + QSize(0, 50)
-
-    def sendframe(self):
-        text = self.framearea.toPlainText()
-        signalBus.sendmessage.emit(text)
     def init_widget(self):
         # self.setFixedHeight(300)
         self.pnInput.setPlaceholderText("使用英文','或'-'拆分,如1,3,5-6")
-        self.itemInput.setPlaceholderText("使用英文','拆分,如05060100,05060101")
+        self.itemInput.setPlaceholderText("使用英文','拆分,如E2000001,E2000002")
         current_date = QDate.currentDate()
         current_time = QTime.currentTime()
         self.starttimeInput.setDateTime(current_date, current_time)
@@ -1107,7 +1104,8 @@ class ReadEventAlarmFrame(QWidget):
             end_time_array = frame_fun.get_time_bcd_array(end_date, end_time)
             adress = [0xff] * 6  # Fix the initialization of adress
             msa = 0x10
-            frame_csg.init_frame(0x4a, afn, adress, msa, 0x60, frame)
+            seq = frame_csg.get_frame_seq(0, 1, False, False)
+            frame_csg.init_frame(0x4a, afn, adress, msa, seq, frame)
             frame_len += FramePos.POS_DATA.value
             frame_len += frame_csg.add_point_and_item_and_time_to_frame(point_array, item_array, start_time_array[:6], end_time_array[:6],None,frame)
             frame_len += frame_csg.set_frame_finish(frame[FramePos.POS_CTRL.value:frame_len], frame)
@@ -1135,8 +1133,8 @@ class ReadEventAlarmInterface(QWidget):
         self.framearea = ReadEventAlarmFrame(type=type, parent=None)
         self.result = CustomframeResult()
         self.framearea.frame_finfish.connect(self.display_frame)
-        self.qhlayout.addWidget(self.framearea, 1, alignment=Qt.AlignLeft|Qt.AlignTop)
-        self.qhlayout.addWidget(self.result, 1)
+        self.qhlayout.addWidget(self.framearea, 5, alignment=Qt.AlignTop)
+        self.qhlayout.addWidget(self.result, 5)
 
         StyleSheet.CUSTOM_INTERFACE.apply(self)
     
@@ -1150,13 +1148,10 @@ class MeterTaskFrame(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
-        self.tasklayout = QHBoxLayout()  # 使用水平布局
         self.tasklabel = QLabel('表端任务号')
-        self.tasklabel.setAlignment(Qt.AlignLeft)
         self.taskNumberInput = LineEdit()
-        self.tasklayout.addWidget(self.tasklabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.tasklayout.addWidget(self.taskNumberInput, 1, Qt.AlignRight)
 
+        self.validreadtypelabel = QLabel('有效性标志')
         self.validradioWidget = QWidget()
         self.validradioLayout = QHBoxLayout(self.validradioWidget)
         self.validradioLayout.setContentsMargins(2, 0, 0, 0)
@@ -1169,18 +1164,11 @@ class MeterTaskFrame(QWidget):
         self.validradioLayout.addWidget(self.validradioButton1)
         self.validradioLayout.addWidget(self.validradioButton2)
         self.validradioButton1.click()
-        self.validreadtypelayout = QHBoxLayout()  # 使用水平布局
-        self.validreadtypelabel = QLabel('有效性标志')
-        self.validreadtypelayout.addWidget(self.validreadtypelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.validreadtypelayout.addWidget(self.validradioWidget, 1, Qt.AlignRight)
 
-        self.reportbasetimelayout = QHBoxLayout()  # 使用水平布局
         self.reportbasetimelabel = QLabel('上报基准时间')
         self.reportbasetimeInput = DateTimePicker()
-        self.reportbasetimelayout.addWidget(self.reportbasetimelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.reportbasetimelayout.addWidget(self.reportbasetimeInput, 1, Qt.AlignRight)
 
-
+        self.reportunitreadtypelabel = QLabel('定时上报周期单位')
         self.reportunitradioWidget = QWidget()
         self.reportunitradioLayout = QHBoxLayout(self.reportunitradioWidget)
         self.reportunitradioLayout.setContentsMargins(2, 0, 0, 0)
@@ -1199,18 +1187,12 @@ class MeterTaskFrame(QWidget):
         self.reportunitradioLayout.addWidget(self.reportunitradioButton3)
         self.reportunitradioLayout.addWidget(self.reportunitradioButton4)
         self.reportunitradioButton1.click()
-        self.reportunitreadtypelayout = QHBoxLayout()  # 使用水平布局
-        self.reportunitreadtypelabel = QLabel('定时上报周期单位')
-        self.reportunitreadtypelayout.addWidget(self.reportunitreadtypelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.reportunitreadtypelayout.addWidget(self.reportunitradioWidget, 1, Qt.AlignRight)
 
-        self.reportcycleinput = QHBoxLayout()  # 使用水平布局
         self.reportcyclelabel = QLabel('定时上报周期')
-        self.reportcyclelabel.setAlignment(Qt.AlignLeft)
+        # self.reportcyclelabel.setAlignment(Qt.AlignLeft)
         self.reportcycleInput = LineEdit()
-        self.reportcycleinput.addWidget(self.reportcyclelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.reportcycleinput.addWidget(self.reportcycleInput, 1, Qt.AlignRight)
 
+        self.tasktypereadtypelabel = QLabel('数据结构方式')
         self.tasktyperadioWidget = QWidget()
         self.tasktyperadioLayout = QHBoxLayout(self.tasktyperadioWidget)
         self.tasktyperadioLayout.setContentsMargins(2, 0, 0, 0)
@@ -1223,17 +1205,12 @@ class MeterTaskFrame(QWidget):
         self.tasktyperadioLayout.addWidget(self.tasktyperadioButton1)
         self.tasktyperadioLayout.addWidget(self.tasktyperadioButton2)
         self.tasktyperadioButton1.click()
-        self.tasktypereadtypelayout = QHBoxLayout()  # 使用水平布局
-        self.tasktypereadtypelabel = QLabel('数据结构方式')
-        self.tasktypereadtypelayout.addWidget(self.tasktypereadtypelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.tasktypereadtypelayout.addWidget(self.tasktyperadioWidget, 1, Qt.AlignRight)
 
-        self.readtimelayout = QHBoxLayout()  # 使用水平布局
+
         self.readtimelabel = QLabel('采样基准时间')
         self.readtimeInput = DateTimePicker()
-        self.readtimelayout.addWidget(self.readtimelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.readtimelayout.addWidget(self.readtimeInput, 1, Qt.AlignRight)
 
+        self.meterunitreadtypelabel = QLabel('表端定时采样周期基本单位')
         self.meterunitradioWidget = QWidget()
         self.meterunitradioLayout = QHBoxLayout(self.meterunitradioWidget)
         self.meterunitradioLayout.setContentsMargins(2, 0, 0, 0)
@@ -1252,32 +1229,20 @@ class MeterTaskFrame(QWidget):
         self.meterunitradioLayout.addWidget(self.meterunitradioButton3)
         self.meterunitradioLayout.addWidget(self.meterunitradioButton4)
         self.meterunitradioButton1.click()
-        self.meterunitreadtypelayout = QHBoxLayout()  # 使用水平布局
-        self.meterunitreadtypelabel = QLabel('表端定时采样周期基本单位')
-        self.meterunitreadtypelayout.addWidget(self.meterunitreadtypelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.meterunitreadtypelayout.addWidget(self.meterunitradioWidget, 1, Qt.AlignRight)
 
 
-        self.metercyclelayout = QHBoxLayout()  # 使用水平布局
         self.metercyclelabel = QLabel('表端定时采样周期')
         self.metercyclelabel.setAlignment(Qt.AlignLeft)
         self.metercycleInput = LineEdit()
-        self.metercyclelayout.addWidget(self.metercyclelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.metercyclelayout.addWidget(self.metercycleInput, 1, Qt.AlignRight)
 
-        self.datafreqlayout = QHBoxLayout()  # 使用水平布局
         self.datafreqlabel = QLabel('数据抽取倍率')
         self.datafreqlabel.setAlignment(Qt.AlignLeft)
         self.datafreqInput = LineEdit()
-        self.datafreqlayout.addWidget(self.datafreqlabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.datafreqlayout.addWidget(self.datafreqInput, 1, Qt.AlignRight)
 
-        self.ertureadtimelayout = QHBoxLayout()  # 使用水平布局
         self.ertureadtimelabel = QLabel('终端查询基准时间')
         self.ertureadtimeInput = DateTimePicker()
-        self.ertureadtimelayout.addWidget(self.ertureadtimelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.ertureadtimelayout.addWidget(self.ertureadtimeInput, 1, Qt.AlignRight)
 
+        self.ertureadunitreadtypelabel = QLabel('终端定时查询周期单位')
         self.ertureadunitradioWidget = QWidget()
         self.ertureadunitradioLayout = QHBoxLayout(self.ertureadunitradioWidget)
         self.ertureadunitradioLayout.setContentsMargins(2, 0, 0, 0)
@@ -1296,65 +1261,49 @@ class MeterTaskFrame(QWidget):
         self.ertureadunitradioLayout.addWidget(self.ertureadunitradioButton3)
         self.ertureadunitradioLayout.addWidget(self.ertureadunitradioButton4)
         self.ertureadunitradioButton1.click()
-        self.ertureadunitreadtypelayout = QHBoxLayout()  # 使用水平布局
-        self.ertureadunitreadtypelabel = QLabel('终端定时查询周期单位')
-        self.ertureadunitreadtypelayout.addWidget(self.ertureadunitreadtypelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.ertureadunitreadtypelayout.addWidget(self.ertureadunitradioWidget, 1, Qt.AlignRight)
 
-        self.ertureadcyclelayout = QHBoxLayout()  # 使用水平布局
+
         self.ertureadcyclelabel = QLabel('终端定时查询周期')
         self.ertureadcyclelabel.setAlignment(Qt.AlignLeft)
         self.ertureadcycleInput = LineEdit()
-        self.ertureadcyclelayout.addWidget(self.ertureadcyclelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.ertureadcyclelayout.addWidget(self.ertureadcycleInput, 1, Qt.AlignRight)
 
-        self.taskexeccountlayout = QHBoxLayout()  # 使用水平布局
         self.taskexeccountlabel = QLabel('执行次数')
         self.taskexeccountlabel.setAlignment(Qt.AlignLeft)
         self.taskexeccountInput = LineEdit()
-        self.taskexeccountlayout.addWidget(self.taskexeccountlabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.taskexeccountlayout.addWidget(self.taskexeccountInput, 1, Qt.AlignRight)
 
-        self.pnlayout = QHBoxLayout()  # 使用水平布局
         self.pnlabel = QLabel('测量点')
         self.pnInput = PlainTextEdit()
-        self.pnInput.setFixedSize(400, 50)
-        self.pnlayout.addWidget(self.pnlabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.pnlayout.addWidget(self.pnInput, 1, Qt.AlignRight)
 
-        self.itemlayout = QHBoxLayout()  # 使用水平布局
         self.itemlabel = QLabel('数据标识')
         self.itemInput = PlainTextEdit()
-        self.itemInput.setFixedSize(400, 100)
-        self.itemlayout.addWidget(self.itemlabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.itemlayout.addWidget(self.itemInput, 1, Qt.AlignRight)
 
         self.button = PrimaryPushButton(self.tr('生成报文'))
 
-        self.qvlayout = QVBoxLayout(self)  # 使用垂直布局
-        self.qvlayout.addLayout(self.tasklayout)
-        self.qvlayout.addLayout(self.validreadtypelayout)
-        self.qvlayout.addLayout(self.reportbasetimelayout)
-        self.qvlayout.addLayout(self.reportunitreadtypelayout)
-        self.qvlayout.addLayout(self.reportcycleinput)
-        self.qvlayout.addLayout(self.tasktypereadtypelayout)
-        self.qvlayout.addLayout(self.readtimelayout)
-        self.qvlayout.addLayout(self.meterunitreadtypelayout)
-        self.qvlayout.addLayout(self.metercyclelayout)
-        self.qvlayout.addLayout(self.datafreqlayout)
-        self.qvlayout.addLayout(self.ertureadtimelayout)
-        self.qvlayout.addLayout(self.ertureadunitreadtypelayout)
-        self.qvlayout.addLayout(self.ertureadcyclelayout)
-        self.qvlayout.addLayout(self.taskexeccountlayout)
-        self.qvlayout.addLayout(self.pnlayout)
-        self.qvlayout.addLayout(self.itemlayout)
-        self.qvlayout.addWidget(self.button)
-        self.qvlayout.setContentsMargins(0,0,0,5)
+        self.form_layout = QFormLayout(self)
+        self.form_layout.addRow(self.tasklabel, self.taskNumberInput)
+        self.form_layout.addRow(self.validreadtypelabel, self.validradioWidget)
+        self.form_layout.addRow(self.reportbasetimelabel, self.reportbasetimeInput)
+        self.form_layout.addRow(self.reportunitreadtypelabel, self.reportunitradioWidget)
+        self.form_layout.addRow(self.reportcyclelabel, self.reportcycleInput)
+        self.form_layout.addRow(self.tasktypereadtypelabel,self.tasktyperadioWidget)
+        self.form_layout.addRow(self.readtimelabel, self.readtimeInput)
+        self.form_layout.addRow(self.meterunitreadtypelabel, self.meterunitradioWidget)
+        self.form_layout.addRow(self.metercyclelabel, self.metercycleInput)
+        self.form_layout.addRow(self.datafreqlabel, self.datafreqInput)
+        self.form_layout.addRow(self.ertureadtimelabel, self.ertureadtimeInput)
+        self.form_layout.addRow(self.ertureadunitreadtypelabel, self.ertureadunitradioWidget)
+        self.form_layout.addRow(self.ertureadcyclelabel, self.ertureadcycleInput)
+        self.form_layout.addRow(self.taskexeccountlabel,self.taskexeccountInput)
+        self.form_layout.addRow(self.pnlabel, self.pnInput)
+        self.form_layout.addRow(self.itemlabel, self.itemInput)
+
+        self.form_layout.addRow(self.button)
+        self.setLayout(self.form_layout)
 
         self.init_widget()
     def init_widget(self):
         self.pnInput.setPlaceholderText("使用英文','或'-'拆分,如1,3,5-6")
-        self.itemInput.setPlaceholderText("使用英文','拆分,如05060100,05060101")
+        self.itemInput.setPlaceholderText("使用英文','拆分,如061201FF,061202FF")
         current_date = QDate.currentDate()
         current_time = QTime.currentTime()
         self.reportbasetimeInput.setDateTime(current_date, current_time)
@@ -1362,11 +1311,6 @@ class MeterTaskFrame(QWidget):
         self.ertureadtimeInput.setDateTime(current_date, current_time)
         self.button.clicked.connect(self.create_frame)
 
-    def sendframe(self):
-        text = self.framearea.toPlainText()
-        signalBus.sendmessage.emit(text)
-    def get_size(self):
-        return self.qvlayout.sizeHint() + QSize(0, 50)
     def create_frame(self, frame):
         try:
             afn = 0x04
@@ -1375,7 +1319,8 @@ class MeterTaskFrame(QWidget):
 
             adress = [0xff] * 6  # Fix the initialization of adress
             msa = 0x10
-            frame_csg.init_frame(0x4a, afn, adress, msa, 0x60, frame)
+            seq = frame_csg.get_frame_seq(0, 1, False, False)
+            frame_csg.init_frame(0x4a, afn, adress, msa, seq, frame)
             frame_len += FramePos.POS_DATA.value
 
             frame.extend([0x00,0x00])
@@ -1872,6 +1817,8 @@ class MeterTaskFrame(QWidget):
 class MeterTaskInterface(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
+        self.sendthread = None
+        self.frame_id_map = {}
 
         # 主布局：水平布局
         self.qhlayout = QHBoxLayout(self)
@@ -1882,8 +1829,12 @@ class MeterTaskInterface(QWidget):
         # 左侧区域布局
         left_widget = QWidget()
         left_layout = QVBoxLayout(left_widget)
+        self.chanel_box = Comwidget()
         self.tasktable = BaseTaskTable()
+        left_layout.addWidget(self.chanel_box)
         left_layout.addWidget(self.tasktable)
+        self.chanel_box.read_button.clicked.connect(self.read_click)
+        self.chanel_box.setbutton.clicked.connect(self.set_click)
 
         self.addbutton = ToolButton()
         self.addbutton.setFixedSize(40, 40)
@@ -1921,23 +1872,168 @@ class MeterTaskInterface(QWidget):
         self.tasktable.cell_clicked.connect(self.display_widget_frame)
         self.tasktable.itemChange.connect(self.recreat_frame)
 
+    def set_readbutton_state(self, state):
+        self.chanel_box.setbutton.setEnabled(state)
+        self.chanel_box.read_button.setProperty('is_act', True if state == False else False)
+        if state == False:
+            self.chanel_box.read_button.setText(self.tr("终止"))
+        else:
+            self.chanel_box.read_button.setText(self.tr("读取"))
+
+    def set_setbutton_state(self, state):
+        self.chanel_box.read_button.setEnabled(state)
+        self.chanel_box.setbutton.setProperty('is_act', True if state == False else False)
+        if state == False:
+            self.chanel_box.setbutton.setText(self.tr("终止"))
+        else:
+            self.chanel_box.setbutton.setText(self.tr("设置"))
+
+    def read_click(self):
+        is_reconnectable = self.chanel_box.read_button.property('is_act')
+        if is_reconnectable:
+            if self.sendthread is not None:
+                self.sendthread.stop()
+                self.sendthread.exit()
+                if self.sendthread.isRunning():
+                    print("close failed")
+            self.set_readbutton_state(True)
+            return
+        task_id_list = self.tasktable.get_task_parm()
+        if task_id_list is None:
+            return
+        channel_info = self.chanel_box.get_channel()
+        if channel_info is None:
+            return
+        frame = bytearray()
+        self.frame_id_map.clear()
+        if self.sendthread is not None:
+            self.sendthread.stop()
+            self.sendthread.exit()
+            if self.sendthread.isRunning():
+                print("close failed")
+                return
+            
+        self.set_readbutton_state(False)
+        self.sendthread = WorkerThread(channel_info[1], 10, self.data_replay)
+        send_list = []
+        for taskid, data in task_id_list.items():
+            frame = [0x00] * FramePos.POS_DATA.value
+            adress = [0xff] * 6  # Fix the initialization of adress
+            msa = 0x10
+            frame_len = 0
+            seq = frame_csg.get_frame_seq(0, 1, False, False)
+            frame_csg.init_frame(0x4a, 0x0A, adress, msa, seq, frame)
+            frame_len += FramePos.POS_DATA.value
+            frame_len += frame_csg.add_point_to_frame(0, frame)
+            frame_len += frame_fun.item_to_di(0xE0001500 + taskid, frame)
+            frame_len += frame_csg.set_frame_finish(frame[FramePos.POS_CTRL.value:frame_len], frame)
+            frame_csg.set_frame_len(frame_len - FramePos.POS_CTRL.value, frame)
+            send_list.append(frame)
+            index = len(send_list) - 1
+            self.frame_id_map[index] = taskid
+
+        self.sendthread.set_send_data(send_list)
+        self.sendthread.finished.connect(self.finish_handle)
+        self.sendthread.start()
+
+    def data_replay(self, index, data):
+        # 将回调函数移到主线程执行
+        QMetaObject.invokeMethod(self, "_data_replay_impl", Qt.QueuedConnection, Q_ARG(int, index), Q_ARG(list, data))
+
+    @pyqtSlot(int, list)
+    def _data_replay_impl(self, index, data):
+        task_id = self.frame_id_map[index]
+        frame = frame_fun.get_data_str_order(data)
+        print("data_replay", task_id, frame)
+        self.tasktable.add_table([task_id, frame])
+        self.qhlayout.update()
+        QApplication.processEvents()
+
+    def finish_handle(self):
+        self.set_readbutton_state(True)
+
+    def set_click(self):
+        is_reconnectable = self.chanel_box.setbutton.property('is_act')
+        if is_reconnectable:
+            if self.sendthread is not None:
+                self.sendthread.stop()
+                self.sendthread.exit()
+                if self.sendthread.isRunning():
+                    print("close failed")
+            self.set_setbutton_state(True)
+            return
+        
+        task_id_list = self.tasktable.get_task_parm()
+        if task_id_list is None:
+            return
+
+        channel_info = self.chanel_box.get_channel()
+        if channel_info is None:
+            return
+        
+        self.set_setbutton_state(False)
+        self.sendthread = WorkerThread(channel_info[1], 10)
+
+        send_list = []
+        for taskid, data in task_id_list.items():
+            frame = frame_fun.get_frame_list_from_str(data)
+            send_list.append(frame)
+        
+        self.sendthread.set_send_data(send_list)
+        self.sendthread.finished.connect(self.setfinish_handle)
+        self.sendthread.start()
+
+    def setfinish_handle(self):
+        self.set_setbutton_state(True)
+        
     def display_frame(self, task_id, frame, length):
-        # self.result.clear_frame()
-        text = frame_fun.get_data_str_with_space(frame)
-        # self.result.set_frame(text)
         self.tasktable.add_table([task_id, frame_fun.get_data_str_order(frame)])
 
     def recreat_frame(self, task_id, frame):
         print("reset", task_id, frame)
         self.framearea.reset_task(str(task_id), frame)
 
+    def find_missing_key(self, task_id_list):
+        keys = sorted(task_id_list.keys())
+        last_key = keys[-1]  # 获取字典中最后一个元素的键
+        if last_key >= 254:
+            # 从第一个元素开始找
+            for i in range(1, 255):
+                if i not in task_id_list:
+                    return i
+        else:
+            # 从最后一个元素的下一个键开始找
+            for i in range(last_key + 1, 255):
+                if i not in task_id_list:
+                    return i
+        return None  # 没有找到符合条件的键
+    
     def add_task(self):
-        self.tasktable.add_table(["", ""])
+        try:
+            task_id_list = self.tasktable.get_exit_task_parm()
+            if task_id_list is None or len(task_id_list) == 0:
+                new_task = 1
+            else:
+                new_task = self.find_missing_key(task_id_list)
+
+            if new_task is None:
+                InfoBar.error(
+                    title=self.tr('错误'),
+                    content=self.tr("添加任务失败!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                return  
+            self.tasktable.add_table([new_task, ""])
+        except Exception as e:
+            print(e)
+            return
 
     def display_widget_frame(self, task_id:str, param:str):
         self.framearea.set_task(task_id, param)
-        # self.result.clear_frame()
-        # self.result.set_frame(param)
 
 class NoramlTaskFrame(QWidget):
     frame_finfish = pyqtSignal(int, list, int)
@@ -1945,13 +2041,11 @@ class NoramlTaskFrame(QWidget):
         super().__init__(parent=parent)
         self.setObjectName("NormalTaskFrame")
 
-        self.tasklayout = QHBoxLayout()  # 使用水平布局
         self.tasklabel = QLabel('普通任务号')
         self.tasklabel.setAlignment(Qt.AlignLeft)
         self.taskNumberInput = LineEdit()
-        self.tasklayout.addWidget(self.tasklabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.tasklayout.addWidget(self.taskNumberInput, 1, Qt.AlignRight)
 
+        self.validreadtypelabel = QLabel('有效性标志')
         self.validradioWidget = QWidget()
         self.validradioLayout = QHBoxLayout(self.validradioWidget)
         self.validradioLayout.setContentsMargins(2, 0, 0, 0)
@@ -1964,18 +2058,11 @@ class NoramlTaskFrame(QWidget):
         self.validradioLayout.addWidget(self.validradioButton1)
         self.validradioLayout.addWidget(self.validradioButton2)
         self.validradioButton1.click()
-        self.validreadtypelayout = QHBoxLayout()  # 使用水平布局
-        self.validreadtypelabel = QLabel('有效性标志')
-        self.validreadtypelayout.addWidget(self.validreadtypelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.validreadtypelayout.addWidget(self.validradioWidget, 1, Qt.AlignRight)
 
-        self.reportbasetimelayout = QHBoxLayout()  # 使用水平布局
         self.reportbasetimelabel = QLabel('上报基准时间')
         self.reportbasetimeInput = DateTimePicker()
-        self.reportbasetimelayout.addWidget(self.reportbasetimelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.reportbasetimelayout.addWidget(self.reportbasetimeInput, 1, Qt.AlignRight)
 
-
+        self.reportunitreadtypelabel = QLabel('定时上报周期单位')
         self.reportunitradioWidget = QWidget()
         self.reportunitradioLayout = QHBoxLayout(self.reportunitradioWidget)
         self.reportunitradioLayout.setContentsMargins(2, 0, 0, 0)
@@ -1994,18 +2081,12 @@ class NoramlTaskFrame(QWidget):
         self.reportunitradioLayout.addWidget(self.reportunitradioButton3)
         self.reportunitradioLayout.addWidget(self.reportunitradioButton4)
         self.reportunitradioButton1.click()
-        self.reportunitreadtypelayout = QHBoxLayout()  # 使用水平布局
-        self.reportunitreadtypelabel = QLabel('定时上报周期单位')
-        self.reportunitreadtypelayout.addWidget(self.reportunitreadtypelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.reportunitreadtypelayout.addWidget(self.reportunitradioWidget, 1, Qt.AlignRight)
 
-        self.reportcycleinput = QHBoxLayout()  # 使用水平布局
         self.reportcyclelabel = QLabel('定时上报周期')
         self.reportcyclelabel.setAlignment(Qt.AlignLeft)
         self.reportcycleInput = LineEdit()
-        self.reportcycleinput.addWidget(self.reportcyclelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.reportcycleinput.addWidget(self.reportcycleInput, 1, Qt.AlignRight)
 
+        self.tasktypereadtypelabel = QLabel('数据结构方式')
         self.tasktyperadioWidget = QWidget()
         self.tasktyperadioLayout = QHBoxLayout(self.tasktyperadioWidget)
         self.tasktyperadioLayout.setContentsMargins(2, 0, 0, 0)
@@ -2018,17 +2099,12 @@ class NoramlTaskFrame(QWidget):
         self.tasktyperadioLayout.addWidget(self.tasktyperadioButton1)
         self.tasktyperadioLayout.addWidget(self.tasktyperadioButton2)
         self.tasktyperadioButton1.click()
-        self.tasktypereadtypelayout = QHBoxLayout()  # 使用水平布局
-        self.tasktypereadtypelabel = QLabel('数据结构方式')
-        self.tasktypereadtypelayout.addWidget(self.tasktypereadtypelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.tasktypereadtypelayout.addWidget(self.tasktyperadioWidget, 1, Qt.AlignRight)
 
-        self.readtimelayout = QHBoxLayout()  # 使用水平布局
         self.readtimelabel = QLabel('采样基准时间')
         self.readtimeInput = DateTimePicker()
-        self.readtimelayout.addWidget(self.readtimelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.readtimelayout.addWidget(self.readtimeInput, 1, Qt.AlignRight)
 
+
+        self.meterunitreadtypelabel = QLabel('定时采样周期基本单位')
         self.meterunitradioWidget = QWidget()
         self.meterunitradioLayout = QHBoxLayout(self.meterunitradioWidget)
         self.meterunitradioLayout.setContentsMargins(2, 0, 0, 0)
@@ -2047,65 +2123,44 @@ class NoramlTaskFrame(QWidget):
         self.meterunitradioLayout.addWidget(self.meterunitradioButton3)
         self.meterunitradioLayout.addWidget(self.meterunitradioButton4)
         self.meterunitradioButton1.click()
-        self.meterunitreadtypelayout = QHBoxLayout()  # 使用水平布局
-        self.meterunitreadtypelabel = QLabel('定时采样周期基本单位')
-        self.meterunitreadtypelayout.addWidget(self.meterunitreadtypelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.meterunitreadtypelayout.addWidget(self.meterunitradioWidget, 1, Qt.AlignRight)
 
-
-        self.metercyclelayout = QHBoxLayout()  # 使用水平布局
         self.metercyclelabel = QLabel('定时采样周期')
         self.metercyclelabel.setAlignment(Qt.AlignLeft)
         self.metercycleInput = LineEdit()
-        self.metercyclelayout.addWidget(self.metercyclelabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.metercyclelayout.addWidget(self.metercycleInput, 1, Qt.AlignRight)
 
-        self.datafreqlayout = QHBoxLayout()  # 使用水平布局
         self.datafreqlabel = QLabel('数据抽取倍率')
         self.datafreqlabel.setAlignment(Qt.AlignLeft)
         self.datafreqInput = LineEdit()
-        self.datafreqlayout.addWidget(self.datafreqlabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.datafreqlayout.addWidget(self.datafreqInput, 1, Qt.AlignRight)
 
-        self.taskexeccountlayout = QHBoxLayout()  # 使用水平布局
         self.taskexeccountlabel = QLabel('执行次数')
         self.taskexeccountlabel.setAlignment(Qt.AlignLeft)
         self.taskexeccountInput = LineEdit()
-        self.taskexeccountlayout.addWidget(self.taskexeccountlabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.taskexeccountlayout.addWidget(self.taskexeccountInput, 1, Qt.AlignRight)
 
-        self.pnlayout = QHBoxLayout()  # 使用水平布局
         self.pnlabel = QLabel('测量点')
         self.pnInput = PlainTextEdit()
-        self.pnInput.setFixedSize(400, 50)
-        self.pnlayout.addWidget(self.pnlabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.pnlayout.addWidget(self.pnInput, 1, Qt.AlignRight)
 
-        self.itemlayout = QHBoxLayout()  # 使用水平布局
         self.itemlabel = QLabel('数据标识')
         self.itemInput = PlainTextEdit()
-        self.itemInput.setFixedSize(400, 100)
-        self.itemlayout.addWidget(self.itemlabel, 0, Qt.AlignLeft | Qt.AlignVCenter)
-        self.itemlayout.addWidget(self.itemInput, 1, Qt.AlignRight)
 
         self.button = PrimaryPushButton(self.tr('生成报文'))
 
-        self.qvlayout = QVBoxLayout(self)  # 使用垂直布局
-        self.qvlayout.addLayout(self.tasklayout)
-        self.qvlayout.addLayout(self.validreadtypelayout)
-        self.qvlayout.addLayout(self.reportbasetimelayout)
-        self.qvlayout.addLayout(self.reportunitreadtypelayout)
-        self.qvlayout.addLayout(self.reportcycleinput)
-        self.qvlayout.addLayout(self.tasktypereadtypelayout)
-        self.qvlayout.addLayout(self.readtimelayout)
-        self.qvlayout.addLayout(self.meterunitreadtypelayout)
-        self.qvlayout.addLayout(self.metercyclelayout)
-        self.qvlayout.addLayout(self.datafreqlayout)
-        self.qvlayout.addLayout(self.taskexeccountlayout)
-        self.qvlayout.addLayout(self.pnlayout)
-        self.qvlayout.addLayout(self.itemlayout)
-        self.qvlayout.addWidget(self.button)
-        self.qvlayout.setContentsMargins(0,0,0,5)
+        self.form_layout = QFormLayout(self)
+        self.form_layout.addRow(self.tasklabel, self.taskNumberInput)
+        self.form_layout.addRow(self.validreadtypelabel, self.validradioWidget)
+        self.form_layout.addRow(self.reportbasetimelabel, self.reportbasetimeInput)
+        self.form_layout.addRow(self.reportunitreadtypelabel, self.reportunitradioWidget)
+        self.form_layout.addRow(self.reportcyclelabel, self.reportcycleInput)
+        self.form_layout.addRow(self.tasktypereadtypelabel,self.tasktyperadioWidget)
+        self.form_layout.addRow(self.readtimelabel, self.readtimeInput)
+        self.form_layout.addRow(self.meterunitreadtypelabel, self.meterunitradioWidget)
+        self.form_layout.addRow(self.metercyclelabel, self.metercycleInput)
+        self.form_layout.addRow(self.datafreqlabel, self.datafreqInput)
+        self.form_layout.addRow(self.taskexeccountlabel,self.taskexeccountInput)
+        self.form_layout.addRow(self.pnlabel, self.pnInput)
+        self.form_layout.addRow(self.itemlabel, self.itemInput)
+
+        self.form_layout.addRow(self.button)
+        self.setLayout(self.form_layout)
 
         self.init_widget()
     def init_widget(self):
@@ -2117,8 +2172,6 @@ class NoramlTaskFrame(QWidget):
         self.readtimeInput.setDateTime(current_date, current_time)
         self.button.clicked.connect(self.create_frame)
 
-    def get_size(self):
-        return self.qvlayout.sizeHint() + QSize(0, 50)
     def create_frame(self, frame):
         try:
             afn = 0x04
@@ -2127,7 +2180,8 @@ class NoramlTaskFrame(QWidget):
 
             adress = [0xff] * 6  # Fix the initialization of adress
             msa = 0x10
-            frame_csg.init_frame(0x4a, afn, adress, msa, 0x60, frame)
+            seq = frame_csg.get_frame_seq(0, 1, False, False)
+            frame_csg.init_frame(0x4a, afn, adress, msa, seq, frame)
             frame_len += FramePos.POS_DATA.value
 
             frame.extend([0x00,0x00])
@@ -2551,6 +2605,9 @@ class NoramlTaskInterface(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
+        self.sendthread = None
+        self.frame_id_map = {}
+
         # 主布局：水平布局
         self.qhlayout = QHBoxLayout(self)
 
@@ -2602,10 +2659,32 @@ class NoramlTaskInterface(QWidget):
         self.tasktable.cell_clicked.connect(self.display_widget_frame)
         self.tasktable.itemChange.connect(self.recreat_frame)
 
+    def set_readbutton_state(self, state):
+        self.chanel_box.setbutton.setEnabled(state)
+        self.chanel_box.read_button.setProperty('is_act', True if state == False else False)
+        if state == False:
+            self.chanel_box.read_button.setText(self.tr("终止"))
+        else:
+            self.chanel_box.read_button.setText(self.tr("读取"))
+
+    def set_setbutton_state(self, state):
+        self.chanel_box.read_button.setEnabled(state)
+        self.chanel_box.setbutton.setProperty('is_act', True if state == False else False)
+        if state == False:
+            self.chanel_box.setbutton.setText(self.tr("终止"))
+        else:
+            self.chanel_box.setbutton.setText(self.tr("设置"))
 
     def read_click(self):
-        task_param_idc = {}
-        count = 0
+        is_reconnectable = self.chanel_box.read_button.property('is_act')
+        if is_reconnectable:
+            if self.sendthread is not None:
+                self.sendthread.stop()
+                self.sendthread.exit()
+                if self.sendthread.isRunning():
+                    print("close failed")
+            self.set_readbutton_state(True)
+            return
         task_id_list = self.tasktable.get_task_parm()
         if task_id_list is None:
             return
@@ -2613,66 +2692,142 @@ class NoramlTaskInterface(QWidget):
         if channel_info is None:
             return
         frame = bytearray()
-        # csg_protocol = CsgProtocolChannel(channel_info[1])
-        send_thread = SendReceiveThread(channel_info[1], 50)
-        print("init csg")
+        self.frame_id_map.clear()
+        if self.sendthread is not None:
+            self.sendthread.stop()
+            self.sendthread.exit()
+            if self.sendthread.isRunning():
+                print("close failed")
+                return
+            
+        self.set_readbutton_state(False)
+        self.sendthread = WorkerThread(channel_info[1], 10, self.data_replay)
         send_list = []
-        for taskid in task_id_list:
+        for taskid, data in task_id_list.items():
             frame = [0x00] * FramePos.POS_DATA.value
             adress = [0xff] * 6  # Fix the initialization of adress
             msa = 0x10
             frame_len = 0
-            frame_csg.init_frame(0x4a, 0x0A, adress, msa, 0x60, frame)
+            seq = frame_csg.get_frame_seq(0, 1, False, False)
+            frame_csg.init_frame(0x4a, 0x0A, adress, msa, seq, frame)
             frame_len += FramePos.POS_DATA.value
             frame_len += frame_csg.add_point_to_frame(0, frame)
             frame_len += frame_fun.item_to_di(0xE0000300 + taskid, frame)
             frame_len += frame_csg.set_frame_finish(frame[FramePos.POS_CTRL.value:frame_len], frame)
             frame_csg.set_frame_len(frame_len - FramePos.POS_CTRL.value, frame)
-            send_frame = frame_fun.get_data_str_order(frame)
-            task_id_list[taskid] = send_frame
-            send_list.append(send_frame)
-            # asycwork = AsyncWorker(channel_info[1], send_frame)
-            # asycwork.start()
-            # result = asycwork.wait()
-            send_thread.send_and_receive(send_frame)
-            # print(result)
+            send_list.append(frame)
+            index = len(send_list) - 1
+            self.frame_id_map[index] = taskid
 
+        self.sendthread.set_send_data(send_list)
+        self.sendthread.finished.connect(self.finish_handle)
+        self.sendthread.start()
 
-        print("start call send")
-        # csg_protocol.worker_thread.start()
-        # receive_frame = csg_protocol.send_data_and_wait_for_reply(send_list, 10)
-        print("send call over")
+    def data_replay(self, index, data):
+        # 将回调函数移到主线程执行
+        QMetaObject.invokeMethod(self, "_data_replay_impl", Qt.QueuedConnection, Q_ARG(int, index), Q_ARG(list, data))
 
-    def data_replay(self, data):
-        print("data_replay", data)
+    @pyqtSlot(int, list)
+    def _data_replay_impl(self, index, data):
+        task_id = self.frame_id_map[index]
+        frame = frame_fun.get_data_str_order(data)
+        print("data_replay", task_id, frame)
+        self.tasktable.add_table([task_id, frame])
+        self.qhlayout.update()
+        QApplication.processEvents()
 
-
+    def finish_handle(self):
+        self.set_readbutton_state(True)
 
     def set_click(self):
+        is_reconnectable = self.chanel_box.setbutton.property('is_act')
+        if is_reconnectable:
+            if self.sendthread is not None:
+                self.sendthread.stop()
+                self.sendthread.exit()
+                if self.sendthread.isRunning():
+                    print("close failed")
+            self.set_setbutton_state(True)
+            return
+        
         task_id_list = self.tasktable.get_task_parm()
         if task_id_list is None:
             return
+
         channel_info = self.chanel_box.get_channel()
         if channel_info is None:
             return
-        for taskid in task_id_list:
-            send_frame = task_id_list[taskid]
-            self.chanel_box.send_message(channel_info[1], "HEX", send_frame)
-
         
+        self.set_setbutton_state(False)
+        self.sendthread = WorkerThread(channel_info[1], 10)
+
+        send_list = []
+        for taskid, data in task_id_list.items():
+            frame = frame_fun.get_frame_list_from_str(data)
+            send_list.append(frame)
+        
+        print(send_list)
+        self.sendthread.set_send_data(send_list)
+        self.sendthread.finished.connect(self.setfinish_handle)
+        self.sendthread.start()
+
+    def setfinish_handle(self):
+        self.set_setbutton_state(True)
+
+
+    @pyqtSlot(int, list, int)
     def display_frame(self, task_id, frame, length):
         # self.result.clear_frame()
         text = frame_fun.get_data_str_with_space(frame)
         # self.result.set_frame(text)
+        print("type", type(task_id))
         self.tasktable.add_table([task_id, frame_fun.get_data_str_order(frame)])
 
     def recreat_frame(self, task_id, frame):
         print("reset", task_id, frame)
         self.framearea.reset_task(str(task_id), frame)
-
+    
+    @pyqtSlot()
     def add_task(self):
-        self.tasktable.add_table(["", ""])
+        try:
+            task_id_list = self.tasktable.get_exit_task_parm()
+            if task_id_list is None or len(task_id_list) == 0:
+                new_task = 1
+            else:
+                new_task = self.find_missing_key(task_id_list)
 
+            if new_task is None:
+                InfoBar.error(
+                    title=self.tr('错误'),
+                    content=self.tr("添加任务失败!"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,
+                    parent=self
+                )
+                return  
+
+            self.tasktable.add_table([new_task, ""])
+        except Exception as e:
+            print(e)
+            return
+
+    def find_missing_key(self, task_id_list):
+        keys = sorted(task_id_list.keys())
+        last_key = keys[-1]  # 获取字典中最后一个元素的键
+        if last_key >= 254:
+            # 从第一个元素开始找
+            for i in range(1, 255):
+                if i not in task_id_list:
+                    return i
+        else:
+            # 从最后一个元素的下一个键开始找
+            for i in range(last_key + 1, 255):
+                if i not in task_id_list:
+                    return i
+        return None  # 没有找到符合条件的键
+    
     def display_widget_frame(self, task_id:str, param:str):
         self.framearea.set_task(task_id, param)
         # self.result.clear_frame()

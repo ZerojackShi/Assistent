@@ -1,0 +1,15 @@
+#mainContainer {
+    border-radius: 5px; /* 设置圆角半径 */
+    background-color: transparent; /* 设置背景颜色 */
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: white;
+}
+#container {
+    background-color: transparent;
+    color: white;
+}
+QScrollArea {
+    border-radius: 5px;
+    background-color: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}

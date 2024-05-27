@@ -21,6 +21,7 @@ class StyleSheet(StyleSheetBase, Enum):
     CUSTOM_INTERFACE = "custom_frame"
     EXPORT = "export"
     FLUENT_WINDW = "fluent_window"
+    GRIDBOX = "gridbox"
     def path(self, theme=Theme.AUTO):
         theme = qconfig.theme if theme == Theme.AUTO else theme
         return f":/gallery/qss/{theme.value.lower()}/{self.value}.qss"

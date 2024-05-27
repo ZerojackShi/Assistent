@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <dataItem id="E8010001" protocol="csg16" region="南网">
+		<name>确认</name>
+		<length>2</length>
+        <splitByLength>
+            <name>等待时间</name>
+            <length>2</length>
+            <unit>秒</unit>
+            <type>BIN</type>
+        </splitByLength>
+    </dataItem>
+    <dataItem id="E8010002" protocol="csg16" region="南网">
+		<name>否认</name>
+		<length>1</length>
+        <splitByLength>
+            <name>错误状态字</name>
+            <length>1</length>
+            <type>BIN</type>
+            <value key="0">通信超时</value>
+            <value key="1">无效数据标识内容</value>
+            <value key="2">长度错误</value>
+            <value key="3">校验错误</value>
+            <value key="4">数据标识编码不存在</value>
+            <value key="5">格式错误</value>
+            <value key="6">表号重复</value>
+            <value key="7">表号不存在</value>
+            <value key="8">电表应用层无应答</value>
+            <value key="9">主节点忙</value>
+            <value key="10">主节点不支持此命令</value>
+            <value key="11">从节点不应答</value>
+            <value key="12">从节点不在网内</value>
+            <value key="13">添加任务时剩余可分配任务数不足</value>
+            <value key="14">上报任务数据时任务不存在</value>
+            <value key="15">任务ID重复</value>
+            <value key="16">查询任务时模块没有此任务</value>
+            <value key="17">任务ID不存在</value>
+            <value key="255">其他</value>
+            <value key="other">未知</value>
+        </splitByLength>
+    </dataItem>
+    <dataItem id="E8020101" protocol="csg16" region="南网">
+		<name>复位硬件</name>
+		<length>0</length>
+    </dataItem>
+    <dataItem id="E8020102" protocol="csg16" region="南网">
+		<name>初始化档案</name>
+		<length>0</length>
+    </dataItem>
+    <dataItem id="E8020103" protocol="csg16" region="南网">
+		<name>初始化任务</name>
+		<length>0</length>
+    </dataItem>
+    <dataItem id="E8020201" protocol="csg16" region="南网">
+		<name>添加任务</name>
+		<length>unknown</length>
+        <splitByLength>
+            <name>任务ID</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>任务模式字</name>
+            <length>1</length>
+            <splitbit>
+                <bit id="0-3">
+                    <name>优先级(0~3,0 表示最高优先级,3 表示最低优先级)</name>
+                    <value key="0">最高优先级</value>
+                    <value key="3">最低优先级</value>
+                </bit>
+                <bit id="4-6">
+                    <name>保留</name>
+                </bit>
+                <bit id="7">
+                    <name>任务响应标识</name>
+                    <value key="0">不需要数据返回</value>
+                    <value key="1">需要数据返回</value>
+                </bit>
+            </splitbit>
+        </splitByLength>
+        <splitByLength>
+            <name>超时时间</name>
+            <length>2</length>
+            <unit>秒</unit>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>报文长度</name>
+            <length>1</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>报文内容</name>
+            <length>unknown</length>
+            <lengthrule>1 * 报文长度</lengthrule>
+            <type>FRAME645</type>
+        </splitByLength>
+    </dataItem>
+    <dataItem id="E8020202" protocol="csg16" region="南网">
+		<name>删除任务</name>
+		<length>2</length>
+        <splitByLength>
+            <name>任务ID</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+    </dataItem>
+    <dataItem id="E8000203" protocol="csg16" region="南网" dir="0">
+		<name>查询未完成任务数</name>
+		<length>0</length>
+    </dataItem>
+    <dataItem id="E8000203" protocol="csg16" region="南网" dir="1">
+		<name>查询未完成任务数</name>
+		<length>2</length>
+        <type>BIN</type>
+    </dataItem>
+    <dataItem id="E8030204" protocol="csg16" region="南网">
+		<name>查询未完成任务列表</name>
+		<length>3</length>
+        <splitByLength>
+            <name>起始任务序号 m</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>本次查询的任务数量 n</name>
+            <length>1</length>
+            <type>BIN</type>
+        </splitByLength>
+    </dataItem>
+    <dataItem id="E8040204" protocol="csg16" region="南网">
+		<name>返回查询未完成任务列表</name>
+		<length>unknown</length>
+        <splitByLength>
+            <name>本次上报的任务数量</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>任务ID</name>
+            <length>unknown</length>
+            <lengthrule>2 * 本次上报的任务数量</lengthrule>
+            <type>TASKID</type>
+        </splitByLength>
+    </dataItem>
+    <template id="TASKID" protocol="csg16" region="南网">
+		<name>任务ID</name>
+        <length>2</length>
+        <type>BIN</type>
+    </template>
+    <dataItem id="E8030205" protocol="csg16" region="南网">
+		<name>查询未完成任务详细信息</name>
+		<length>2</length>
+        <splitByLength>
+            <name>任务ID</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+    </dataItem>
+    <dataItem id="E8040205" protocol="csg16" region="南网">
+		<name>返回查询未完成任务详细信息</name>
+		<length>2</length>
+        <splitByLength>
+            <name>任务ID</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>任务模式字</name>
+            <length>1</length>
+            <splitbit>
+                <bit id="0-3">
+                    <name>优先级(0~3,0 表示最高优先级,3 表示最低优先级)</name>
+                    <value key="0">最高优先级</value>
+                    <value key="3">最低优先级</value>
+                </bit>
+                <bit id="4-6">
+                    <name>保留</name>
+                </bit>
+                <bit id="7">
+                    <name>任务响应标识</name>
+                    <value key="0">不需要数据返回</value>
+                    <value key="1">需要数据返回</value>
+                </bit>
+            </splitbit>
+        </splitByLength>
+        <splitByLength>
+            <name>任务目的地址个数</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>任务目的地址</name>
+            <length>unknown</length>
+            <lengthrule>6 * 任务目的地址个数</lengthrule>
+            <type>NODEADRESS</type>
+        </splitByLength>
+        <splitByLength>
+            <name>报文长度</name>
+            <length>1</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>报文内容</name>
+            <length>unknown</length>
+            <lengthrule>1 * 报文长度</lengthrule>
+            <type>FRAME645</type>
+        </splitByLength>
+    </dataItem>
+    <dataItem id="E8000206" protocol="csg16" region="南网">
+		<name>查询剩余可分配任务数</name>
+		<length>0</length>
+    </dataItem>
+
+    <dataItem id="E8020207" protocol="csg16" region="南网">
+		<name>添加多播任务</name>
+		<length>unknown</length>
+        <splitByLength>
+            <name>任务ID</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>任务模式字</name>
+            <length>1</length>
+            <splitbit>
+                <bit id="0-3">
+                    <name>优先级(0~3,0 表示最高优先级,3 表示最低优先级)</name>
+                    <value key="0">最高优先级</value>
+                    <value key="3">最低优先级</value>
+                </bit>
+                <bit id="4-6">
+                    <name>保留</name>
+                </bit>
+                <bit id="7">
+                    <name>任务响应标识</name>
+                    <value key="0">不需要数据返回</value>
+                    <value key="1">需要数据返回</value>
+                </bit>
+            </splitbit>
+        </splitByLength>
+        <splitByLength>
+            <name>从节点数量</name>
+            <length>2</length>
+            <type>BIN_FF</type>
+            <value key="65535">0</value>
+        </splitByLength>
+        <splitByLength>
+            <name>从节点地址</name>
+            <length>unknown</length>
+            <lengthrule>6 * 从节点数量</lengthrule>
+            <type>NODEADRESS</type>
+        </splitByLength>
+        <splitByLength>
+            <name>超时时间</name>
+            <length>2</length>
+            <unit>秒</unit>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>报文长度</name>
+            <length>1</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>报文内容</name>
+            <length>unknown</length>
+            <lengthrule>1 * 报文长度</lengthrule>
+            <type>FRAME645</type>
+        </splitByLength>
+    </dataItem>
+    <template id="NODEADRESS" protocol="csg16" region="南网">
+        <name>地址</name>
+        <length>6</length>
+        <type>NORMAL</type>
+    </template>
+    <dataItem id="E8020208" protocol="csg16" region="南网">
+        <name>启动任务</name>
+        <length>0</length>
+    </dataItem>
+    <dataItem id="E8020209" protocol="csg16" region="南网">
+        <name>暂停任务</name>
+        <length>0</length>
+    </dataItem>
+    <dataItem id="E8000301" protocol="csg16" region="南网" dir="0">
+        <name>查询厂商代码和版本信息</name>
+        <length>0</length>
+    </dataItem>
+    <dataItem id="E8000301" protocol="csg16" region="南网" dir="1">
+        <name>查询厂商代码和版本信息</name>
+        <length>9</length>
+        <splitByLength>
+            <name>厂商代码</name>
+            <length>2</length>
+            <type>ASCII</type>
+        </splitByLength>
+        <splitByLength>
+            <name>芯片代码</name>
+            <length>2</length>
+            <type>ASCII</type>
+        </splitByLength>
+       <splitByLength>
+            <name>版本时间</name>
+            <length>3</length>
+            <time>DDMMYY</time>
+        </splitByLength>
+        <splitByLength>
+            <name>版本</name>
+            <length>2</length>
+            <type>BCD</type>
+        </splitByLength>
+    </dataItem>
+    <dataItem id="E8000302" protocol="csg16" region="南网" dir="0">
+        <name>查询本地通信模块运行模式信息</name>
+        <length>0</length>
+    </dataItem>
+    <dataItem id="E8000302" protocol="csg16" region="南网" dir="1">
+        <name>查询本地通信模块运行模式信息</name>
+        <length>unknown</length>
+        <splitByLength>
+            <name>本地通信模式字</name>
+            <length>1</length>
+            <splitbit>
+                <bit id="0-3">
+                    <name>通信方式</name>
+                    <value key="001">窄带电力线载波通信</value>
+                    <value key="010">宽带电力线载波通信</value>
+                    <value key="111">微功率无线通信</value>
+                    <value key="100">窄带+微功率无线</value>
+                    <value key="101">宽带+微功率无线</value>
+                    <value key="other">保留</value>
+                </bit>
+                <bit id="4-7">
+                    <name>保留</name>
+                </bit>
+            </splitbit>
+        </splitByLength>
+    </dataItem>
+</config>

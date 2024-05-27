@@ -387,6 +387,9 @@ config_645.load('app/config/DLT645.xml')
 config_csg13 = QframeConfig()
 config_csg13.load('app/config/CSG13.xml')
 
+config_csg16 = QframeConfig()
+config_csg16.load('app/config/CSG16.xml')
+
 log_config = LogConfig()
 
 # 使用示例

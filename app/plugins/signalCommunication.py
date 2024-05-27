@@ -28,6 +28,7 @@ class CommunicationError(Exception):
 class WorkerSignals(QObject):
     finished = pyqtSignal()
     receive_data = pyqtSignal(QTcpSocket, bytes)
+    send_data = pyqtSignal(QTcpSocket, bytes)
 
     def __init__(self):
         super().__init__()
@@ -37,6 +38,9 @@ class WorkerSignals(QObject):
         if isinstance(socket, QTcpSocket): 
             print(data, f'{socket.localAddress().toString()} {socket.localPort()}')
         signalBus.messagereceive.emit(data, socket)
+
+    def send_data_slot(self, data: bytes):
+        signalBus.sendmessage.emit(QTcpSocket, data)
 
 class ClientWorker(QThread):
     disconnected = pyqtSignal(QTcpSocket, object)
@@ -61,13 +65,16 @@ class ClientWorker(QThread):
     def on_start_work(self):
         # worker内部处理开始逻辑
         self.run()
+        
     def on_ready_read(self):
         data = self.socket.readAll()
         self.receive_data.emit(self.socket, data.data())
         print(data)
+
     def send_data_to_client(self, data: bytes):
         if self.socket.state() == QAbstractSocket.SocketState.ConnectedState:
             self.socket.write(data)
+            signalBus.sendmessage.emit(self, data)
                 
     def run(self):
         while self.runingstatus:
@@ -336,7 +343,7 @@ class TcpClient(QThread):
         self.client.err_event.connect(self.err_handler)
         self.client.data_received.connect(self.data_received_handler)
         self.client.disconnected.connect(self.disconnected_handler)
-        self.data_sended.connect(self.client.data_sended)
+        self.data_sended.connect(self.data_send_handler)
 
     def worker_start(self):
         self.client.try_connect.emit()
@@ -356,6 +363,7 @@ class TcpClient(QThread):
             self.wait()
             self.err_event.emit(404)
             print("TcpClient stop end")
+            
     def connected_handler(self, socket: QTcpSocket):
         self.connected.emit(socket)
         signalBus.channel_connected.emit(CommType.TCP_CLIENT, self)
@@ -363,6 +371,10 @@ class TcpClient(QThread):
     def err_handler(self, err_code):
         self.err_event.emit(err_code)
     
+    def data_send_handler(self, data):
+        self.client.data_sended.emit(data)
+        signalBus.sendmessage.emit(self, data)
+
     def data_received_handler(self, data):
         self.data_received.emit(data)
 
@@ -476,6 +488,7 @@ class SerialPortThread(QThread):
         self.serial_manager.connected.connect(self.connected_handler)
         self.disconnected.connect(self.disconnected_handler)
         self.data_sended.connect(self.serial_manager.data_sended)
+
     def run(self):
         self.serial_manager.start_signal.emit()
         while self.runingstatus:
@@ -483,6 +496,10 @@ class SerialPortThread(QThread):
 
         print("SerialPortThread run end")
         # You can add more serial port operations here...
+
+    def data_send(self, data):
+        self.serial_manager.data_sended(data)
+        signalBus.sendmessage.emit(self, data)
 
     def stop_serial_manager(self):
         if self.runingstatus:

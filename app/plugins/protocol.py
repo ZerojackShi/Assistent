@@ -146,7 +146,7 @@ def parse_bitwise_data(splitbit_elem, data_segment,index,need_delete):
             if bit_elem.find('value[@key="other"]') is not None:
                 bit_value_name = bit_elem.find('value[@key="other"]').text
             else:
-                bit_value_name = ""
+                bit_value_name = str(int(bit_value))
         bit_id_attr = "bit"+bit_id_attr
         result[bit_id_attr] = [bit_name, bit_value, bit_value_name,[index + start_pos, index + end_pos]]
     return result
@@ -468,7 +468,7 @@ def prase_singal_item(data_item_elem, data_segment,index, need_delete):
         if is_sign is not None:
             sign = True if is_sign.text=="yes" else False
         ret = prase_simple_type_data(data_item_elem, data_segment,index, need_delete)
-        if ret == True:
+        if ret != False:
             subitem_value = ret
         else:
             subitem_value = frame_fun.bcd_to_decimal(data_segment,decimal,need_delete,sign)

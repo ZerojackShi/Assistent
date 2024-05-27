@@ -90,7 +90,7 @@ class Comwidget(QWidget):
         self.read_button = PrimaryPushButton(self.tr('读取'))
         self.setbutton = PrimaryPushButton(self.tr("设置"))
         self.channelcomboBox = ComboBox()
-        self.channelcomboBox.setPlaceholderText(self.tr("请选择通道"))
+        self.channelcomboBox.setPlaceholderText(self.tr("无通道链接"))
 
         self._hBoxLayout.addWidget(self.read_button)
         self._hBoxLayout.addWidget(self.setbutton)
@@ -107,11 +107,18 @@ class Comwidget(QWidget):
         self.channelcomboBox.currentIndexChanged.connect(self.set_cur_channel)
         
     def add_combobox(self, channel_info):
+        existing_items = [self.channelcomboBox.itemText(i) for i in range(self.channelcomboBox.count())]
         for key, value in channel_info.items():
-            channel_name = value[2]  # 获取 channel_name
-            print(channel_name)
-            if self.channelcomboBox.findText(channel_name) == -1:
+            channel_name = value[2]
+            if channel_name not in existing_items:
                 self.channelcomboBox.addItem(channel_name)
+        # 移除不在 channel_info 中的项
+        for i in range(self.channelcomboBox.count()):
+            if self.channelcomboBox.itemText(i) not in [value[2] for value in channel_info.values()]:
+                self.channelcomboBox.removeItem(i)
+        
+        if self.channelcomboBox.count() == 0:
+            self.channelcomboBox.setPlaceholderText(self.tr("无通道链接"))
 
     def set_cur_channel(self):
         channel_name = self.channelcomboBox.currentText()
@@ -135,6 +142,4 @@ class Comwidget(QWidget):
                 break
         self.channel_info = channel
         return self.channel_info
-    
-    def send_message(self, channel, type, message):
-        channel_info.send_message(channel, type, message)
+

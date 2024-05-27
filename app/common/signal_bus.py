@@ -14,7 +14,7 @@ class SignalBus(QObject):
     micaEnableChanged = pyqtSignal(bool)
     supportSignal = pyqtSignal()
     windowschange = pyqtSignal(QSize)
-    sendmessage = pyqtSignal(str)
+    sendmessage = pyqtSignal(object, bytes)
     messagereceive = pyqtSignal(bytes, object)
     tcpSocketChange = pyqtSignal(list)
     infopopup = pyqtSignal(bool, str, str)
