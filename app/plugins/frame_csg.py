@@ -1325,7 +1325,7 @@ def Analysic_csg_read_history_frame(frame, dir, prm,result_list,start_pos):
                     sub_length = int(data_item_elem.find('length').text)
                     sub_datament = data_segment[pos:pos + sub_length]
                     sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
-                    alalysic_result, subitem_length = prase_data.parse_data_item(data_item_elem,new_datament, index + pos, False)
+                    alalysic_result = prase_data.parse_data_item(data_item_elem,new_datament, index + pos, False)
                     frame_fun.prase_data_with_config(alalysic_result, False,item_data)
                 else:
                     sub_length = 0#下行读取报文
@@ -1539,7 +1539,7 @@ def Analysic_csg_read_task_frame(frame, dir, prm,result_list,start_pos):
                         sub_length = int(sub_length_cont)
                         sub_datament = data_segment[pos:pos + sub_length]
                         sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
-                    alalysic_result,subitem_length = prase_data.parse_data_item(data_item_elem,new_datament, index + pos, False)
+                    alalysic_result = prase_data.parse_data_item(data_item_elem,new_datament, index + pos, False)
                     frame_fun.prase_data_with_config(alalysic_result, False,item_data)
                 else:
                     sub_length = 0#下行读取报文
