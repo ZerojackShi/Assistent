@@ -154,7 +154,8 @@ class BaseTaskTable(QFrame):
                 item.setFlags(item.flags() | Qt.ItemIsEditable)
                 item.setTextAlignment(Qt.AlignCenter)
             else:
-                item.setFlags(item.flags() & ~Qt.ItemIsEditable)
+                # item.setFlags(item.flags() & ~Qt.ItemIsEditable)
+                item.setFlags(item.flags() | Qt.ItemIsEditable)
             self.table.setItem(row, i + 1, item)
             self.table.setRowHeight(row, 40)
             if (i == 0) and task != 0xFF:
