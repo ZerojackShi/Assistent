@@ -2,7 +2,7 @@ from token import STAR
 from PyQt5.QtGui import QResizeEvent, QTextCharFormat,QColor,QTextCursor
 from PyQt5.QtCore import Qt,pyqtSignal,QSize,QObject,QEvent
 # coding:utf-8
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout,QButtonGroup,QLabel,QSplitter
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout,QButtonGroup,QLabel,QSplitter,QApplication
 from qfluentwidgets import ComboBox, isDarkTheme, FluentIcon,InfoBarIcon,PlainTextEdit,TransparentToolButton,InfoBarPosition,RadioButton,TextEdit
 from qfluentwidgets import FluentIcon as FIF
 from qfluentwidgets import (Pivot, qrouter, PrimaryPushButton, TabBar, CheckBox, ComboBox,
@@ -319,7 +319,7 @@ class BaseSendRecive(QWidget):
         self.title = title
         self.message_type = message_type
         self.sendandreceive = TextEdit(self)
-        self.sendandreceive.setReadOnly(True)
+        self.sendandreceive.setReadOnly(False)
         self.sendandreceive.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.qvlayout = QVBoxLayout(self)
         self.qvlayout.addWidget(self.sendandreceive)
@@ -341,7 +341,10 @@ class BaseSendRecive(QWidget):
             bkg = QColor("red")
             dir_name = "接收"
         else:
-            bkg = QColor("blue")
+            if isDarkTheme():
+                bkg = QColor("white")
+            else:
+                bkg = QColor("blue")
             dir_name = custom
 
         last_position = self.sendandreceive.verticalScrollBar().value() + self.sendandreceive.viewport().height()
@@ -631,12 +634,26 @@ class NormalSendReceive(BaseSendReceive):
                 message = self.get_modify_text(mesg)
                 self.sendandreceive.add_message(DIR_UP, message)
     def client_receive_message_process(self, socket:QTcpSocket, data:bytes):
-        message = self.get_receive_text(data)
-        if message is not None:
-            for mesg in message:
-                format_message = self.get_modify_text(mesg)
-                self.sendandreceive.add_message(DIR_UP, format_message)
-                self.check_is_need_replay(mesg)
+        try:
+            message = self.get_receive_text(data)
+            if message is not None:
+                for mesg in message:
+                    format_message = self.get_modify_text(mesg)
+                    if cfg.get(cfg.Multireport) == True:
+                        frame = self.get_hex_frame(mesg)
+                        control_data = frame[6]
+                        control_code = control_data & 0x0f
+                        if control_code == 9:
+                            adresslist = cfg.get(cfg.MultireportAdress)
+                            adress = get_csg_adress(frame)
+                            if adress not in adresslist:
+                                print("接收地址{}不在列表中".format(adress))
+                                self.check_is_need_replay(mesg)
+                                return
+                    self.sendandreceive.add_message(DIR_UP, format_message)
+                    self.check_is_need_replay(mesg)
+        except Exception as e:
+            print(e)
         
     def check_is_need_replay(self, data:bytes):
         try:
@@ -652,8 +669,8 @@ class NormalSendReceive(BaseSendReceive):
                             return
                         replay_frame = send_ack_frame(frame, control_code)
                         self.chennel.data_sended.emit(bytes(replay_frame))
-                        frame_format = frame_fun.get_data_str_with_space(replay_frame)
-                        self.sendandreceive.add_message(DIR_DOWN, frame_format)
+                        # frame_format = frame_fun.get_data_str_with_space(replay_frame)
+                        # self.sendandreceive.add_message(DIR_DOWN, frame_format)
                         
                         if cfg.get(cfg.Multireport) == True:
                             adresslist = cfg.get(cfg.MultireportAdress)
@@ -690,9 +707,21 @@ class NormalSendReceive(BaseSendReceive):
             # self.sendandreceive.add_message(DIR_DOWN, formatted_frame)
 
     def global_send_message(self, channel, data):
-        frame = frame_fun.bytes_to_decimal_list(data)
-        format_string = self.get_modify_text(frame_fun.get_data_str_order(frame))
-        self.sendandreceive.add_message(DIR_DOWN, format_string)
+        try:
+            if channel != self.chennel:
+                return
+            frame = frame_fun.bytes_to_decimal_list(data)
+            control_data = frame[6]
+            if cfg.get(cfg.Multireport) == True:
+                adresslist = cfg.get(cfg.MultireportAdress)
+                adress = get_csg_adress(frame)
+                if adress not in adresslist:
+                    print("发送地址{}不在列表中".format(adress))
+                    return
+            format_string = self.get_modify_text(frame_fun.get_data_str_order(frame))
+            self.sendandreceive.add_message(DIR_DOWN, format_string)
+        except Exception as e:
+            print(e)
     
     def resizeEvent(self, a0: QResizeEvent | None) -> None:
         return super().resizeEvent(a0)
@@ -996,6 +1025,7 @@ class TabInterface(QWidget):
             if self.label is not None:
                 self.vBoxLayout.removeWidget(self.label)
                 self.label.deleteLater()
+                self.label.setParent(None)
                 self.label = None
             text = self.get_title_name(channel)
             if text in self.widget_dict:

@@ -41107,6 +41107,196 @@
 			<sign>yes</sign>
 		</dataItem>
 	</dataItem>
+
+	<dataItem id="E0001211" protocol="csg13" region="南网">
+		<name>对空调遥控设置制冷温值</name>
+		<length>16</length>
+		<splitByLength>
+			<name>电能表地址</name>
+			<length>6</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>电能表控制密码-PA</name>
+			<length>1</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>电能表控制密码-P1P2P3</name>
+			<length>3</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>操作者代码</name>
+			<length>4</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>空调制冷设置温度</name>
+			<length>2</length>
+			<unit>℃</unit>
+			<decimal>1</decimal>
+			<sign>yes</sign>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0001212" protocol="csg13" region="南网">
+		<name>对空调遥控设置制热温值</name>
+		<length>16</length>
+		<splitByLength>
+			<name>电能表地址</name>
+			<length>6</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>电能表控制密码-PA</name>
+			<length>1</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>电能表控制密码-P1P2P3</name>
+			<length>3</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>操作者代码</name>
+			<length>4</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>空调制热设置温度</name>
+			<length>2</length>
+			<unit>℃</unit>
+			<decimal>1</decimal>
+			<sign>yes</sign>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0001213" protocol="csg13" region="南网">
+		<name>对蓄电池电压设置下限阈值</name>
+		<length>16</length>
+		<splitByLength>
+			<name>电能表地址</name>
+			<length>6</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>电能表控制密码-PA</name>
+			<length>1</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>电能表控制密码-P1P2P3</name>
+			<length>3</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>操作者代码</name>
+			<length>4</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>蓄电池电压下限阈值</name>
+			<length>2</length>
+			<unit>V</unit>
+			<decimal>1</decimal>
+			<sign>yes</sign>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0001214" protocol="csg13" region="南网">
+		<name>对充电桩设置限制功率值</name>
+		<length>19</length>
+		<splitByLength>
+			<name>电能表地址</name>
+			<length>6</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>电能表控制密码-PA</name>
+			<length>1</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>电能表控制密码-P1P2P3</name>
+			<length>3</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>操作者代码</name>
+			<length>4</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>充电桩X号枪的限制功率</name>
+			<length>4</length>
+			<unit>kw</unit>
+			<decimal>4</decimal>
+		</splitByLength>
+		<splitByLength>
+			<name>充电枪号</name>
+			<length>1</length>
+			<type>BCD</type>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0001215" protocol="csg13" region="南网">
+		<name>对空调设置限制功率值</name>
+		<length>18</length>
+		<splitByLength>
+			<name>电能表地址</name>
+			<length>6</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>电能表控制密码-PA</name>
+			<length>1</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>电能表控制密码-P1P2P3</name>
+			<length>3</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>操作者代码</name>
+			<length>4</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>空调的限制功率值</name>
+			<length>4</length>
+			<unit>kw</unit>
+			<decimal>4</decimal>
+		</splitByLength>
+	</dataItem>
+	<dataItem id="E0001216" protocol="csg13" region="南网">
+		<name>对空调设置开关机状态</name>
+		<length>15</length>
+		<splitByLength>
+			<name>电能表地址</name>
+			<length>6</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>电能表控制密码-PA</name>
+			<length>1</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>电能表控制密码-P1P2P3</name>
+			<length>3</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>操作者代码</name>
+			<length>4</length>
+			<type>BCD</type>
+		</splitByLength>
+		<splitByLength>
+			<name>空调开关机状态</name>
+			<length>1</length>
+			<value key="01">开机</value>
+			<value key="02">关机</value>
+		</splitByLength>
+	</dataItem>
+	
 	<dataItem id="E0010181" protocol="csg13" region="南网">
 		<name>主站请求终端安全信息</name>
 		<length>74</length>
@@ -51640,7 +51830,7 @@
 		<splitByLength>
 			<name>数据标识编码组数</name>
 			<length>1</length>
-			<type>BIN</type>
+			<type>BIN_FF</type>
 		</splitByLength>
 		<splitByLength>
 			<name>数据标识编码</name>

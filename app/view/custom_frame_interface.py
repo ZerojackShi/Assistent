@@ -355,18 +355,143 @@ class CustomframeResult(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent=parent)
 
+        self.sendthread = None
+
         self.qvlayout = QVBoxLayout(self)
 
-
+        self.chanel_box = Comwidget()
         self.framearea = PlainTextEdit()
         self.framearea.setPlaceholderText("报文生成区...")
 
+        self.receivearea = PlainTextEdit()
+        self.receivearea.setPlaceholderText("报文接收区...")
+
+        self.qvlayout.addWidget(self.chanel_box)
         self.qvlayout.addWidget(self.framearea)
+        self.qvlayout.addWidget(self.receivearea)
+        self.chanel_box.read_button.clicked.connect(self.read_click)
+        # self.chanel_box.setbutton.clicked.connect(self.set_click)
+
+        self.chanel_box.read_button.setText(self.tr("发送"))
+        self.chanel_box._hBoxLayout.removeWidget(self.chanel_box.setbutton)
+        self.chanel_box.setbutton.deleteLater()
+        self.chanel_box.setbutton.setParent(None)
 
     def set_frame(self, frame):
         self.framearea.setPlainText(frame)
     def clear_frame(self):
         self.framearea.clear()
+
+    def set_readbutton_state(self, state):
+        self.chanel_box.read_button.setProperty('is_act', True if state == False else False)
+        if state == False:
+            self.chanel_box.read_button.setText(self.tr("终止"))
+        else:
+            self.chanel_box.read_button.setText(self.tr("发送"))
+
+    def set_setbutton_state(self, state):
+        self.chanel_box.read_button.setEnabled(state)
+        self.chanel_box.setbutton.setProperty('is_act', True if state == False else False)
+        if state == False:
+            self.chanel_box.setbutton.setText(self.tr("终止"))
+        else:
+            self.chanel_box.setbutton.setText(self.tr("设置"))
+
+    def read_click(self):
+        is_reconnectable = self.chanel_box.read_button.property('is_act')
+        if is_reconnectable:
+            if self.sendthread is not None:
+                self.sendthread.stop()
+                self.sendthread.exit()
+                if self.sendthread.isRunning():
+                    print("close failed")
+            self.set_readbutton_state(True)
+            return
+        data = self.framearea.toPlainText()
+        if len(data) <= 0:
+            return
+        channel_info = self.chanel_box.get_channel()
+        if channel_info is None:
+            return
+        frame = bytearray()
+        if self.sendthread is not None:
+            self.sendthread.stop()
+            self.sendthread.exit()
+            if self.sendthread.isRunning():
+                print("close failed")
+                return
+        data = self.framearea.toPlainText()
+        if len(data) <= 0:
+            return
+        frame = frame_fun.get_frame_list_from_str(data).copy()    
+        self.set_readbutton_state(False)
+        self.sendthread = WorkerThread(channel_info[1], 15, self.data_replay)
+        send_list = []
+        send_list.append(frame)
+
+        self.sendthread.set_send_data(send_list)
+        self.sendthread.finished.connect(self.finish_handle)
+        self.sendthread.start()
+
+    def data_replay(self, index, data):
+        # 将回调函数移到主线程执行
+        QMetaObject.invokeMethod(self, "_data_replay_impl", Qt.QueuedConnection, Q_ARG(int, index), Q_ARG(list, data))
+
+    @pyqtSlot(int, list)
+    def _data_replay_impl(self, index, data):
+        try:
+            frame = frame_fun.get_data_str_with_space(data)
+            print("data_replay", frame)
+            self.receivearea.clear()
+            self.receivearea.setPlainText(frame)
+            QApplication.processEvents()
+        except Exception as e:
+            print(e)
+
+    def finish_handle(self):
+        self.set_readbutton_state(True)
+
+    def set_click(self):
+        is_reconnectable = self.chanel_box.setbutton.property('is_act')
+        if is_reconnectable:
+            if self.sendthread is not None:
+                self.sendthread.stop()
+                self.sendthread.exit()
+                if self.sendthread.isRunning():
+                    print("close failed")
+            self.set_setbutton_state(True)
+            return
+        
+        task_id_list = self.tasktable.get_task_parm()
+        if task_id_list is None:
+            return
+
+        channel_info = self.chanel_box.get_channel()
+        if channel_info is None:
+            return
+        
+        self.set_setbutton_state(False)
+        self.sendthread = WorkerThread(channel_info[1], 15)
+
+        send_list = []
+        for taskid, data in task_id_list.items():
+            frame = frame_fun.get_frame_list_from_str(data).copy()
+            seq = frame_csg.get_frame_seq(0, 1, 1, False)
+            adress = frame[FramePos.POS_RTUA.value:FramePos.POS_RTUA.value + 6]
+            frame_csg.init_frame(0x4a, 0x04, adress, 0x10, seq, frame)
+            len = frame_csg.get_meter_task_len(frame[FramePos.POS_ITEM.value + 4:])
+            len += (FramePos.POS_ITEM_DATA.value - FramePos.POS_CTRL.value)
+            send_frame = frame[:FramePos.POS_CTRL.value + len].copy()
+            len += frame_csg.set_frame_finish(send_frame[FramePos.POS_CTRL.value:], send_frame)
+            frame_csg.set_frame_len(len, send_frame)
+            send_list.append(frame)
+        
+        self.sendthread.set_send_data(send_list)
+        self.sendthread.finished.connect(self.setfinish_handle)
+        self.sendthread.start()
+
+    def setfinish_handle(self):
+        self.set_setbutton_state(True)
 
 class CheckboxGrid(QWidget):
     def __init__(self, list, parent=None):
@@ -662,7 +787,7 @@ class ParamFrame(QWidget):
             
         adress = [0xff] * 6  # Fix the initialization of adress
         msa = 0x10
-        seq = frame_csg.get_frame_seq(0, 1, False, False)
+        seq = frame_csg.get_frame_seq(0, 1, 1, False)
         frame_csg.init_frame(0x4a, afn, adress, msa, seq, frame)
         frame_len += FramePos.POS_DATA.value
         frame_len += frame_csg.get_frame(point_array, item_dic, frame)
@@ -775,7 +900,7 @@ class ReadCurFrame(QWidget):
                 
             adress = [0xff] * 6  # Fix the initialization of adress
             msa = 0x10
-            seq = frame_csg.get_frame_seq(0, 1, False, False)
+            seq = frame_csg.get_frame_seq(0, 1, 1, False)
             frame_csg.init_frame(0x4a, afn, adress, msa, seq, frame)
             frame_len += FramePos.POS_DATA.value
             frame_len += frame_csg.add_point_and_item_to_frame(point_array, item_array, frame)
@@ -934,7 +1059,7 @@ class ReadHistoryFrame(QWidget):
             adress = [0xff] * 6  # Fix the initialization of adress
             msa = 0x10
             datakind = self.datakindInput.currentIndex() + 1
-            seq = frame_csg.get_frame_seq(0, 1, False, False)
+            seq = frame_csg.get_frame_seq(0, 1, 1, False)
             frame_csg.init_frame(0x4a, afn, adress, msa, seq, frame)
             frame_len += FramePos.POS_DATA.value
             frame_len += frame_csg.add_point_and_item_and_time_to_frame(point_array, item_array, start_time_array[:6], end_time_array[:6],datakind,frame)
@@ -1104,7 +1229,7 @@ class ReadEventAlarmFrame(QWidget):
             end_time_array = frame_fun.get_time_bcd_array(end_date, end_time)
             adress = [0xff] * 6  # Fix the initialization of adress
             msa = 0x10
-            seq = frame_csg.get_frame_seq(0, 1, False, False)
+            seq = frame_csg.get_frame_seq(0, 1, 1, False)
             frame_csg.init_frame(0x4a, afn, adress, msa, seq, frame)
             frame_len += FramePos.POS_DATA.value
             frame_len += frame_csg.add_point_and_item_and_time_to_frame(point_array, item_array, start_time_array[:6], end_time_array[:6],None,frame)
@@ -1319,7 +1444,7 @@ class MeterTaskFrame(QWidget):
 
             adress = [0xff] * 6  # Fix the initialization of adress
             msa = 0x10
-            seq = frame_csg.get_frame_seq(0, 1, False, False)
+            seq = frame_csg.get_frame_seq(0, 1, 1, False)
             frame_csg.init_frame(0x4a, afn, adress, msa, seq, frame)
             frame_len += FramePos.POS_DATA.value
 
@@ -1778,7 +1903,10 @@ class MeterTaskFrame(QWidget):
             for i in range(point_count):
                 total_measurement_points, measurement_points_array = frame_fun.calculate_measurement_points(point_array[i*2:i*2+2])
                 for point_id in measurement_points_array:
-                    point_str.append(str(point_id))
+                    if point_id == 0xFFFF:
+                        point_str.append("FFFF")
+                    else:
+                        point_str.append(str(point_id))
                 
             point_str = ",".join(point_str)
 
@@ -1921,7 +2049,7 @@ class MeterTaskInterface(QWidget):
             adress = [0xff] * 6  # Fix the initialization of adress
             msa = 0x10
             frame_len = 0
-            seq = frame_csg.get_frame_seq(0, 1, False, False)
+            seq = frame_csg.get_frame_seq(0, 1, 1, False)
             frame_csg.init_frame(0x4a, 0x0A, adress, msa, seq, frame)
             frame_len += FramePos.POS_DATA.value
             frame_len += frame_csg.add_point_to_frame(0, frame)
@@ -1972,12 +2100,20 @@ class MeterTaskInterface(QWidget):
             return
         
         self.set_setbutton_state(False)
-        self.sendthread = WorkerThread(channel_info[1], 10)
+        self.sendthread = WorkerThread(channel_info[1], 15)
 
         send_list = []
         for taskid, data in task_id_list.items():
-            frame = frame_fun.get_frame_list_from_str(data)
-            send_list.append(frame)
+            frame = frame_fun.get_frame_list_from_str(data).copy()
+            seq = frame_csg.get_frame_seq(0, 1, 1, False)
+            adress = frame[FramePos.POS_RTUA.value:FramePos.POS_RTUA.value + 6]
+            frame_csg.init_frame(0x4a, 0x04, adress, 0x10, seq, frame)
+            len = frame_csg.get_meter_task_len(frame[FramePos.POS_ITEM.value + 4:])
+            len += (FramePos.POS_ITEM_DATA.value - FramePos.POS_CTRL.value)
+            send_frame = frame[:FramePos.POS_CTRL.value + len].copy()
+            len += frame_csg.set_frame_finish(send_frame[FramePos.POS_CTRL.value:], send_frame)
+            frame_csg.set_frame_len(len, send_frame)
+            send_list.append(send_frame)
         
         self.sendthread.set_send_data(send_list)
         self.sendthread.finished.connect(self.setfinish_handle)
@@ -2180,7 +2316,7 @@ class NoramlTaskFrame(QWidget):
 
             adress = [0xff] * 6  # Fix the initialization of adress
             msa = 0x10
-            seq = frame_csg.get_frame_seq(0, 1, False, False)
+            seq = frame_csg.get_frame_seq(0, 1, 1, False)
             frame_csg.init_frame(0x4a, afn, adress, msa, seq, frame)
             frame_len += FramePos.POS_DATA.value
 
@@ -2486,7 +2622,8 @@ class NoramlTaskFrame(QWidget):
                 self.validradioButton1.click()
             
             report_time = valid_param[7:12]
-            date = QDate(frame_fun.bcd2int(report_time[-1]), frame_fun.bcd2int(report_time[-2]), frame_fun.bcd2int(report_time[-3]))
+            centry = (QDate.currentDate().year() // 100) * 100
+            date = QDate(frame_fun.bcd2int(report_time[-1]) + centry, frame_fun.bcd2int(report_time[-2]), frame_fun.bcd2int(report_time[-3]))
             time = QTime(frame_fun.bcd2int(report_time[1]), frame_fun.bcd2int(report_time[0]), 0, 0)
             self.reportbasetimeInput.setDateTime(date, time)
 
@@ -2522,7 +2659,7 @@ class NoramlTaskFrame(QWidget):
 
 
             get_time = valid_param[15:20]
-            date = QDate(frame_fun.bcd2int(get_time[-1]), frame_fun.bcd2int(get_time[-2]), frame_fun.bcd2int(get_time[-3]))
+            date = QDate(frame_fun.bcd2int(get_time[-1]) + centry, frame_fun.bcd2int(get_time[-2]), frame_fun.bcd2int(get_time[-3]))
             time = QTime(frame_fun.bcd2int(get_time[1]), frame_fun.bcd2int(get_time[0]), 0, 0)
             self.readtimeInput.setDateTime(date, time)
 
@@ -2565,7 +2702,10 @@ class NoramlTaskFrame(QWidget):
             for i in range(point_count):
                 total_measurement_points, measurement_points_array = frame_fun.calculate_measurement_points(point_array[i*2:i*2+2])
                 for point_id in measurement_points_array:
-                    point_str.append(str(point_id))
+                    if point_id == 0xFFFF:
+                        point_str.append("FFFF")
+                    else:
+                        point_str.append(str(point_id))
                 
             point_str = ",".join(point_str)
 
@@ -2701,14 +2841,14 @@ class NoramlTaskInterface(QWidget):
                 return
             
         self.set_readbutton_state(False)
-        self.sendthread = WorkerThread(channel_info[1], 10, self.data_replay)
+        self.sendthread = WorkerThread(channel_info[1], 15, self.data_replay)
         send_list = []
         for taskid, data in task_id_list.items():
             frame = [0x00] * FramePos.POS_DATA.value
             adress = [0xff] * 6  # Fix the initialization of adress
             msa = 0x10
             frame_len = 0
-            seq = frame_csg.get_frame_seq(0, 1, False, False)
+            seq = frame_csg.get_frame_seq(0, 1, 1, False)
             frame_csg.init_frame(0x4a, 0x0A, adress, msa, seq, frame)
             frame_len += FramePos.POS_DATA.value
             frame_len += frame_csg.add_point_to_frame(0, frame)
@@ -2759,14 +2899,21 @@ class NoramlTaskInterface(QWidget):
             return
         
         self.set_setbutton_state(False)
-        self.sendthread = WorkerThread(channel_info[1], 10)
+        self.sendthread = WorkerThread(channel_info[1], 15)
 
         send_list = []
         for taskid, data in task_id_list.items():
-            frame = frame_fun.get_frame_list_from_str(data)
+            frame = frame_fun.get_frame_list_from_str(data).copy()
+            seq = frame_csg.get_frame_seq(0, 1, 1, False)
+            adress = frame[FramePos.POS_RTUA.value:FramePos.POS_RTUA.value + 6]
+            frame_csg.init_frame(0x4a, 0x04, adress, 0x10, seq, frame)
+            len = frame_csg.get_meter_task_len(frame[FramePos.POS_ITEM.value + 4:])
+            len += (FramePos.POS_ITEM_DATA.value - FramePos.POS_CTRL.value)
+            send_frame = frame[:FramePos.POS_CTRL.value + len].copy()
+            len += frame_csg.set_frame_finish(send_frame[FramePos.POS_CTRL.value:], send_frame)
+            frame_csg.set_frame_len(len, send_frame)
             send_list.append(frame)
         
-        print(send_list)
         self.sendthread.set_send_data(send_list)
         self.sendthread.finished.connect(self.setfinish_handle)
         self.sendthread.start()

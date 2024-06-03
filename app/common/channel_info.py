@@ -40,7 +40,8 @@ class Channel_info(QObject):
             if self.all_channel[key][1] == channel or self.all_channel[key][2] == channel_name:
                 del self.all_channel[key]
                 break
-
+        
+        print(self.all_channel)
         self.channelInfoChanel.emit(self.all_channel)
 
 

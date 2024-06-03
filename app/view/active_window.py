@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import (QWidget, QFrame, QLabel, QHBoxLayout, QVBoxLayout,
                              QToolButton, QGraphicsOpacityEffect,QApplication, QMainWindow)
 from PyQt5.QtCore import Qt,QTimer
 from PyQt5.QtGui import QIcon, QDesktopServices
-from mur.user import *
+# from mur.user import *
 from PyQt5.QtCore import Qt, QTextCodec,QSize,pyqtSignal
 class ActiveWindow(QMainWindow):
     activestatus = pyqtSignal(bool)

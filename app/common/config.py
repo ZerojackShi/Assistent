@@ -12,15 +12,15 @@ from qfluentwidgets import (qconfig, QConfig, ConfigItem, OptionsConfigItem, Boo
                             FolderListValidator, Theme, FolderValidator, ConfigSerializer, ConfigValidator,__version__)
 import logging
 from datetime import datetime
-from mur._public import *
+# from mur._public import *
 
-def custom_read_user_code() :
-    '''
-    用户场景： 读取（或输入）被管理员分配的用户码
-    [return] 用户码
-    '''
-    user_code = read(USER_CODE_PATH)   # 若无法从文件中读取
-    return user_code
+# def custom_read_user_code() :
+#     '''
+#     用户场景： 读取（或输入）被管理员分配的用户码
+#     [return] 用户码
+#     '''
+#     user_code = read(USER_CODE_PATH)   # 若无法从文件中读取
+#     return user_code
 
 class Language(Enum):
     """ Language enumeration """
@@ -365,12 +365,12 @@ REPO_OWNER = "ZerojackShi"
 REPO_NAME = "Assistent"
 APP_NAME = "Assistent"
 VERSION = "1.0.0"
-HELP_URL = "https://gitee.com/zerokit/assistent"
+HELP_URL = "https://www.baidu.com/"
 REPO_URL = "https://gitee.com/zerokit/assistent"
-EXAMPLE_URL = "https://gitee.com/zerokit/assistent"
-FEEDBACK_URL = "https://gitee.com/zerokit/assistent/issues"
+EXAMPLE_URL = "https://www.baidu.com/"
+FEEDBACK_URL = "https://www.baidu.com/"
 RELEASE_URL = "https://gitee.com/zerokit/assistent/releases"
-SUPPORT_URL = "https://gitee.com/zerokit/assistent"
+SUPPORT_URL = "https://www.baidu.com/"
 CONFIG_DIR = 'app/config'
 Authorization = "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"
 UPDATE_FILE = './upgrade.zip'

@@ -1,14 +1,14 @@
 # coding:utf-8
 import os
 import sys
-from mur.user import *
+# from mur.user import *
 from PyQt5.QtCore import Qt, QTranslator
 from PyQt5.QtWidgets import QApplication
 from qfluentwidgets import FluentTranslator
 # 将项目的根目录添加到模块搜索路径中
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
-from app.common.config import cfg,custom_read_user_code
+from app.common.config import cfg
 from app.view.main_window import MainWindow
 from app.view.active_window import ActiveWindow
 # enable dpi scale

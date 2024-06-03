@@ -335,5 +335,640 @@
                 </bit>
             </splitbit>
         </splitByLength>
+        <splitByLength>
+            <name>最大支持的协议报文长度</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>文件传输支持的最大单包长度</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>升级操作等待时间</name>
+            <length>1</length>
+            <type>BIN</type>
+            <unit>分钟</unit>
+        </splitByLength>
+        <splitByLength>
+            <name>主节点地址</name>
+            <length>6</length>
+            <type>NORMAL</type>
+        </splitByLength>
+        <splitByLength>
+            <name>支持的最大从节点数量</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>当前从节点数量</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>支持单次读写从节点信息的最大数量 </name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>通信模块接口协议发布日期</name>
+            <length>3</length>
+            <time>DDMMYY</time>
+            <type>BCD</type>
+        </splitByLength>
+        <splitByLength>
+            <name>厂商代码和版本信息</name>
+            <length>9</length>
+            <splitByLength>
+                <name>厂商代码</name>
+                <length>2</length>
+                <type>ASCII</type>
+            </splitByLength>
+            <splitByLength>
+                <name>芯片代码</name>
+                <length>2</length>
+                <type>ASCII</type>
+            </splitByLength>
+        <splitByLength>
+                <name>版本时间</name>
+                <length>3</length>
+                <time>DDMMYY</time>
+            </splitByLength>
+            <splitByLength>
+                <name>版本</name>
+                <length>2</length>
+                <type>BCD</type>
+            </splitByLength>
+        </splitByLength>
     </dataItem>
+    <dataItem id="E8000303" protocol="csg16" region="南网" dir="0">
+        <name>查询主节点地址</name>
+        <length>0</length>
+    </dataItem>
+    <dataItem id="E8000303" protocol="csg16" region="南网" dir="1">
+        <name>查询主节点地址</name>
+        <length>6</length>
+        <type>NORMAL</type>
+    </dataItem>
+    <dataItem id="E8030304" protocol="csg16" region="南网">
+        <name>查询通信延时时长</name>
+        <length>7</length>
+        <splitByLength>
+            <name>通信目的地址</name>
+            <length>6</length>
+            <type>NORMAL</type>
+        </splitByLength>
+        <splitByLength>
+            <name>报文长度 L</name>
+            <length>1</length>
+            <type>BIN</type>
+        </splitByLength>
+    </dataItem>
+    <dataItem id="E8040304" protocol="csg16" region="南网">
+        <name>查询通信延时时长</name>
+        <length>9</length>
+        <splitByLength>
+            <name>通信目的地址</name>
+            <length>6</length>
+            <type>NORMAL</type>
+        </splitByLength>
+        <splitByLength>
+            <name>通信延时时长</name>
+            <length>2</length>
+            <type>BIN</type>
+            <unit>秒</unit>
+        </splitByLength>
+        <splitByLength>
+            <name>报文长度 L</name>
+            <length>1</length>
+            <type>BIN</type>
+        </splitByLength>
+    </dataItem>
+
+    <dataItem id="E8000305" protocol="csg16" region="南网" dir="0">
+        <name>查询从节点数量</name>
+        <length>0</length>
+    </dataItem>
+    <dataItem id="E8000305" protocol="csg16" region="南网" dir="1">
+        <name>查询从节点数量</name>
+        <length>2</length>
+        <type>BIN</type>
+    </dataItem>
+
+    <dataItem id="E8030306" protocol="csg16" region="南网">
+        <name>查询从节点信息</name>
+        <length>3</length>
+        <splitByLength>
+            <name>从节点起始序号</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>从节点数量</name>
+            <length>1</length>
+            <type>BIN</type>
+        </splitByLength>
+    </dataItem>
+    <dataItem id="E8040306" protocol="csg16" region="南网">
+        <name>返回查询从节点信息</name>
+        <length>unknown</length>
+        <splitByLength>
+            <name>从节点总数量</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>本次应答的从节点数量</name>
+            <length>1</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>从节点信息</name>
+            <length>unknown</length>
+            <lengthrule>6 * 本次应答的从节点数量</lengthrule>
+            <type>NODEADRESS</type>
+        </splitByLength>
+    </dataItem>
+
+    <dataItem id="E8000307" protocol="csg16" region="南网" dir="0">
+        <name>查询从节点主动注册进度</name>
+        <length>0</length>
+    </dataItem>
+    <dataItem id="E8000307" protocol="csg16" region="南网" dir="1">
+        <name>查询从节点主动注册进度</name>
+        <length>1</length>
+        <type>BIN</type>
+        <value key="0">从节点停止主动注册</value>
+        <value key="1">从节点正在主动注册</value>
+    </dataItem>
+
+    <dataItem id="E8030308" protocol="csg16" region="南网">
+        <name>查询从节点的父节点</name>
+        <length>6</length>
+        <type>NORMAL</type>
+    </dataItem>
+    <dataItem id="E8040308" protocol="csg16" region="南网">
+        <name>返回查询从节点的父节点</name>
+        <length>13</length>
+        <splitByLength>
+            <name>从节点地址</name>
+            <length>6</length>
+            <type>NORMAL</type>
+        </splitByLength>
+        <splitByLength>
+            <name>父节点地址</name>
+            <length>6</length>
+            <type>NORMAL</type>
+        </splitByLength>
+        <splitByLength>
+            <name>链路质量</name>
+            <length>1</length>
+            <type>BIN</type>
+        </splitByLength>
+    </dataItem>
+
+    <dataItem id="E8000309" protocol="csg16" region="南网" dir="0">
+        <name>查询映射表从节点数量</name>
+        <length>0</length>
+    </dataItem>
+    <dataItem id="E8000309" protocol="csg16" region="南网" dir="1">
+        <name>查询映射表从节点数量</name>
+        <length>2</length>
+        <type>BIN</type>
+        <unit>个</unit>
+    </dataItem>
+
+    <dataItem id="E803030A" protocol="csg16" region="南网">
+        <name>查询从节点通信地址映射表 </name>
+        <length>3</length>
+        <splitByLength>
+            <name>映射表记录起始序号</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>查询的映射表数量</name>
+            <length>1</length>
+            <type>BIN</type>
+        </splitByLength>
+    </dataItem>
+    <dataItem id="E804030A" protocol="csg16" region="南网">
+        <name>返回查询从节点通信地址映射表</name>
+        <length>unknown</length>
+        <splitByLength>
+            <name>映射表记录节点数量</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>本次应答的映射表记录数量</name>
+            <length>1</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>映射表记录</name>
+            <length>unknown</length>
+            <lengthrule>18 * 本次应答的映射表记录数量</lengthrule>
+            <type>NODEADRESSMAP</type>
+        </splitByLength>
+    </dataItem>
+    <template id="NODEADRESSMAP" protocol="csg16" region="南网">
+        <name>从节点通信地址映射表</name>
+        <length>18</length>
+        <splitByLength>
+            <name>从节点通信地址</name>
+            <length>6</length>
+            <type>NORMAL</type>
+        </splitByLength>
+        <splitByLength>
+            <name>从节点表计地址</name>
+            <length>12</length>
+            <type>NORMAL</type>
+        </splitByLength>
+    </template>
+
+    <dataItem id="E800030B" protocol="csg16" region="南网" dir="0">
+        <name>查询任务建议超时时间</name>
+        <length>0</length>
+    </dataItem>
+    <dataItem id="E800030B" protocol="csg16" region="南网" dir="1">
+        <name>查询任务建议超时时间</name>
+        <length>8</length>
+        <splitByLength>
+            <name>优先级 0 的任务建议超时时间</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>优先级 1 的任务建议超时时间</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>优先级 2 的任务建议超时时间</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>优先级 3 的任务建议超时时间</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+    </dataItem>
+
+    <dataItem id="E803030C" protocol="csg16" region="南网">
+        <name>查询从节点相位信息</name>
+        <length>unknown</length>
+        <splitByLength>
+            <name>本次查询从节点数量</name>
+            <length>1</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>节点信息</name>
+            <length>unknown</length>
+            <lengthrule>6 * 本次查询从节点数量</lengthrule>
+            <type>NODEADRESS</type>
+        </splitByLength>
+    </dataItem>
+
+    <dataItem id="E804030C" protocol="csg16" region="南网">
+        <name>返回查询从节点相位信息</name>
+        <length>unknown</length>
+        <splitByLength>
+            <name>本次应答的从节点数量</name>
+            <length>1</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>节点相位信息</name>
+            <length>unknown</length>
+            <lengthrule>8 * 本次应答的从节点数量</lengthrule>
+            <type>NODEPHASEINFO</type>
+        </splitByLength>
+    </dataItem>
+    <template id="NODEPHASEINFO" protocol="csg16" region="南网">
+        <name>从节点地址</name>
+        <length>8</length>
+        <splitByLength>
+            <name>从节点地址</name>
+            <length>6</length>
+            <type>NORMAL</type>
+        </splitByLength>
+        <splitByLength>
+            <name>从节点相位信息</name>
+            <length>2</length>
+            <splitByLength>
+                <name>相序相性信息</name>
+                <length>1</length>
+                <splitbit>
+                    <bit id="0-2">
+                        <name>相线标识</name>
+                        <value key="100">C相</value>
+                        <value key="010">B相</value>
+                        <value key="001">A相</value>
+                        <value key="110">A相</value>
+                        <value key="101">B相</value>
+                        <value key="011">C相</value>
+                        <value key="111">正常</value>
+                    </bit>
+                    <bit id="3-4">
+                        <name>相线特征</name>
+                        <value key="00">支持相线识别</value>
+                        <value key="01">不支持相线识别</value>
+                        <value key="02">相线不确定</value>
+                    </bit>
+                    <bit id="5-7">
+                        <name>相序特征</name>
+                        <value key="000">三相表ABC（单相/三相正常相序）</value>
+                        <value key="001">三相表ACB（逆相序）</value>
+                        <value key="010">三相表BAC（逆相序）</value>
+                        <value key="011">三相表BCA（逆相序）</value>
+                        <value key="100">三相表CAB（逆相序）</value>
+                        <value key="101">三相表CBA（逆相序）</value>
+                        <value key="110">三相表/单相表零火反接（逆相序）</value>
+                        <value key="111">保留</value>
+                    </bit>
+                </splitbit>
+            </splitByLength>
+            <splitByLength>
+                <name>电表及规约类型</name>
+                <length>1</length>
+                <type>BIN</type>
+                <value key="00">未知规约</value>
+                <value key="01">DLT/645-1997</value>
+                <value key="02">DLT/645-2007</value>
+                <value key="03">CJ/T188</value>
+                <value key="other">未知</value>
+            </splitByLength>
+        </splitByLength>
+    </template>
+
+    <dataItem id="E803030D" protocol="csg16" region="南网">
+        <name>批量查询从节点相位信息</name>
+        <length>3</length>
+        <splitByLength>
+            <name>从节点起始序号</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>从节点数量</name>
+            <length>1</length>
+            <type>BIN</type>
+        </splitByLength>
+    </dataItem>
+    <dataItem id="E804030D" protocol="csg16" region="南网">
+        <name>返回批量查询从节点相位信息</name>
+        <length>unknown</length>
+        <splitByLength>
+            <name>从节点总数量</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>本次应答的从节点数量</name>
+            <length>1</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>节点相位信息</name>
+            <length>unknown</length>
+            <lengthrule>8 * 本次应答的从节点数量</lengthrule>
+            <type>NODEPHASEINFO</type>
+        </splitByLength>
+    </dataItem>
+
+    <dataItem id="E803030E" protocol="csg16" region="南网">
+        <name>查询表档案的台区识别结果</name>
+        <length>3</length>
+        <splitByLength>
+            <name>从节点起始序号</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>从节点数量</name>
+            <length>1</length>
+            <type>BIN</type>
+        </splitByLength>
+    </dataItem>
+    <dataItem id="E804030E" protocol="csg16" region="南网">
+        <name>返回查询表档案的台区识别结果</name>
+        <length>unknown</length>
+        <splitByLength>
+            <name>台区识别结果从节点总数量</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>本次应答的节点总数量</name>
+            <length>1</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>台区识别结果</name>
+            <length>unknown</length>
+            <lengthrule>7 * 本次应答的节点总数量</lengthrule>
+            <type>NODEIDENTIFYINFO</type>
+        </splitByLength>
+    </dataItem>
+    <template id="NODEIDENTIFYINFO" protocol="csg16" region="南网">
+        <name>台区识别结果</name>
+        <length>7</length>
+        <splitByLength>
+            <name>从节点地址</name>
+            <length>6</length>
+            <type>NORMAL</type>
+        </splitByLength>
+        <splitByLength>
+            <name>台区识别结果</name>
+            <length>1</length>
+            <type>BIN</type>
+            <value key="00">该节点属于本台区</value>
+            <value key="01">该节点不属于本台区</value>
+            <value key="02">该节点无法通信</value>
+            <value key="03">未知</value>
+            <value key="04">不支持台区识别功能</value>
+            <value key="other">保留</value>
+        </splitByLength>
+    </template>
+    
+    <dataItem id="E803030F" protocol="csg16" region="南网">
+        <name>查询多余节点的台区识别结果</name>
+        <length>3</length>
+        <splitByLength>
+            <name>从节点起始序号</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>从节点数量</name>
+            <length>1</length>
+            <type>BIN</type>
+        </splitByLength>
+    </dataItem>
+    <dataItem id="E804030F" protocol="csg16" region="南网">
+        <name>返回查询多余节点的台区识别结果</name>
+        <length>unknown</length>
+        <splitByLength>
+            <name>台区识别结果从节点总数量</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>本次应答的节点总数量</name>
+            <length>1</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>台区识别结果</name>
+            <length>unknown</length>
+            <lengthrule>14 * 本次应答的节点总数量</lengthrule>
+            <type>SUPERFLUOUSNODEIDENTIFYINFO</type>
+        </splitByLength>
+    </dataItem>
+    <template id="SUPERFLUOUSNODEIDENTIFYINFO" protocol="csg16" region="南网">
+        <name>台区识别结果</name>
+        <length>14</length>
+        <splitByLength>
+            <name>从节点地址</name>
+            <length>6</length>
+            <type>NORMAL</type>
+        </splitByLength>
+        <splitByLength>
+            <name>节点属性</name>
+            <length>8</length>
+            <type>NORMAL</type>
+        </splitByLength>
+    </template>
+
+    <dataItem id="E80303F0" protocol="CSG16" region="南网">
+        <name>查询网络是否支持分钟采集</name>
+        <length>0</length>
+    </dataItem>
+    <dataItem id="E80403F0" protocol="CSG16" region="南网">
+        <name>返回网络是否支持分钟采集</name>
+        <length>1</length>
+        <type>BIN</type>
+        <value key="00">不支持</value>
+        <value key="01">支持</value>
+        <value key="other">未知</value>
+    </dataItem>
+    
+    <dataItem id="E80303F1" protocol="CSG16" region="南网">
+        <name>查询上报间隔</name>
+        <length>0</length>
+    </dataItem>
+    <dataItem id="E80403F1" protocol="CSG16" region="南网">
+        <name>返回查询上报间隔</name>
+        <length>1</length>
+        <splitByLength>
+            <name>是否支持分钟采集</name>
+            <length>1</length>
+            <type>BIN</type>
+            <unit>分</unit>
+        </splitByLength>
+    </dataItem>
+
+    <dataItem id="E80303F2" protocol="CSG16" region="南网">
+        <name>查询上报开关</name>
+        <length>0</length>
+    </dataItem>
+    <dataItem id="E80403F2" protocol="CSG16" region="南网">
+        <name>返回查询上报开关</name>
+        <length>1</length>
+        <type>BIN</type>
+        <value key="00">关闭</value>
+        <value key="01">开启</value>
+        <value key="other">未知</value>
+    </dataItem>
+
+    <dataItem id="E80204F1" protocol="CSG16" region="南网">
+        <name>设置上报间隔</name>
+        <length>1</length>
+        <type>BIN</type>
+        <unit>分钟</unit>
+    </dataItem>
+    <dataItem id="E80204F2" protocol="CSG16" region="南网">
+        <name>设置上报开关</name>
+        <length>1</length>
+        <type>BIN</type>
+        <value key="00">关闭</value>
+        <value key="01">开启</value>
+    </dataItem>
+
+    <dataItem id="E80505F1" protocol="CSG16" region="南网">
+        <name>主动上报分钟采集数据</name>
+        <length>unknown</length>
+        <splitByLength>
+            <name>报文长度</name>
+            <length>2</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>从节点地址</name>
+            <length>6</length>
+            <type>NORMAL</type>
+        </splitByLength>
+        <splitByLength>
+            <name>表类型</name>
+            <length>1</length>
+            <type>BIN</type>
+            <value key="00">单相表</value>
+            <value key="01">三相表</value>
+            <value key="other">保留</value>
+        </splitByLength>
+        <splitByLength>
+            <name>起始点时间</name>
+            <length>5</length>
+            <type>BCD</type>
+            <time>mmhhddMMYY</time>
+        </splitByLength>
+        <splitByLength>
+            <name>采集点数量</name>
+            <length>1</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>采集时间间隔</name>
+            <length>1</length>
+            <type>BIN</type>
+            <unit>分钟</unit>
+        </splitByLength>
+        <splitByLength>
+            <name>数据项数量</name>
+            <length>1</length>
+            <type>BIN</type>
+        </splitByLength>
+        <splitByLength>
+            <name>上报数据信息</name>
+            <length>unknown</length>
+            <type>SUPERFLUOUSNODEDATA</type>
+            <count>数据项数量</count>
+        </splitByLength>
+    </dataItem>
+    <template id="SUPERFLUOUSNODEDATA" protocol="CSG16" region="南网">
+        <name>上报数据信息</name>
+        <length>unknown</length>
+        <single>YES</single>
+        <splitByLength>
+            <name>数据标识</name>
+            <length>4</length>
+            <type>ITEM</type>
+        </splitByLength>
+        <splitByLength>
+            <name>采集数据</name>
+            <length>unknown</length>
+            <lengthrule>ItemLen(数据标识) * 采集点数量</lengthrule>
+            <type>ITEMDATAINFO</type>
+        </splitByLength>
+    </template>
+    <template id="ITEMDATAINFO" protocol="CSG16" region="南网" withitem="数据标识">
+        <name>采集数据</name>
+        <length>unknown</length>
+        <single>YES</single>
+        <type>WITHITEM</type>
+    </template>
 </config>

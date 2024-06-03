@@ -4,6 +4,7 @@ from .frame_fun import FrameFun as frame_fun
 import binascii,threading,queue
 from .frame_csg import *
 import asyncio
+from PyQt5.QtNetwork import QTcpServer, QTcpSocket, QHostAddress,QAbstractSocket
 
 class AsyncCommunicator(QObject):
     def __init__(self, channel,callback):
@@ -49,7 +50,7 @@ class AsyncCommunicator(QObject):
             self.channel.data_sended.emit(message)
 
     async def receive_signal(self, timeout):
-        print("Waiting to receive signal...")
+        print("Waiting to receive signal...\n")
         try:
             await asyncio.wait_for(self._wait_for_event_or_stop(), timeout)
             if self.stop_flag:
@@ -69,6 +70,7 @@ class AsyncCommunicator(QObject):
                 return
             await asyncio.sleep(0.01)
 
+    @pyqtSlot(bytes)
     def on_receive_data(self, data):
         rec_frame = frame_fun.bytes_to_decimal_list(data)
         if rec_frame is None:
@@ -78,6 +80,10 @@ class AsyncCommunicator(QObject):
         if dir == 1 and prm == 0 and self.seq == seq and self.afn == afn:
             self.received_data = rec_frame
             self.receive_event.set()
+
+    @pyqtSlot(QTcpSocket, bytes)
+    def on_client_receive_data(self, socket:QTcpSocket, data:bytes):
+        self.on_receive_data(data)
 
     def stop(self):
         self.stop_flag = True
@@ -92,7 +98,7 @@ class AsyncCommunicator(QObject):
             elif isinstance(self.channel, TcpClient):
                 self.channel.data_received.connect(self.on_receive_data)
             elif isinstance(self.channel, ClientWorker):
-                self.channel.receive_data.connect(self.on_receive_data)
+                self.channel.receive_data.connect(self.on_client_receive_data)
     
     def close_slot(self):
         if self.channel is not None:
@@ -102,7 +108,7 @@ class AsyncCommunicator(QObject):
             elif isinstance(self.channel, TcpClient):
                 self.channel.data_received.disconnect(self.on_receive_data)
             elif isinstance(self.channel, ClientWorker):
-                self.channel.receive_data.disconnect(self.on_receive_data)
+                self.channel.receive_data.disconnect(self.on_client_receive_data)
 
 class WorkerThread(QThread):
     result_signal = pyqtSignal(object)

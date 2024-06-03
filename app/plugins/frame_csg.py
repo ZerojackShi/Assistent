@@ -23,6 +23,7 @@ class FramePos(Enum):
     POS_SEQ     = 15          #命令序号
     POS_DATA    = 16          #用户数据域起始
     POS_ITEM    = 18          #数据项起始
+    POS_ITEM_DATA    = 22
 
 
 ACK = 0x00        #全部确认
@@ -47,7 +48,25 @@ def init_frame(ctrl, afn, adress, msa, seq, frame):
     frame[FramePos.POS_MSA.value] = msa
     frame[FramePos.POS_AFN.value] = afn
     frame[FramePos.POS_SEQ.value] = seq
-    
+
+def get_meter_task_len(frame):
+    pos = 26
+    len = 27
+
+    len += frame[pos] * 2
+    len += frame[len] * 4
+    len += 1
+    return len
+
+def get_normal_task_len(frame):
+    pos = 19
+    len = 20
+
+    len += frame[pos] * 2
+    len += frame[len] * 4
+    len += 1
+    return len
+
 def get_frame_seq(tpv, fir, fin, con):
     value = 0
     value |= (tpv & 0x01) << 7  # TpV at D7
@@ -189,6 +208,10 @@ def set_frame_finish(data, frame:list):
     frame.extend([caculate_cs, 0x16])
     return frame_len
 
+def set_frame_cs(data, frame:list):
+    caculate_cs = frame_fun.caculate_cs(data)
+    frame[-2] = caculate_cs
+    
 def set_frame_len(length, frame):
     frame[FramePos.POS_DATALEN.value] = length & 0X00ff
     frame[FramePos.POS_DATALEN.value + 1] = length >> 8
@@ -1302,7 +1325,7 @@ def Analysic_csg_read_history_frame(frame, dir, prm,result_list,start_pos):
                     sub_length = int(data_item_elem.find('length').text)
                     sub_datament = data_segment[pos:pos + sub_length]
                     sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
-                    alalysic_result = prase_data.parse_data_item(data_item_elem,new_datament, index + pos, False)
+                    alalysic_result, subitem_length = prase_data.parse_data_item(data_item_elem,new_datament, index + pos, False)
                     frame_fun.prase_data_with_config(alalysic_result, False,item_data)
                 else:
                     sub_length = 0#下行读取报文
@@ -1516,7 +1539,7 @@ def Analysic_csg_read_task_frame(frame, dir, prm,result_list,start_pos):
                         sub_length = int(sub_length_cont)
                         sub_datament = data_segment[pos:pos + sub_length]
                         sub_length, new_datament = recaculate_sub_length(data_item_elem, sub_datament)
-                    alalysic_result = prase_data.parse_data_item(data_item_elem,new_datament, index + pos, False)
+                    alalysic_result,subitem_length = prase_data.parse_data_item(data_item_elem,new_datament, index + pos, False)
                     frame_fun.prase_data_with_config(alalysic_result, False,item_data)
                 else:
                     sub_length = 0#下行读取报文

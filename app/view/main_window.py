@@ -108,12 +108,12 @@ class MainWindow(FluentWindow):
         # self.addSubInterface(self.viewInterface, FIF.SCROLL, t.param, pos) 
 
         # add custom widget to bottom
-        # self.navigationInterface.addWidget(
-        #     routeKey='avatar',
-        #     widget=NavigationAvatarWidget('zhiyiYo', ':/gallery/images/shoko.png'),
-        #     onClick=self.onSupport,
-        #     position=NavigationItemPosition.BOTTOM
-        # )
+        self.navigationInterface.addWidget(
+            routeKey='avatar',
+            widget=NavigationAvatarWidget('zhiyiYo', ':/gallery/images/shoko.png'),
+            onClick=self.onSupport,
+            position=NavigationItemPosition.BOTTOM
+        )
         self.addSubInterface(self.settingInterface, FIF.SETTING, self.tr('Settings'), NavigationItemPosition.BOTTOM)
 
     def initWindow(self):
@@ -137,19 +137,19 @@ class MainWindow(FluentWindow):
 
     def onSupport(self):
         w = MessageBox(
-            '支持作者🥰',
-            '个人开发不易，如果这个项目帮助到了您，可以考虑请作者喝一瓶快乐水🥤。您的支持就是作者开发和维护项目的动力🚀',
+            '软件介绍',
+            '个人开发，不接受修改需求',
             self
         )
-        w.yesButton.setText('来啦老弟')
-        w.cancelButton.setText('下次一定')
+        # w.yesButton.setText('来啦老弟')
+        # w.cancelButton.setText('下次一定')
         if w.exec():
-            QDesktopServices.openUrl(QUrl(SUPPORT_URL))
+            # QDesktopServices.openUrl(QUrl(SUPPORT_URL))
+            pass
 
     def resizeEvent(self, e):
         super().resizeEvent(e)
         self.splashScreen.resize(self.size())
-        print('mainwindow resize', self.size())
 
     def switchToSample(self, routeKey, index):
         """ switch to sample """

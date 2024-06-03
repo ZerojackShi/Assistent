@@ -1093,8 +1093,9 @@ class CheckUpgradeCard(SettingCard):
         self.wqvBoxLayout.addWidget(self.button, 0, Qt.AlignRight)
         self.wqvBoxLayout.setContentsMargins(0,0,0,0)
         # self.wqvBoxLayout.addWidget(self.ring)
-        self.button.clicked.connect(self.__onAboutCardClicked)
-        signalBus.upgrade.connect(self.__onAboutCardClicked)
+        # self.button.clicked.connect(self.__onAboutCardClicked)
+        # signalBus.upgrade.connect(self.__onAboutCardClicked)
+
     def __onAboutCardClicked(self):
         if self.update_thread is not None and self.update_thread.isRunning():
             return
@@ -1260,42 +1261,42 @@ class SettingInterface(ScrollArea):
         # )
 
         # update software
-        self.updateSoftwareGroup = SettingCardGroup(
-            self.tr("Software update"), self.scrollWidget)
-        self.updateOnStartUpCard = SwitchSettingCard(
-            FIF.UPDATE,
-            self.tr('Check for updates when the application starts'),
-            self.tr('The new version will be more stable and have more features'),
-            configItem=cfg.checkUpdateAtStartUp,
-            parent=self.updateSoftwareGroup
-        )
+        # self.updateSoftwareGroup = SettingCardGroup(
+        #     self.tr("Software update"), self.scrollWidget)
+        # self.updateOnStartUpCard = SwitchSettingCard(
+        #     FIF.UPDATE,
+        #     self.tr('Check for updates when the application starts'),
+        #     self.tr('The new version will be more stable and have more features'),
+        #     configItem=cfg.checkUpdateAtStartUp,
+        #     parent=self.updateSoftwareGroup
+        # )
 
-        # application
-        self.aboutGroup = SettingCardGroup(self.tr('About'), self.scrollWidget)
-        self.helpCard = HyperlinkCard(
-            HELP_URL,
-            self.tr('Open help page'),
-            FIF.HELP,
-            self.tr('Help'),
-            self.tr(
-                'Discover new features and learn useful tips about PyQt-Fluent-Widgets'),
-            self.aboutGroup
-        )
-        self.feedbackCard = PrimaryPushSettingCard(
-            self.tr('Provide feedback'),
-            FIF.FEEDBACK,
-            self.tr('Provide feedback'),
-            self.tr('Help us improve PyQt-Fluent-Widgets by providing feedback'),
-            self.aboutGroup
-        )
-        self.aboutCard = CheckUpgradeCard(
-            self.tr('Check update'),
-            FIF.INFO,
-            self.tr('About'),
-            '© ' + self.tr('Copyright') + f" {YEAR}, {AUTHOR}. " +
-            self.tr('Version') + " " + VERSION,
-            self.aboutGroup
-        )
+        # # application
+        # self.aboutGroup = SettingCardGroup(self.tr('About'), self.scrollWidget)
+        # self.helpCard = HyperlinkCard(
+        #     HELP_URL,
+        #     self.tr('Open help page'),
+        #     FIF.HELP,
+        #     self.tr('Help'),
+        #     self.tr(
+        #         'Discover new features and learn useful tips about PyQt-Fluent-Widgets'),
+        #     self.aboutGroup
+        # )
+        # self.feedbackCard = PrimaryPushSettingCard(
+        #     self.tr('Provide feedback'),
+        #     FIF.FEEDBACK,
+        #     self.tr('Provide feedback'),
+        #     self.tr('Help us improve PyQt-Fluent-Widgets by providing feedback'),
+        #     self.aboutGroup
+        # )
+        # self.aboutCard = CheckUpgradeCard(
+        #     self.tr('Check update'),
+        #     FIF.INFO,
+        #     self.tr('About'),
+        #     '© ' + self.tr('Copyright') + f" {YEAR}, {AUTHOR}. " +
+        #     self.tr('Version') + " " + VERSION,
+        #     self.aboutGroup
+        # )
 
         self.__initWidget()
 
@@ -1334,11 +1335,11 @@ class SettingInterface(ScrollArea):
 
         # self.materialGroup.addSettingCard(self.blurRadiusCard)
 
-        self.updateSoftwareGroup.addSettingCard(self.updateOnStartUpCard)
+        # self.updateSoftwareGroup.addSettingCard(self.updateOnStartUpCard)
 
-        self.aboutGroup.addSettingCard(self.helpCard)
-        self.aboutGroup.addSettingCard(self.feedbackCard)
-        self.aboutGroup.addSettingCard(self.aboutCard)
+        # self.aboutGroup.addSettingCard(self.helpCard)
+        # self.aboutGroup.addSettingCard(self.feedbackCard)
+        # self.aboutGroup.addSettingCard(self.aboutCard)
 
         # add setting card group to layout
         self.expandLayout.setSpacing(28)
@@ -1347,8 +1348,8 @@ class SettingInterface(ScrollArea):
         self.expandLayout.addWidget(self.basicsetgroup)
         self.expandLayout.addWidget(self.personalGroup)
         # self.expandLayout.addWidget(self.materialGroup)
-        self.expandLayout.addWidget(self.updateSoftwareGroup)
-        self.expandLayout.addWidget(self.aboutGroup)
+        # self.expandLayout.addWidget(self.updateSoftwareGroup)
+        # self.expandLayout.addWidget(self.aboutGroup)
 
     def __showRestartTooltip(self):
         """ show restart tooltip """
@@ -1383,5 +1384,5 @@ class SettingInterface(ScrollArea):
         self.micaCard.checkedChanged.connect(signalBus.micaEnableChanged)
 
         # about
-        self.feedbackCard.clicked.connect(
-            lambda: QDesktopServices.openUrl(QUrl(FEEDBACK_URL)))
+        # self.feedbackCard.clicked.connect(
+        #     lambda: QDesktopServices.openUrl(QUrl(FEEDBACK_URL)))
