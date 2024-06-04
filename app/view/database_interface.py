@@ -110,63 +110,76 @@ class CustomItem(QWidget):
 
         self.Button.clicked.connect(self.taskParamButtonClicked)
     def taskParamButtonClicked(self):
-        item = self.itemInput.toPlainText()
-        data = self.contentInput.toPlainText()
-        alalysic_result = []
-        self.tree_widget.clear()
-        self.tree_widget.last_item = None
-        if item == '':
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("数据标识不能为空"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
+        try:
+            item = self.itemInput.toPlainText()
+            data = self.contentInput.toPlainText()
+            alalysic_result = []
+            self.tree_widget.clear()
+            self.tree_widget.last_item = None
+            if item == '':
+                InfoBar.warning(
+                title=self.tr('告警'),
+                content=self.tr("数据标识不能为空"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+                return
+            if data == '':
+                InfoBar.warning(
+                title=self.tr('告警'),
+                content=self.tr("数据内容不能为空"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+                return
+            cleaned_string = data.replace(' ', '').replace('\n', '')
+            data_content = [int(cleaned_string[i:i + 2], 16) for i in range(0, len(cleaned_string), 2)]
+            protocol.frame_fun.globregion = cfg.get(cfg.Region)
+            frame_fun.globalprotocol = "CSG13"
+            template_element = frame_fun.get_config_xml(item, frame_fun.globalprotocol,frame_fun.globregion)
+            if template_element is None:
+                InfoBar.warning(
+                title=self.tr('告警'),
+                content=self.tr("数据标识不存在"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+                return
+            show_data = protocol.parse_data_item(template_element, data_content, 0, 0)
+            frame_fun.prase_data_with_config(show_data, False, alalysic_result)
+            sub_result = []
+            reverse_item = item.replace(' ', '').replace('\n', '')
+            item_list = [int(reverse_item[i:i + 2], 16) for i in range(0, len(reverse_item), 2)]
+            item_str = frame_fun.to_hex_string_reverse_with_space(item_list)
+            name = template_element.find('name').text
+            dis_data_identifier = "数据标识编码：" + f"[{reverse_item.upper()}]" + "-" + name
+            result_str = f"数据标识[{reverse_item.upper()}]数据内容：" + frame_fun.get_data_str_reverser(data_content)
+            frame_fun.add_data(sub_result, f"数据标识编码DI",item_str,dis_data_identifier,[])
+            frame_fun.add_data(sub_result, f"数据标识内容",frame_fun.get_data_str_with_space(data_content),result_str,[],alalysic_result)
+            self.tree_widget.create_tree(None, sub_result, self.item_position)
+            self.tree_widget.expandAll()
+        except Exception as e:
+            print(e)
+            InfoBar.error(
+                title=self.tr('错误'),
+                content=self.tr("解析失败"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
             return
-        if data == '':
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("数据内容不能为空"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
-            return
-        cleaned_string = data.replace(' ', '').replace('\n', '')
-        data_content = [int(cleaned_string[i:i + 2], 16) for i in range(0, len(cleaned_string), 2)]
-        protocol.frame_fun.globregion = cfg.get(cfg.Region)
-        frame_fun.globalprotocol = "CSG13"
-        template_element = frame_fun.get_config_xml(item, frame_fun.globalprotocol,frame_fun.globregion)
-        if template_element is None:
-            InfoBar.warning(
-            title=self.tr('告警'),
-            content=self.tr("数据标识不存在"),
-            orient=Qt.Horizontal,
-            isClosable=True,
-            position=InfoBarPosition.TOP,
-            duration=2000,
-            parent=self
-        )
-            return
-        show_data = protocol.parse_data_item(template_element, data_content, 0, 0)
-        frame_fun.prase_data_with_config(show_data, False, alalysic_result)
-        sub_result = []
-        reverse_item = item.replace(' ', '').replace('\n', '')
-        item_list = [int(reverse_item[i:i + 2], 16) for i in range(0, len(reverse_item), 2)]
-        item_str = frame_fun.to_hex_string_reverse_with_space(item_list)
-        name = template_element.find('name').text
-        dis_data_identifier = "数据标识编码：" + f"[{reverse_item.upper()}]" + "-" + name
-        result_str = f"数据标识[{reverse_item.upper()}]数据内容：" + frame_fun.get_data_str_reverser(data_content)
-        frame_fun.add_data(sub_result, f"数据标识编码DI",item_str,dis_data_identifier,[])
-        frame_fun.add_data(sub_result, f"数据标识内容",frame_fun.get_data_str_with_space(data_content),result_str,[],alalysic_result)
-        self.tree_widget.create_tree(None, sub_result, self.item_position)
-        self.tree_widget.expandAll()
-
+            
 class FrameInterface(QWidget):
     """ Pivot interface """
 

@@ -403,6 +403,10 @@ def prase_simple_type_data(data_item_elem, data_segment,index, need_delete):
     data_type = ""
     if subitem_type is not None:
         data_type = subitem_type.text
+    else:
+        data_type = "BCD"
+        # if frame_fun.globalprotocol.upper() in "CSG13":
+        #     data_type = "BCD"
     if data_type in ("BCD","Bcd","bcd"):
          subitem_value = frame_fun.bcd_to_decimal(data_segment,decimal,need_delete,sign)
     elif data_type in ("BIN","Bin","bin"):

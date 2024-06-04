@@ -406,18 +406,24 @@ class ProblemAnalysic(ExpandSettingCard):
             self.stop_analyse()
 
     def analyse(self):
-        self.tree.clear()
-        self.param_list.clear()
-        if self.base_param_get():
-            self.analysize_thread = AnalysizeThread(self.data, self.param_list)
-            self.analysize_thread.result_change.connect(self.add_info_list)
-            self.analysize_thread.finished.connect(self.thread_finished)
-            self.analysize_thread.step_change.connect(self.change_parent_item)
-            self.analysize_thread.start()
-        else:
+        try:
+            self.tree.clear()
+            self.param_list.clear()
+            if self.base_param_get():
+                self.analysize_thread = AnalysizeThread(self.data, self.param_list)
+                self.analysize_thread.result_change.connect(self.add_info_list)
+                self.analysize_thread.finished.connect(self.thread_finished)
+                self.analysize_thread.step_change.connect(self.change_parent_item)
+                self.analysize_thread.start()
+            else:
+                self.button.setText('开始分析')
+                self.set_input_state(True)
+                self.button.setProperty('is_start', True)
+        except Exception as e:
+            print(e)
             self.button.setText('开始分析')
             self.set_input_state(True)
-            self.button.setProperty('is_start', True)
+            self.button.setProperty('is_start', False)
 
     def stop_analyse(self):
         self.analysize_thread.stop()

@@ -515,16 +515,22 @@ class FrameFun:
         return total_measurement_points, measurement_points_array
     @staticmethod
     def prase_DA_data(DA):
-        point_str = ""
-        total_measurement_points, measurement_points_array = FrameFun.calculate_measurement_points(DA)
-        if measurement_points_array[0] == 0 and total_measurement_points == 1:
-            point_str = "Pn=测量点：0(终端)"
-        elif measurement_points_array[0] == 0xffff and total_measurement_points == 1:
-            point_str = "Pn=测量点：FFFF(除了终端信息点以外的所有测量点)"
-        else:
-            formatted_string = ', '.join(map(str, measurement_points_array))
-            point_str = "Pn=第" + formatted_string + "测量点"
-        return point_str
+        try:
+            point_str = ""
+            total_measurement_points, measurement_points_array = FrameFun.calculate_measurement_points(DA)
+            if total_measurement_points == 0:
+                return "Pn解析失败"
+            if measurement_points_array[0] == 0 and total_measurement_points == 1:
+                point_str = "Pn=测量点：0(终端)"
+            elif measurement_points_array[0] == 0xffff and total_measurement_points == 1:
+                point_str = "Pn=测量点：FFFF(除了终端信息点以外的所有测量点)"
+            else:
+                formatted_string = ', '.join(map(str, measurement_points_array))
+                point_str = "Pn=第" + formatted_string + "测量点"
+            return point_str
+        except Exception as e:
+            print(e)
+            return ""
     
     @staticmethod
     def caculate_item_box_length(item_ele):

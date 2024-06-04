@@ -51523,6 +51523,21 @@
 		<length>unknown</length>
 		<type>METERTASK</type>
 	</dataItem>
+
+	<dataItem id="E1800030" protocol="csg13" region="南网">
+		<name>终端是否支持分钟级采集</name>
+		<length>1</length>
+		<type>BCD</type>
+		<value key="00">不支持</value>
+		<value key="01">支持</value>
+		<value key="other">未知</value>
+	</dataItem>
+	<dataItem id="E1800060" protocol="csg13" region="南网">
+		<name>分钟级采集本轮用时</name>
+		<length>2</length>
+		<type>BCD</type>
+		<unit>分</unit>
+	</dataItem>
 	<dataItem id="E1800032" protocol="csg13" region="南网">
 		<name>终端 APP 列表信息</name>
 		<length>unknown</length>
@@ -57778,6 +57793,14 @@
 			<type>BCD</type>
 			<unit>时</unit>
 		</splitByLength>
+	</dataItem>
+
+	<dataItem id="E000120B" protocol="csg13" region="南网">
+		<name>模块曲线数据主动上报功能开关</name>
+		<length>1</length>
+		<value key="00">关闭</value>
+		<value key="01">开启</value>
+		<value key="other">未知</value>
 	</dataItem>
 	<dataItem id="E0001210" protocol="csg13" region="南网,广东,海南">
 		<name>负荷控制回路断线检测</name>
