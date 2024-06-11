@@ -21,8 +21,19 @@ from ..plugins.frame_cco import FrameCCO
 class CustomTreeWidgetItem(QtWidgets.QTreeWidgetItem):
     def __init__(self, parent, text_list):
         self.data = text_list  # Store the associated data
-        super(CustomTreeWidgetItem, self).__init__(parent, text_list)
+        super(CustomTreeWidgetItem, self).__init__(parent, text_list[:-1])  # Exclude color from the displayed text
         self.setFlags(self.flags() | QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEditable)
+        
+        # Assuming the last element in text_list is the color
+        self.color = text_list[-1]
+        if self.color is not None:
+            print(self.color)
+        # Apply the color to the description column (index 2 in this case)
+            self.setTextColor(2, QtGui.QColor(self.color))
+
+    def setTextColor(self, column, color):
+        brush = QtGui.QBrush(color)
+        self.setForeground(column, brush)
 
 class CustomDelegate(QtWidgets.QStyledItemDelegate):
     def __init__(self, parent=None):
@@ -44,6 +55,8 @@ class CustomTreeWidget(QtWidgets.QTreeWidget):
         super().__init__()
         self.expend_status = True
         self.last_item = None
+        self.old_color = {}
+        self.old_brush = {}
         self.last_column = 0
         self.scrollDelegate = SmoothScrollDelegate(self)
         self.setObjectName('custom_tree')
@@ -81,10 +94,15 @@ class CustomTreeWidget(QtWidgets.QTreeWidget):
     def onItemClicked(self, item):
 
         column = self.currentColumn()
-        self.old_color = item.background(column)
-        self.old_brush = item.foreground(column)
-
+            
         for i in range(self.columnCount()):
+            if self.last_item is not None:
+                self.last_item.setBackground(i,self.old_color[i])
+                self.last_item.setForeground(i,self.old_brush[i])
+
+            self.old_color[i] = (item.background(i))
+            self.old_brush[i] = (item.foreground(i))
+
             if i != column:
                 backbrush = QtGui.QBrush(QtGui.QColor(51, 134, 255)) 
             else:
@@ -93,9 +111,6 @@ class CustomTreeWidget(QtWidgets.QTreeWidget):
             forcebrush = QtGui.QBrush(QtGui.QColor(255, 255, 255))
             item.setBackground(i,backbrush)
             item.setForeground(i,forcebrush)
-            if self.last_item != None:
-                self.last_item.setBackground(i,self.old_color)
-                self.last_item.setForeground(i,self.old_brush)
 
         self.last_item = item
         self.last_column = column
@@ -123,12 +138,13 @@ class CustomTreeWidget(QtWidgets.QTreeWidget):
             data_value = item_data.get("数据", "")
             description = item_data.get("说明", "")
             position = item_data.get("位置")
+            color = item_data.get("颜色")
 
             if frame == "内部规约":
                 print(description)
                 self.custom_header.emit(description)
                 description = "参见窗口内部规约说明"
-            column_texts = [frame, data_value, description]
+            column_texts = [frame, data_value, description, color]
 
             item = CustomTreeWidgetItem(parent_item, column_texts)
             item_positions[id(item)] = position

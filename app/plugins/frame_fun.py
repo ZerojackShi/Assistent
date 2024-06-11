@@ -65,8 +65,8 @@ class FrameFun:
         except ValueError:
             return None
     @staticmethod
-    def add_data(data_list, frame, data, description, location,child_items=None):
-        new_data = {"帧域": frame, "数据": data, "说明": description,"位置":location}
+    def add_data(data_list, frame, data, description, location,child_items=None,color=None):
+        new_data = {"帧域": frame, "数据": data, "说明": description,"位置":location, "颜色":color}
         if child_items is not None:
             new_data["子项"] = child_items
         data_list.append(new_data)
@@ -820,6 +820,10 @@ class FrameFun:
                     data_str = FrameFun.to_hex_string_reverse(item_data[1])
                 sub_data_items = item_data[2]
                 data_index = item_data[3]
+                if len(item_data) > 4:
+                    color = item_data[4]
+                else:
+                    color = None
                 dispriction = data_str if isinstance(sub_data_items, dict) else sub_data_items
                 result_dispriction = ""
                 if FrameFun.is_numeric_and_4_bytes(item_id):
@@ -835,12 +839,12 @@ class FrameFun:
                 if isinstance(sub_data_items, dict):
                     sub_result = []
                     FrameFun.prase_data_with_config(sub_data_items, need_delete,sub_result, indent + 1)
-                    FrameFun.add_data(data_list, f"{item_id}", origial_data, result_dispriction, data_index,sub_result)
+                    FrameFun.add_data(data_list, f"{item_id}", origial_data, result_dispriction, data_index,sub_result, color)
                 else:
                     if isinstance(sub_data_items, list):
-                        FrameFun.add_data(data_list, f"{item_id}", origial_data, f"{item_id}内容", data_index,sub_data_items)
+                        FrameFun.add_data(data_list, f"{item_id}", origial_data, f"{item_id}内容", data_index,sub_data_items, color)
                     else:
-                        FrameFun.add_data(data_list, f"{item_id}", origial_data, result_dispriction, data_index)
+                        FrameFun.add_data(data_list, f"{item_id}", origial_data, result_dispriction, data_index, color=color)
 
             elif isinstance(item_data, dict):
                 sub_result = []
@@ -940,6 +944,7 @@ class FrameFun:
         # Convert the hexadecimal strings to integers
         item_array = [int(x, 16) for x in hex_values]
         return item_array
+    
     @staticmethod
     def item_to_di(item, frame):
         for _ in range(4):

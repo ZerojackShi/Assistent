@@ -745,10 +745,11 @@ class ParamFrame(QWidget):
             )
             return
 
-        item = self.itemInput.toPlainText()
-        if item is not None and item != '':
+        item_array = []
+        input_text = self.itemInput.toPlainText()
+        if input_text:
             try:
-                item = int(item, 16)
+                item_array = frame_fun.prase_item_by_input_text(input_text)
             except Exception as e:
                 InfoBar.warning(
                 title=self.tr('告警'),
@@ -762,27 +763,30 @@ class ParamFrame(QWidget):
                 return
         else:
             InfoBar.warning(
-                title=self.tr('告警'),
-                content=self.tr("请输入数据标识!"),
-                orient=Qt.Horizontal,
-                isClosable=True,
-                position=InfoBarPosition.TOP,
-                duration=2000,
-                parent=self
-            )
+            title=self.tr('告警'),
+            content=self.tr("请输入数据标识!"),
+            orient=Qt.Horizontal,
+            isClosable=True,
+            position=InfoBarPosition.TOP,
+            duration=2000,
+            parent=self
+        )
             return
-        if item in (0xE0000150, 0xE0000151,0xE0000152):
+        
+        values_to_check = (0xE0000150, 0xE0000151, 0xE0000152)
+
+        if any(value in item_array for value in values_to_check) and len(item_array) == 1:
             if self.switchButton.isChecked():
                 data = self.get_item_mask_data()
-                item_dic[item] = frame_fun.get_data_str_order(data)
+                item_dic[item_array[0]] = frame_fun.get_data_str_order(data)
             else:
                 data = None
-                item_dic[item] = data 
+                hex_values = [data] * len(item_array)
         else:
             data = self.dataInput.toPlainText()
             if self.switchButton.isChecked():
                 if data is not None and data != '':
-                    item_dic[item] = data
+                    hex_values = [x.strip() for x in data.replace(',', ' ').split()]
                 else:
                     InfoBar.warning(
                     title=self.tr('告警'),
@@ -796,8 +800,12 @@ class ParamFrame(QWidget):
                     return
             else:
                 data = None
-                item_dic[item] = data
-            
+                hex_values = [data] * len(item_array)
+                
+        for i, item in enumerate(item_array):
+            item_dic[item] = hex_values[i]
+
+
         adress = [0xff] * 6  # Fix the initialization of adress
         msa = 0x10
         seq = frame_csg.get_frame_seq(0, 1, 1, False)
@@ -2928,12 +2936,15 @@ class NoramlTaskInterface(QWidget):
 
     @pyqtSlot(int, list)
     def _data_replay_impl(self, index, data):
-        task_id = self.frame_id_map[index]
-        len = frame_csg.get_normal_task_len(data[FramePos.POS_ITEM.value + 4:])
-        frame = frame_fun.get_data_str_order(data[FramePos.POS_ITEM.value + 4: FramePos.POS_ITEM.value + 4 + len])
-        self.tasktable.add_table([task_id, frame])
-        self.qhlayout.update()
-        QApplication.processEvents()
+        try:
+            task_id = self.frame_id_map[index]
+            len = frame_csg.get_normal_task_len(data[FramePos.POS_ITEM.value + 4:])
+            frame = frame_fun.get_data_str_order(data[FramePos.POS_ITEM.value + 4: FramePos.POS_ITEM.value + 4 + len])
+            self.tasktable.add_table([task_id, frame])
+            self.qhlayout.update()
+            QApplication.processEvents()
+        except Exception as e:
+            print(e)
 
     def finish_handle(self):
         self.set_readbutton_state(True)

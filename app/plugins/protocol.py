@@ -141,14 +141,17 @@ def parse_bitwise_data(splitbit_elem, data_segment,index,need_delete):
 
         if bit_value_elem is not None:
             bit_value_name = bit_value_elem.text
+            color = bit_value_elem.get('color')  # 获取 color 属性
         else:
             # If <value> tag is not present, use an empty string
             if bit_elem.find('value[@key="other"]') is not None:
                 bit_value_name = bit_elem.find('value[@key="other"]').text
+                color = bit_elem.find('value[@key="other"]').get('color')
             else:
                 bit_value_name = str(int(bit_value))
+                color = None
         bit_id_attr = "bit"+bit_id_attr
-        result[bit_id_attr] = [bit_name, bit_value, bit_value_name,[index + start_pos, index + end_pos]]
+        result[bit_id_attr] = [bit_name, bit_value, bit_value_name,[index + start_pos, index + end_pos], color]
     return result
 def prase_type_item(data_item_elem, data_segment, index, need_delete, singal_length):
     from ..plugins.frame_csg import FrameCsg
@@ -338,7 +341,7 @@ def parse_splitByLength_data(data_item_elem, data_segment,index, need_delete):
         if subitem_length > len(subitem_content):
             break
         if data_subitem_elem.find('unit') is not None and data_subitem_elem.find('value') is not None:
-            subitem_value = prase_value_item(data_subitem_elem, subitem_content, index + pos,  need_delete)
+            subitem_value,color = prase_value_item(data_subitem_elem, subitem_content, index + pos,  need_delete)
             subitem_value = f"{subitem_value}"
         elif data_subitem_elem.find('unit') is not None:
             subitem_unit = data_subitem_elem.find('unit').text
@@ -375,7 +378,7 @@ def parse_splitByLength_data(data_item_elem, data_segment,index, need_delete):
         elif data_subitem_elem.find('splitByLength') is not None:
             subitem_value = parse_splitByLength_data(data_subitem_elem, subitem_content,index + pos, need_delete)
         elif data_subitem_elem.find('value') is not None:
-            subitem_value = prase_value_item(data_subitem_elem, subitem_content, index + pos,  need_delete)
+            subitem_value,color = prase_value_item(data_subitem_elem, subitem_content, index + pos,  need_delete)
         elif data_subitem_elem.find('type') is not None:
             subitem_value = prase_type_item(data_subitem_elem, subitem_content, index + pos,  need_delete, singal_length)
         elif data_subitem_elem.find('item') is not None:
@@ -498,7 +501,8 @@ def prase_value_item(data_item_elem, data_segment, index, need_delete):
             value_name = data_item_elem.find('value[@key="other"]').text
         else:
             value_name = parsevalue
-    return value_name
+    color = data_item_elem.get('color')
+    return value_name,color
 
 def parse_data_item(data_item_elem, data_segment, index, need_delete):
     # 解析单个dataItem数据段
@@ -529,14 +533,14 @@ def parse_data_item(data_item_elem, data_segment, index, need_delete):
             result[sub_data_item_id] = parsed_sub_data
             pos += sub_data_item_length
     elif data_item_elem.find('unit') is not None and data_item_elem.find('value') is not None:
-        subitem_value = prase_value_item(data_item_elem, data_segment, index,  need_delete)
+        subitem_value,color = prase_value_item(data_item_elem, data_segment, index,  need_delete)
         singal_result = f"{subitem_value}"
         result = {data_item_id: [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]}
     elif data_item_elem.find('unit') is not None:
         singal_result = prase_singal_item(data_item_elem, data_segment, index, need_delete)
         result = {data_item_id: [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]}
     elif data_item_elem.find('value') is not None:
-        singal_result = prase_value_item(data_item_elem, data_segment, index,  need_delete)
+        singal_result,color = prase_value_item(data_item_elem, data_segment, index,  need_delete)
         result = {data_item_id: [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]}
     elif data_item_elem.find('time') is not None:
        # 解析时间数据
@@ -622,6 +626,7 @@ class PraseFrameData():
         data_item_name = data_item_elem.find('name').text
 
         # 递归解析子dataItem标签
+        color = None
         sub_data_item = data_item_elem.find('dataItem')
         if sub_data_item is not None:
             sub_data_segment = data_segment
@@ -636,21 +641,21 @@ class PraseFrameData():
                 if 'splitByLength' in sub_data_item_elem.tag:
                     sub_data_segment = sub_data_segment[:int(sub_data_item_elem.find('length').text)]
                 parsed_sub_data = parse_data_item(sub_data_item_elem,sub_data_segment,index + pos,need_delete)
-                result_data = [sub_item_name, sub_data_segment, parsed_sub_data, [index + pos, index + pos + sub_data_item_length]]
+                result_data = [sub_item_name, sub_data_segment, parsed_sub_data, [index + pos, index + pos + sub_data_item_length], color]
                 result[sub_data_item_id] = parsed_sub_data
                 pos += sub_data_item_length
         elif data_item_elem.find('unit') is not None and data_item_elem.find('value') is not None:
-            subitem_value = prase_value_item(data_item_elem, data_segment, index,  need_delete)
+            subitem_value,color = prase_value_item(data_item_elem, data_segment, index,  need_delete)
             singal_result = f"{subitem_value}"
-            result = {data_item_id: [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]}
+            result = {data_item_id: [data_item_name, data_segment, singal_result,[index, index + len(data_segment)],color]}
         elif data_item_elem.find('unit') is not None:
             singal_result = prase_singal_item(data_item_elem, data_segment, index, need_delete)
             #result = [data_item_name,data_segment, singal_result, [index, index+len(data_segment)]]
-            result = {data_item_id: [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]}
+            result = {data_item_id: [data_item_name, data_segment, singal_result,[index, index + len(data_segment)], color]}
             #result = singal_result
         elif data_item_elem.find('value') is not None:
-            singal_result = prase_value_item(data_item_elem, data_segment, index,  need_delete)
-            result = {data_item_id: [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]}
+            singal_result,color = prase_value_item(data_item_elem, data_segment, index,  need_delete)
+            result = {data_item_id: [data_item_name, data_segment, singal_result,[index, index + len(data_segment)], color]}
         elif data_item_elem.find('time') is not None:
             # 解析时间数据
             subitem_time_format = data_item_elem.find('time').text
@@ -662,13 +667,13 @@ class PraseFrameData():
             if data_type in ("BIN","Bin","bin"):
                 time_data = frame_fun.binary_to_bcd(time_data)
             singal_result = frame_fun.parse_time_data(time_data,subitem_time_format,need_delete)
-            result = {data_item_id: [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]}
+            result = {data_item_id: [data_item_name, data_segment, singal_result,[index, index + len(data_segment)], color]}
                 # 判断是否包含splitbit标签
         elif data_item_elem.find('splitbit') is not None:
             # 包含splitbit标签，则先解析splitbit数据
             splitbit_elem = data_item_elem.find('splitbit')
             parsed_bitwise_data = parse_bitwise_data(splitbit_elem, data_segment,index, need_delete)
-            result = {data_item_id: [data_item_name, data_segment, parsed_bitwise_data,[index, index + len(data_segment)]]}
+            result = {data_item_id: [data_item_name, data_segment, parsed_bitwise_data,[index, index + len(data_segment)], color]}
             # result.update(parsed_bitwise_data)
 
         # 解析splitByLength数据
@@ -709,7 +714,7 @@ class PraseFrameData():
                         key = data_item_name
                     singal_result = prase_singal_item(data_item_elem, data_segment, index, need_delete)
                     #result = [data_item_name,data_segment, singal_result, [index, index+len(data_segment)]]
-                    result[key] = [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]
+                    result[key] = [data_item_name, data_segment, singal_result,[index, index + len(data_segment)], color]
             else:
                 if data_item_id:
                     key = data_item_id
@@ -717,7 +722,7 @@ class PraseFrameData():
                     key = data_item_name
                 singal_result = prase_singal_item(data_item_elem, data_segment, index, need_delete)
                 #result = [data_item_name,data_segment, singal_result, [index, index+len(data_segment)]]
-                result[key] = [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]
+                result[key] = [data_item_name, data_segment, singal_result,[index, index + len(data_segment)],color]
         else:
             if data_item_id:
                 key = data_item_id
@@ -725,7 +730,7 @@ class PraseFrameData():
                 key = data_item_name
             singal_result = prase_singal_item(data_item_elem, data_segment, index, need_delete)
             #result = [data_item_name,data_segment, singal_result, [index, index+len(data_segment)]]
-            result[key] = [data_item_name, data_segment, singal_result,[index, index + len(data_segment)]]
+            result[key] = [data_item_name, data_segment, singal_result,[index, index + len(data_segment)],color]
         return result
     def parse_data(self,data_item_id, protocol, region, data_segment, index):
         # 根据xml配置解析数据

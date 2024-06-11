@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <config>
 	<!--(当前)组合有功电能数据块-->
 	<dataItem id="0000FF00" protocol="csg13" region="南网">
@@ -41534,1284 +41535,1284 @@
 		</splitByLength>
 	</dataItem>
 	<!--告警上报屏蔽字-->
-	<dataItem id="E0000150" protocol="csg13" region="南网">
+    <dataItem id="E0000150" protocol="csg13" region="南网">
 		<name>告警上报屏蔽字</name>
 		<length>32</length>
 		<splitbit>
 			<bit id="0">
 				<name>E2000001:计量装置门开闭</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="1">
 				<name>E2000002:电流反极性</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="2">
 				<name>E2000003:电压逆相序</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="3">
 				<name>E2000004:电流不平衡</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="4">
 				<name>E2000005:电压不平衡</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="5">
 				<name>E2000006:零序电流偏大</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="6">
 				<name>E2000007:A相TA二次侧短路</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="7">
 				<name>E2000008:B相TA二次侧短路</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="8">
 				<name>E2000009:C相TA二次侧短路</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="9">
 				<name>E200000A:A相TA二次侧开路</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="10">
 				<name>E200000B:B相TA二次侧开路</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="11">
 				<name>E200000C:C相TA二次侧开路</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="12">
 				<name>E200000D:A相潮流反向</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="13">
 				<name>E200000E:B相潮流反向</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="14">
 				<name>E200000F:C相潮流反向</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="15">
 				<name>E2000010:A相电流过流</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="16">
 				<name>E2000011:B相电流过流</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="17">
 				<name>E2000012:C相电流过流</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="18">
 				<name>E2000013:A相电流失流</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="19">
 				<name>E2000014:B相电流失流</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="20">
 				<name>E2000015:C相电流失流</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="21">
 				<name>E2000016:A相电压失压</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="22">
 				<name>E2000017:B相电压失压</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="23">
 				<name>E2000018:C相电压失压</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="24">
 				<name>E2000019:全失压</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="25">
 				<name>E200001A:A相电压过压</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="26">
 				<name>E200001B:B相电压过压</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="27">
 				<name>E200001C:C相电压过压</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="28">
 				<name>E200001D:A相电压断相</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="29">
 				<name>E200001E:B相电压断相</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="30">
 				<name>E200001F:C相电压断相</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="31">
 				<name>E2000020:A相电压畸变</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="32">
 				<name>E2000021:B相电压畸变</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="33">
 				<name>E2000022:C相电压畸变</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="34">
 				<name>E2000023:A相电流畸变</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="35">
 				<name>E2000024:B相电流畸变</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="36">
 				<name>E2000025:C相电流畸变</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="37">
 				<name>E2000026:无功过补偿</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="38">
 				<name>E2000027:无功欠补偿</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="39">
 				<name>E2000028:功率超定值</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="40">
 				<name>E2000029:负荷过载</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="41">
 				<name>E200002A:超合同容量用电</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="42">
 				<name>E200002B:剩余电费不足</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="43">
 				<name>E200002C:示度下降</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="44">
 				<name>E200002D:电能表飞走</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="45">
 				<name>E200002E:电能表停走</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="46">
 				<name>E200002F:电能表通讯失败</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="47">
 				<name>E2000030:差动告警</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="48">
 				<name>E2000031:最大需量手动复零</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="49">
 				<name>E2000032:时钟电池电压过低</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="50">
 				<name>E2000033:设备掉电</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="51">
 				<name>E2000034:设备上电</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="52">
 				<name>E2000035:电能表编程时间更改</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="53">
 				<name>E2000036:电能表时段或费率数更改</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="54">
 				<name>E2000037:电能表脉冲常数更改</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="55">
 				<name>E2000038:计量互感器倍率更改</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="56">
 				<name>E2000039:遥信变位</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="57">
 				<name>E200003A:月通信流量越限</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="58">
 				<name>E200003B:继电器变位</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="59">
 				<name>E200003C:电能表拉合闸失败</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="60">
 				<name>E200003D:抄表失败</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="61">
 				<name>E200003E:电能表时钟异常</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="62">
 				<name>E200003F:电能表校时失败</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="63">
 				<name>E2000040:电能表 A、B、C 相失压总次数</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="64">
 				<name>E2000041:电能表 A、B、C 相失流总次数</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="65">
 				<name>E2000042:电能表 A、B、C 相潮流反向总次数</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="66">
 				<name>E2000043:电能表编程总次数</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="67">
 				<name>E2000044:A 相电压偏差越限</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="68">
 				<name>E2000045:B 相电压偏差越限</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="69">
 				<name>E2000046:C 相电压偏差越限</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="70">
 				<name>E2000047:频率偏差越限</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="71">
 				<name>E2000048:A 相闪变越限</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="72">
 				<name>E2000049:B 相闪变越限</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="73">
 				<name>E200004A:C 相闪变越限</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="74">
 				<name>E200004B:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="75">
 				<name>E200004C:发现未知电表</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="76">
 				<name>E200004D:表端钮盒开盖告警</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="77">
 				<name>E200004E:表盖开启告警</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="78">
 				<name>E200004F:费率参数表编程次数更改</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="79">
 				<name>E2000050:阶梯表编程次数更改</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="80">
 				<name>E2000051:异常插卡告警</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="81">
 				<name>E2000052:非法插卡告警</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="82">
 				<name>E2000053:恒定磁场干扰告警</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="83">
 				<name>E2000054:负荷开关误动作告警</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="84">
 				<name>E2000055:电源异常告警</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="85">
 				<name>E2000056:备用电池异常告警</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="86">
 				<name>E2000057:SIM卡更换告警</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="87">
 				<name>E2000058:电表通信模块更换告警</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="88">
 				<name>E2000059:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="89">
 				<name>E200005A:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="90">
 				<name>E200005B:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="91">
 				<name>E200005C:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="92">
 				<name>E200005D:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="93">
 				<name>E200005E:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="94">
 				<name>E200005F:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="95">
 				<name>E2000060:安全监测告警</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="96">
 				<name>E2000061:测量点参数变更</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="97">
 				<name>E2000062:终端模块更换告警</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="98">
 				<name>E2000063:拓扑信息变更</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="99">
 				<name>E2000064:电能表计量芯片故障</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="100">
 				<name>E2000065:文件传输情况告警</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="101">
 				<name>E2000066:低压故障告警</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="102">
 				<name>E2000067:负荷控制回路断线告警</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="103">
 				<name>E2000068:负荷控制告警</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="104">
 				<name>E2000069:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="105">
 				<name>E200006A:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="106">
 				<name>E200006B:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="107">
 				<name>E200006C:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="108">
 				<name>E200006D:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="109">
 				<name>E200006E:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="110">
 				<name>E200006F:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="111">
 				<name>E2000070:操作系统异常告警</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="112">
 				<name>E2000071:微应用异常告警</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="113">
 				<name>E2000072:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="114">
 				<name>E2000073:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="115">
 				<name>E2000074:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="116">
 				<name>E2000075:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="117">
 				<name>E2000076:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="118">
 				<name>E2000077:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="119">
 				<name>E2000078:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="120">
 				<name>E2000079:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="121">
 				<name>E200007A:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="122">
 				<name>E200007B:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="123">
 				<name>E200007C:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="124">
 				<name>E200007D:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="125">
 				<name>E200007E:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="126">
 				<name>E200007F:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="127">
 				<name>E2000080:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="128">
 				<name>E2000081:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="129">
 				<name>E2000082:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="130">
 				<name>E2000083:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="131">
 				<name>E2000084:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="132">
 				<name>E2000085:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="133">
 				<name>E2000086:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="134">
 				<name>E2000087:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="135">
 				<name>E2000088:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="136">
 				<name>E2000089:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="137">
 				<name>E200008A:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="138">
 				<name>E200008B:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="139">
 				<name>E200008C:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="140">
 				<name>E200008D:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="141">
 				<name>E200008E:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="142">
 				<name>E200008F:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="143">
 				<name>E2000090:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="144">
 				<name>E2000091:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="145">
 				<name>E2000092:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="146">
 				<name>E2000093:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="147">
 				<name>E2000094:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="148">
 				<name>E2000095:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="149">
 				<name>E2000096:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="150">
 				<name>E2000097:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="151">
 				<name>E2000098:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="152">
 				<name>E2000099:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="153">
 				<name>E200009A:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="154">
 				<name>E200009B:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="155">
 				<name>E200009C:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="156">
 				<name>E200009D:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="157">
 				<name>E200009E:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="158">
 				<name>E200009F:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="159">
 				<name>E20000A0:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="160">
 				<name>E20000A1:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="161">
 				<name>E20000A2:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="162">
 				<name>E20000A3:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="163">
 				<name>E20000A4:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="164">
 				<name>E20000A5:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="165">
 				<name>E20000A6:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="166">
 				<name>E20000A7:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="167">
 				<name>E20000A8:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="168">
 				<name>E20000A9:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="169">
 				<name>E20000AA:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="170">
 				<name>E20000AB:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="171">
 				<name>E20000AC:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="172">
 				<name>E20000AD:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="173">
 				<name>E20000AE:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="174">
 				<name>E20000AF:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="175">
 				<name>E20000B0:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="176">
 				<name>E20000B1:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="177">
 				<name>E20000B2:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="178">
 				<name>E20000B3:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="179">
 				<name>E20000B4:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="180">
 				<name>E20000B5:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="181">
 				<name>E20000B6:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="182">
 				<name>E20000B7:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="183">
 				<name>E20000B8:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="184">
 				<name>E20000B9:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="185">
 				<name>E20000BA:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="186">
 				<name>E20000BB:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="187">
 				<name>E20000BC:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="188">
 				<name>E20000BD:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="189">
 				<name>E20000BE:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="190">
 				<name>E20000BF:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="191">
 				<name>E20000C0:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="192">
 				<name>E20000C1:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="193">
 				<name>E20000C2:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="194">
 				<name>E20000C3:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="195">
 				<name>E20000C4:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="196">
 				<name>E20000C5:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="197">
 				<name>E20000C6:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="198">
 				<name>E20000C7:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="199">
 				<name>E20000C8:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="200">
 				<name>E20000C9:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="201">
 				<name>E20000CA:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="202">
 				<name>E20000CB:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="203">
 				<name>E20000CC:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="204">
 				<name>E20000CD:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="205">
 				<name>E20000CE:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="206">
 				<name>E20000CF:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="207">
 				<name>E20000D0:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="208">
 				<name>E20000D1:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="209">
 				<name>E20000D2:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="210">
 				<name>E20000D3:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="211">
 				<name>E20000D4:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="212">
 				<name>E20000D5:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="213">
 				<name>E20000D6:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="214">
 				<name>E20000D7:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="215">
 				<name>E20000D8:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="216">
 				<name>E20000D9:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="217">
 				<name>E20000DA:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="218">
 				<name>E20000DB:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="219">
 				<name>E20000DC:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="220">
 				<name>E20000DD:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="221">
 				<name>E20000DE:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="222">
 				<name>E20000DF:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="223">
 				<name>E20000E0:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="224">
 				<name>E20000E1:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="225">
 				<name>E20000E2:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="226">
 				<name>E20000E3:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="227">
 				<name>E20000E4:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="228">
 				<name>E20000E5:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="229">
 				<name>E20000E6:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="230">
 				<name>E20000E7:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="231">
 				<name>E20000E8:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="232">
 				<name>E20000E9:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="233">
 				<name>E20000EA:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="234">
 				<name>E20000EB:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="235">
 				<name>E20000EC:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="236">
 				<name>E20000ED:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="237">
 				<name>E20000EE:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="238">
 				<name>E20000EF:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="239">
 				<name>E20000F0:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="240">
 				<name>E20000F1:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="241">
 				<name>E20000F2:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="242">
 				<name>E20000F3:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="243">
 				<name>E20000F4:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="244">
 				<name>E20000F5:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="245">
 				<name>E20000F6:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="246">
 				<name>E20000F7:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="247">
 				<name>E20000F8:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="248">
 				<name>E20000F9:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="249">
 				<name>E20000FA:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="250">
 				<name>E20000FB:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="251">
 				<name>E20000FC:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="252">
 				<name>E20000FD:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="253">
 				<name>E20000FE:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="254">
 				<name>E20000FF:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 		</splitbit>
 	</dataItem>
@@ -42822,1278 +42823,1278 @@
 		<splitbit>
 			<bit id="0">
 				<name>E2000001:计量装置门开闭</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="1">
 				<name>E2000002:电流反极性</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="2">
 				<name>E2000003:电压逆相序</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="3">
 				<name>E2000004:电流不平衡</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="4">
 				<name>E2000005:电压不平衡</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="5">
 				<name>E2000006:零序电流偏大</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="6">
 				<name>E2000007:A相TA二次侧短路</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="7">
 				<name>E2000008:B相TA二次侧短路</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="8">
 				<name>E2000009:C相TA二次侧短路</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="9">
 				<name>E200000A:A相TA二次侧开路</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="10">
 				<name>E200000B:B相TA二次侧开路</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="11">
 				<name>E200000C:C相TA二次侧开路</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="12">
 				<name>E200000D:A相潮流反向</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="13">
 				<name>E200000E:B相潮流反向</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="14">
 				<name>E200000F:C相潮流反向</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="15">
 				<name>E2000010:A相电流过流</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="16">
 				<name>E2000011:B相电流过流</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="17">
 				<name>E2000012:C相电流过流</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="18">
 				<name>E2000013:A相电流失流</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="19">
 				<name>E2000014:B相电流失流</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="20">
 				<name>E2000015:C相电流失流</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="21">
 				<name>E2000016:A相电压失压</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="22">
 				<name>E2000017:B相电压失压</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="23">
 				<name>E2000018:C相电压失压</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="24">
 				<name>E2000019:全失压</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="25">
 				<name>E200001A:A相电压过压</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="26">
 				<name>E200001B:B相电压过压</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="27">
 				<name>E200001C:C相电压过压</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="28">
 				<name>E200001D:A相电压断相</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="29">
 				<name>E200001E:B相电压断相</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="30">
 				<name>E200001F:C相电压断相</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="31">
 				<name>E2000020:A相电压畸变</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="32">
 				<name>E2000021:B相电压畸变</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="33">
 				<name>E2000022:C相电压畸变</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="34">
 				<name>E2000023:A相电流畸变</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="35">
 				<name>E2000024:B相电流畸变</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="36">
 				<name>E2000025:C相电流畸变</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="37">
 				<name>E2000026:无功过补偿</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="38">
 				<name>E2000027:无功欠补偿</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="39">
 				<name>E2000028:功率超定值</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="40">
 				<name>E2000029:负荷过载</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="41">
 				<name>E200002A:超合同容量用电</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="42">
 				<name>E200002B:剩余电费不足</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="43">
 				<name>E200002C:示度下降</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="44">
 				<name>E200002D:电能表飞走</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="45">
 				<name>E200002E:电能表停走</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="46">
 				<name>E200002F:电能表通讯失败</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="47">
 				<name>E2000030:差动告警</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="48">
 				<name>E2000031:最大需量手动复零</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="49">
 				<name>E2000032:时钟电池电压过低</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="50">
 				<name>E2000033:设备掉电</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="51">
 				<name>E2000034:设备上电</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="52">
 				<name>E2000035:电能表编程时间更改</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="53">
 				<name>E2000036:电能表时段或费率数更改</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="54">
 				<name>E2000037:电能表脉冲常数更改</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="55">
 				<name>E2000038:计量互感器倍率更改</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="56">
 				<name>E2000039:遥信变位</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="57">
 				<name>E200003A:月通信流量越限</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="58">
 				<name>E200003B:继电器变位</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="59">
 				<name>E200003C:电能表拉合闸失败</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="60">
 				<name>E200003D:抄表失败</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="61">
 				<name>E200003E:电能表时钟异常</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="62">
 				<name>E200003F:电能表校时失败</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="63">
 				<name>E2000040:电能表 A、B、C 相失压总次数</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="64">
 				<name>E2000041:电能表 A、B、C 相失流总次数</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="65">
 				<name>E2000042:电能表 A、B、C 相潮流反向总次数</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="66">
 				<name>E2000043:电能表编程总次数</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="67">
 				<name>E2000044:A 相电压偏差越限</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="68">
 				<name>E2000045:B 相电压偏差越限</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="69">
 				<name>E2000046:C 相电压偏差越限</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="70">
 				<name>E2000047:频率偏差越限</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="71">
 				<name>E2000048:A 相闪变越限</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="72">
 				<name>E2000049:B 相闪变越限</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="73">
 				<name>E200004A:C 相闪变越限</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="74">
 				<name>E200004B:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="75">
 				<name>E200004C:发现未知电表</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="76">
 				<name>E200004D:表端钮盒开盖告警</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="77">
 				<name>E200004E:表盖开启告警</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="78">
 				<name>E200004F:费率参数表编程次数更改</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="79">
 				<name>E2000050:阶梯表编程次数更改</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="80">
 				<name>E2000051:异常插卡告警</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="81">
 				<name>E2000052:非法插卡告警</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="82">
 				<name>E2000053:恒定磁场干扰告警</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="83">
 				<name>E2000054:负荷开关误动作告警</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="84">
 				<name>E2000055:电源异常告警</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="85">
 				<name>E2000056:备用电池异常告警</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="86">
 				<name>E2000057:SIM卡更换告警</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="87">
 				<name>E2000058:电表通信模块更换告警</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="88">
 				<name>E2000059:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="89">
 				<name>E200005A:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="90">
 				<name>E200005B:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="91">
 				<name>E200005C:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="92">
 				<name>E200005D:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="93">
 				<name>E200005E:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="94">
 				<name>E200005F:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="95">
 				<name>E2000060:安全监测告警</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="96">
 				<name>E2000061:测量点参数变更</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="97">
 				<name>E2000062:终端模块更换告警</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="98">
 				<name>E2000063:拓扑信息变更</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="99">
 				<name>E2000064:电能表计量芯片故障</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="100">
 				<name>E2000065:文件传输情况告警</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="101">
 				<name>E2000066:低压故障告警</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="102">
 				<name>E2000067:负荷控制回路断线告警</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="103">
 				<name>E2000068:负荷控制告警</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="104">
 				<name>E2000069:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="105">
 				<name>E200006A:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="106">
 				<name>E200006B:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="107">
 				<name>E200006C:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="108">
 				<name>E200006D:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="109">
 				<name>E200006E:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="110">
 				<name>E200006F:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="111">
 				<name>E2000070:操作系统异常告警</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="112">
 				<name>E2000071:微应用异常告警</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="113">
 				<name>E2000072:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="114">
 				<name>E2000073:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="115">
 				<name>E2000074:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="116">
 				<name>E2000075:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="117">
 				<name>E2000076:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="118">
 				<name>E2000077:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="119">
 				<name>E2000078:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="120">
 				<name>E2000079:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="121">
 				<name>E200007A:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="122">
 				<name>E200007B:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="123">
 				<name>E200007C:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="124">
 				<name>E200007D:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="125">
 				<name>E200007E:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="126">
 				<name>E200007F:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="127">
 				<name>E2000080:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="128">
 				<name>E2000081:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="129">
 				<name>E2000082:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="130">
 				<name>E2000083:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="131">
 				<name>E2000084:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="132">
 				<name>E2000085:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="133">
 				<name>E2000086:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="134">
 				<name>E2000087:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="135">
 				<name>E2000088:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="136">
 				<name>E2000089:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="137">
 				<name>E200008A:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="138">
 				<name>E200008B:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="139">
 				<name>E200008C:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="140">
 				<name>E200008D:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="141">
 				<name>E200008E:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="142">
 				<name>E200008F:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="143">
 				<name>E2000090:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="144">
 				<name>E2000091:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="145">
 				<name>E2000092:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="146">
 				<name>E2000093:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="147">
 				<name>E2000094:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="148">
 				<name>E2000095:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="149">
 				<name>E2000096:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="150">
 				<name>E2000097:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="151">
 				<name>E2000098:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="152">
 				<name>E2000099:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="153">
 				<name>E200009A:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="154">
 				<name>E200009B:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="155">
 				<name>E200009C:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="156">
 				<name>E200009D:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="157">
 				<name>E200009E:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="158">
 				<name>E200009F:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="159">
 				<name>E20000A0:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="160">
 				<name>E20000A1:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="161">
 				<name>E20000A2:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="162">
 				<name>E20000A3:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="163">
 				<name>E20000A4:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="164">
 				<name>E20000A5:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="165">
 				<name>E20000A6:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="166">
 				<name>E20000A7:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="167">
 				<name>E20000A8:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="168">
 				<name>E20000A9:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="169">
 				<name>E20000AA:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="170">
 				<name>E20000AB:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="171">
 				<name>E20000AC:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="172">
 				<name>E20000AD:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="173">
 				<name>E20000AE:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="174">
 				<name>E20000AF:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="175">
 				<name>E20000B0:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="176">
 				<name>E20000B1:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="177">
 				<name>E20000B2:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="178">
 				<name>E20000B3:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="179">
 				<name>E20000B4:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="180">
 				<name>E20000B5:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="181">
 				<name>E20000B6:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="182">
 				<name>E20000B7:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="183">
 				<name>E20000B8:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="184">
 				<name>E20000B9:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="185">
 				<name>E20000BA:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="186">
 				<name>E20000BB:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="187">
 				<name>E20000BC:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="188">
 				<name>E20000BD:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="189">
 				<name>E20000BE:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="190">
 				<name>E20000BF:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="191">
 				<name>E20000C0:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="192">
 				<name>E20000C1:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="193">
 				<name>E20000C2:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="194">
 				<name>E20000C3:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="195">
 				<name>E20000C4:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="196">
 				<name>E20000C5:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="197">
 				<name>E20000C6:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="198">
 				<name>E20000C7:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="199">
 				<name>E20000C8:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="200">
 				<name>E20000C9:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="201">
 				<name>E20000CA:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="202">
 				<name>E20000CB:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="203">
 				<name>E20000CC:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="204">
 				<name>E20000CD:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="205">
 				<name>E20000CE:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="206">
 				<name>E20000CF:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="207">
 				<name>E20000D0:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="208">
 				<name>E20000D1:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="209">
 				<name>E20000D2:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="210">
 				<name>E20000D3:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="211">
 				<name>E20000D4:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="212">
 				<name>E20000D5:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="213">
 				<name>E20000D6:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="214">
 				<name>E20000D7:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="215">
 				<name>E20000D8:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="216">
 				<name>E20000D9:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="217">
 				<name>E20000DA:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="218">
 				<name>E20000DB:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="219">
 				<name>E20000DC:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="220">
 				<name>E20000DD:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="221">
 				<name>E20000DE:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="222">
 				<name>E20000DF:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="223">
 				<name>E20000E0:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="224">
 				<name>E20000E1:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="225">
 				<name>E20000E2:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="226">
 				<name>E20000E3:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="227">
 				<name>E20000E4:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="228">
 				<name>E20000E5:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="229">
 				<name>E20000E6:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="230">
 				<name>E20000E7:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="231">
 				<name>E20000E8:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="232">
 				<name>E20000E9:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="233">
 				<name>E20000EA:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="234">
 				<name>E20000EB:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="235">
 				<name>E20000EC:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="236">
 				<name>E20000ED:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="237">
 				<name>E20000EE:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="238">
 				<name>E20000EF:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="239">
 				<name>E20000F0:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="240">
 				<name>E20000F1:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="241">
 				<name>E20000F2:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="242">
 				<name>E20000F3:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="243">
 				<name>E20000F4:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="244">
 				<name>E20000F5:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="245">
 				<name>E20000F6:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="246">
 				<name>E20000F7:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="247">
 				<name>E20000F8:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="248">
 				<name>E20000F9:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="249">
 				<name>E20000FA:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="250">
 				<name>E20000FB:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="251">
 				<name>E20000FC:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="252">
 				<name>E20000FD:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="253">
 				<name>E20000FE:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="254">
 				<name>E20000FF:保留</name>
-				<value key="1">上报</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">上报</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 		</splitbit>
 	</dataItem>
@@ -44104,1281 +44105,1282 @@
 		<splitbit>
 			<bit id="0">
 				<name>E2010001:编程记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="1">
 				<name>E2010002:最大需量结算日自动复零</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="2">
 				<name>E2010003:最大需量手动复零</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="3">
 				<name>E2010004:A 相失压记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="4">
 				<name>E2010005:B 相失压记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="5">
 				<name>E2010006:C 相失压记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="6">
 				<name>E2010007:A 相失流记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="7">
 				<name>E2010008:B 相失流记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="8">
 				<name>E2010009:C 相失流记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="9">
 				<name>E201000A:掉电/上电记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="10">
 				<name>E201000B:A 相断相记</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="11">
 				<name>E201000C:B 相断相记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="12">
 				<name>E201000D:C 相断相记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="13">
 				<name>E201000E:控制事件记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="14">
 				<name>E201000F:电量清零记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="15">
 				<name>E2010010:校时记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="16">
 				<name>E2010011:表端钮盒开启记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="17">
 				<name>E2010012:表盖开启记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="18">
 				<name>E2010013:消息认证错误记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="19">
 				<name>E2010014:参数变更记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="20">
 				<name>E2010015:计量门箱开闭记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="21">
 				<name>E2010016:恒定磁场干扰记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="22">
 				<name>E2010017:负荷开关误动作记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="23">
 				<name>E2010018:电源异常记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="24">
 				<name>E2010019:电能表广播校时记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="25">
 				<name>E201001A:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="26">
 				<name>E201001B:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="27">
 				<name>E201001C:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="28">
 				<name>E201001D:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="29">
 				<name>E201001E:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="30">
 				<name>E201001F:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="31">
 				<name>E2010020:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="32">
 				<name>E2010021:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="33">
 				<name>E2010022:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="34">
 				<name>E2010023:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="35">
 				<name>E2010024:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="36">
 				<name>E2010025:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="37">
 				<name>E2010026:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="38">
 				<name>E2010027:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="39">
 				<name>E2010028:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="40">
 				<name>E2010029:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="41">
 				<name>E201002A:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="42">
 				<name>E201002B:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="43">
 				<name>E201002C:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="44">
 				<name>E201002D:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="45">
 				<name>E201002E:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="46">
 				<name>E201002F:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="47">
 				<name>E2010030:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="48">
 				<name>E2010031:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="49">
 				<name>E2010032:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="50">
 				<name>E2010033:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="51">
 				<name>E2010034:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="52">
 				<name>E2010035:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="53">
 				<name>E2010036:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="54">
 				<name>E2010037:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="55">
 				<name>E2010038:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="56">
 				<name>E2010039:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="57">
 				<name>E201003A:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="58">
 				<name>E201003B:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="59">
 				<name>E201003C:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="60">
 				<name>E201003D:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="61">
 				<name>E201003E:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="62">
 				<name>E201003F:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="63">
 				<name>E2010040:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="64">
 				<name>E2010041:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="65">
 				<name>E2010042:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="66">
 				<name>E2010043:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="67">
 				<name>E2010044:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="68">
 				<name>E2010045:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="69">
 				<name>E2010046:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="70">
 				<name>E2010047:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="71">
 				<name>E2010048:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="72">
 				<name>E2010049:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="73">
 				<name>E201004A:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="74">
 				<name>E201004B:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="75">
 				<name>E201004C:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="76">
 				<name>E201004D:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="77">
 				<name>E201004E:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="78">
 				<name>E201004F:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="79">
 				<name>E2010050:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="80">
 				<name>E2010051:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="81">
 				<name>E2010052:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="82">
 				<name>E2010053:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="83">
 				<name>E2010054:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="84">
 				<name>E2010055:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="85">
 				<name>E2010056:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="86">
 				<name>E2010057:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="87">
 				<name>E2010058:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="88">
 				<name>E2010059:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="89">
 				<name>E201005A:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="90">
 				<name>E201005B:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="91">
 				<name>E201005C:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="92">
 				<name>E201005D:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="93">
 				<name>E201005E:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="94">
 				<name>E201005F:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="95">
 				<name>E2010060:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="96">
 				<name>E2010061:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="97">
 				<name>E2010062:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="98">
 				<name>E2010063:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="99">
 				<name>E2010064:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="100">
 				<name>E2010065:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="101">
 				<name>E2010066:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="102">
 				<name>E2010067:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="103">
 				<name>E2010068:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="104">
 				<name>E2010069:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="105">
 				<name>E201006A:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="106">
 				<name>E201006B:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="107">
 				<name>E201006C:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="108">
 				<name>E201006D:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="109">
 				<name>E201006E:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="110">
 				<name>E201006F:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="111">
 				<name>E2010070:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="112">
 				<name>E2010071:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="113">
 				<name>E2010072:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="114">
 				<name>E2010073:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="115">
 				<name>E2010074:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="116">
 				<name>E2010075:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="117">
 				<name>E2010076:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="118">
 				<name>E2010077:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="119">
 				<name>E2010078:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="120">
 				<name>E2010079:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="121">
 				<name>E201007A:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="122">
 				<name>E201007B:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="123">
 				<name>E201007C:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="124">
 				<name>E201007D:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="125">
 				<name>E201007E:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="126">
 				<name>E201007F:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="127">
 				<name>E2010080:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="128">
 				<name>E2010081:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="129">
 				<name>E2010082:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="130">
 				<name>E2010083:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="131">
 				<name>E2010084:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="132">
 				<name>E2010085:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="133">
 				<name>E2010086:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="134">
 				<name>E2010087:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="135">
 				<name>E2010088:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="136">
 				<name>E2010089:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="137">
 				<name>E201008A:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="138">
 				<name>E201008B:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="139">
 				<name>E201008C:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="140">
 				<name>E201008D:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="141">
 				<name>E201008E:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="142">
 				<name>E201008F:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="143">
 				<name>E2010090:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="144">
 				<name>E2010091:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="145">
 				<name>E2010092:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="146">
 				<name>E2010093:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="147">
 				<name>E2010094:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="148">
 				<name>E2010095:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="149">
 				<name>E2010096:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="150">
 				<name>E2010097:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="151">
 				<name>E2010098:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="152">
 				<name>E2010099:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="153">
 				<name>E201009A:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="154">
 				<name>E201009B:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="155">
 				<name>E201009C:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="156">
 				<name>E201009D:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="157">
 				<name>E201009E:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="158">
 				<name>E201009F:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="159">
 				<name>E20100A0:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="160">
 				<name>E20100A1:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="161">
 				<name>E20100A2:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="162">
 				<name>E20100A3:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="163">
 				<name>E20100A4:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="164">
 				<name>E20100A5:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="165">
 				<name>E20100A6:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="166">
 				<name>E20100A7:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="167">
 				<name>E20100A8:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="168">
 				<name>E20100A9:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="169">
 				<name>E20100AA:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="170">
 				<name>E20100AB:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="171">
 				<name>E20100AC:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="172">
 				<name>E20100AD:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="173">
 				<name>E20100AE:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="174">
 				<name>E20100AF:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="175">
 				<name>E20100B0:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="176">
 				<name>E20100B1:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="177">
 				<name>E20100B2:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="178">
 				<name>E20100B3:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="179">
 				<name>E20100B4:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="180">
 				<name>E20100B5:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="181">
 				<name>E20100B6:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="182">
 				<name>E20100B7:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="183">
 				<name>E20100B8:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="184">
 				<name>E20100B9:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="185">
 				<name>E20100BA:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="186">
 				<name>E20100BB:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="187">
 				<name>E20100BC:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="188">
 				<name>E20100BD:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="189">
 				<name>E20100BE:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="190">
 				<name>E20100BF:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="191">
 				<name>E20100C0:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="192">
 				<name>E20100C1:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="193">
 				<name>E20100C2:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="194">
 				<name>E20100C3:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="195">
 				<name>E20100C4:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="196">
 				<name>E20100C5:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="197">
 				<name>E20100C6:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="198">
 				<name>E20100C7:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="199">
 				<name>E20100C8:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="200">
 				<name>E20100C9:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="201">
 				<name>E20100CA:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="202">
 				<name>E20100CB:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="203">
 				<name>E20100CC:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="204">
 				<name>E20100CD:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="205">
 				<name>E20100CE:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="206">
 				<name>E20100CF:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="207">
 				<name>E20100D0:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="208">
 				<name>E20100D1:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="209">
 				<name>E20100D2:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="210">
 				<name>E20100D3:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="211">
 				<name>E20100D4:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="212">
 				<name>E20100D5:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="213">
 				<name>E20100D6:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="214">
 				<name>E20100D7:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="215">
 				<name>E20100D8:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="216">
 				<name>E20100D9:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="217">
 				<name>E20100DA:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="218">
 				<name>E20100DB:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="219">
 				<name>E20100DC:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="220">
 				<name>E20100DD:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="221">
 				<name>E20100DE:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="222">
 				<name>E20100DF:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="223">
 				<name>E20100E0:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="224">
 				<name>E20100E1:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="225">
 				<name>E20100E2:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="226">
 				<name>E20100E3:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="227">
 				<name>E20100E4:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="228">
 				<name>E20100E5:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="229">
 				<name>E20100E6:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="230">
 				<name>E20100E7:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="231">
 				<name>E20100E8:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="232">
 				<name>E20100E9:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="233">
 				<name>E20100EA:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="234">
 				<name>E20100EB:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="235">
 				<name>E20100EC:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="236">
 				<name>E20100ED:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="237">
 				<name>E20100EE:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="238">
 				<name>E20100EF:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="239">
 				<name>E20100F0:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="240">
 				<name>E20100F1:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="241">
 				<name>E20100F2:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="242">
 				<name>E20100F3:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="243">
 				<name>E20100F4:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="244">
 				<name>E20100F5:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="245">
 				<name>E20100F6:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="246">
 				<name>E20100F7:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="247">
 				<name>E20100F8:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="248">
 				<name>E20100F9:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="249">
 				<name>E20100FA:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="250">
 				<name>E20100FB:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="251">
 				<name>E20100FC:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="252">
 				<name>E20100FD:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="253">
 				<name>E20100FE:保留</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 			<bit id="254">
 				<name>E20100FF:所有类型事件记录</name>
-				<value key="1">判断</value>
-				<value key="0">屏蔽</value>
+				<value key="1" color="#FF0000">判断</value>
+				<value key="0" color="#00FF00">屏蔽</value>
 			</bit>
 		</splitbit>
 	</dataItem>
+
 	<dataItem id="E000120A" protocol="csg13" region="南网">
 		<name>资产管理功能周期参数</name>
 		<length>4</length>

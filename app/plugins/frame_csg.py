@@ -80,24 +80,24 @@ def get_frame(point_arrray:list, itemData:dict, frame:list=None):
     if frame is None:
         frame = bytearray()
     frame_len = 0
-    def push_item_data_into_frame(itemData:dict, frame):
+    def push_item_data_into_frame(meter_point, itemData:dict, frame):
         pos = 0
         for item, data in itemData.items():
+            pos += add_point_to_frame(meter_point, frame)
             pos += frame_fun.item_to_di(item, frame)
             if data is not None:
                 pos += frame_fun.prase_text_to_frame(data, frame)
         return pos
-    if point_arrray[0] == 0xFF and point_arrray[1] == 0xff:
-        frame.extend([0xFF, 0XFF])
-        frame_len += 2
-        frame_len += push_item_data_into_frame(itemData, frame)
-
-    else:
-        for meter_point in point_arrray:
+    def add_point_to_frame(meter_point, frame:list):
+        if meter_point == 0xFFFF:
+            frame.extend([0xFF, 0XFF])
+        else:
             da1, da2 = toDA(meter_point)
             frame.extend([da1, da2])
-            frame_len += 2
-            frame_len += push_item_data_into_frame(itemData, frame)
+        return 2
+
+    for meter_point in point_arrray:
+        frame_len += push_item_data_into_frame(meter_point, itemData, frame)
 
     return frame_len
 def add_point_to_frame(point, frame:list):
