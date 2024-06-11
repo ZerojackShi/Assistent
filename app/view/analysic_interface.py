@@ -27,7 +27,6 @@ class CustomTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         # Assuming the last element in text_list is the color
         self.color = text_list[-1]
         if self.color is not None:
-            print(self.color)
         # Apply the color to the description column (index 2 in this case)
             self.setTextColor(2, QtGui.QColor(self.color))
 
