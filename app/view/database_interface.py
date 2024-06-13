@@ -10,7 +10,7 @@ from ..plugins.frame_csg import FramePos
 from ..plugins import protocol
 from ..plugins.frame_fun import FrameFun as frame_fun
 from .analysic_interface import CustomTreeWidgetItem,CustomTreeWidget
-from ..common.config import cfg
+from ..common.config import cfg, ProtocolInfo,ConfigManager
 from ..common.signal_bus import signalBus
 from ..plugins.MeterTask import MeterTask
 
@@ -141,8 +141,7 @@ class CustomItem(QWidget):
             cleaned_string = data.replace(' ', '').replace('\n', '')
             data_content = [int(cleaned_string[i:i + 2], 16) for i in range(0, len(cleaned_string), 2)]
             protocol.frame_fun.globregion = cfg.get(cfg.Region)
-            frame_fun.globalprotocol = "CSG13"
-            template_element = frame_fun.get_config_xml(item, frame_fun.globalprotocol,frame_fun.globregion)
+            template_element = ConfigManager.get_config_xml(item, ProtocolInfo.PROTOCOL_CSG13.name(),frame_fun.globregion)
             if template_element is None:
                 InfoBar.warning(
                 title=self.tr('告警'),
@@ -154,7 +153,7 @@ class CustomItem(QWidget):
                 parent=self
             )
                 return
-            show_data = protocol.parse_data_item(template_element, data_content, 0, 0)
+            show_data = protocol.parse_data_item(template_element, data_content, 0, 0, ProtocolInfo.PROTOCOL_CSG13.name())
             frame_fun.prase_data_with_config(show_data, False, alalysic_result)
             sub_result = []
             reverse_item = item.replace(' ', '').replace('\n', '')

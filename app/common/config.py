@@ -12,6 +12,8 @@ from qfluentwidgets import (qconfig, QConfig, ConfigItem, OptionsConfigItem, Boo
                             FolderListValidator, Theme, FolderValidator, ConfigSerializer, ConfigValidator,__version__)
 import logging
 from datetime import datetime
+
+import threading
 # from mur._public import *
 
 # def custom_read_user_code() :
@@ -359,6 +361,73 @@ class OadFinder:
         
         return None
 
+class ProtocolInfo(Enum):
+
+    PROTOCOL_CSG13 = 'CSG13'
+    PROTOCOL_CSG16 = 'CSG16'
+    PROTOCOL_DLT64507 = 'DLT/645-2007'
+    def name(self):
+        return self.value
+    
+
+class ConfigManager:
+    globregion = None
+    globalprotocol = None
+
+    thread_local = threading.local()
+
+    @staticmethod
+    def _initialize_thread_local():
+        if not hasattr(ConfigManager.thread_local, 'config_645'):
+            ConfigManager.thread_local.config_645 = QframeConfig()
+            ConfigManager.thread_local.config_645.load('app/config/DLT645.xml')
+
+        if not hasattr(ConfigManager.thread_local, 'config_csg13'):
+            ConfigManager.thread_local.config_csg13 = QframeConfig()
+            ConfigManager.thread_local.config_csg13.load('app/config/CSG13.xml')
+
+        if not hasattr(ConfigManager.thread_local, 'config_csg16'):
+            ConfigManager.thread_local.config_csg16 = QframeConfig()
+            ConfigManager.thread_local.config_csg16.load('app/config/CSG16.xml')
+
+    @staticmethod
+    def get_config_xml(data_item_id: str, protocol: str, region: str, dir=None):
+        ConfigManager._initialize_thread_local()
+        find_protocol = protocol.upper()
+        
+        if "DLT/645" in find_protocol:
+            if find_protocol != "DLT/645-2007":
+                find_protocol = "DLT/645-2007"
+            itemconfig = ConfigManager.thread_local.config_645.get_item(data_item_id, find_protocol, region)
+            if itemconfig is not None:
+                return itemconfig
+            else:
+                if data_item_id.isupper():
+                    return ConfigManager.thread_local.config_645.get_item(data_item_id.lower(), find_protocol, region, dir)
+                return ConfigManager.thread_local.config_645.get_item(data_item_id.upper(), find_protocol, region, dir)
+        
+        elif "CSG13" in find_protocol:
+            itemconfig = ConfigManager.thread_local.config_csg13.get_item(data_item_id, find_protocol, region, dir)
+            if itemconfig is not None:
+                return itemconfig
+            else:
+                if data_item_id.isupper():
+                    return ConfigManager.thread_local.config_csg13.get_item(data_item_id.lower(), find_protocol, region, dir)
+                return ConfigManager.thread_local.config_csg13.get_item(data_item_id.upper(), find_protocol, region, dir)
+
+        elif "CSG16" in find_protocol:
+            itemconfig = ConfigManager.thread_local.config_csg16.get_item(data_item_id, find_protocol, region)
+            if itemconfig is not None:
+                return itemconfig
+            else:
+                if data_item_id.isupper():
+                    return ConfigManager.thread_local.config_csg16.get_item(data_item_id.lower(), find_protocol, region, dir)
+                return ConfigManager.thread_local.config_csg16.get_item(data_item_id.upper(), find_protocol, region, dir)
+        
+        else:
+            return None
+
+
 YEAR = 2023
 AUTHOR = "ZeroJack"
 REPO_OWNER = "ZerojackShi"
@@ -379,16 +448,6 @@ APP_EXEC = "Assistent.exe"
 cfg = Config()
 cfg.themeMode.value = Theme.AUTO
 qconfig.load('app/config/config.json', cfg)
-
-
-config_645 = QframeConfig()
-config_645.load('app/config/DLT645.xml')
-
-config_csg13 = QframeConfig()
-config_csg13.load('app/config/CSG13.xml')
-
-config_csg16 = QframeConfig()
-config_csg16.load('app/config/CSG16.xml')
 
 log_config = LogConfig()
 

@@ -30,6 +30,7 @@ from ..common.translator import Translator
 from .receive_send_interface import SendReceive,ReceiveSendInterface
 from ..common import resource
 from .problam_interface import Problam_Interface
+from .frame_file_anasic_interface import FrameFileInterface
 from .custom_frame_interface import CustomFrame
 from .database_interface import DataBaseInterface
 from .app_message_interface import AppMessageInterface
@@ -65,6 +66,7 @@ class MainWindow(FluentWindow):
         self.appmessage = AppMessageInterface(self)
         self.problam = Problam_Interface(self)
         self.test = StatusInfoInterface(self)
+        self.framefile = FrameFileInterface(self)
         # self.param_interface = ParamInterface(self)
         # enable acrylic effect
         self.navigationInterface.setAcrylicEnabled(True)
@@ -105,6 +107,7 @@ class MainWindow(FluentWindow):
         self.addSubInterface(self.dataBaseView, FIF.ZOOM, t.dataBaseView, pos)
         self.addSubInterface(self.appmessage, FIF.MESSAGE, t.appmessage, pos)
         self.addSubInterface(self.problam, FIF.CHAT, t.problam, pos)
+        self.addSubInterface(self.framefile, FIF.LIBRARY_FILL, t.framefile, pos)
         # self.addSubInterface(self.viewInterface, FIF.SCROLL, t.param, pos) 
 
         # add custom widget to bottom

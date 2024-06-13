@@ -25,3 +25,4 @@ class Translator(QObject):
         self.dataBaseView      = self.tr('数据库解析')
         self.appmessage        = self.tr('APP消息接口')
         self.problam = self.tr('问题分析')
+        self.framefile = self.tr('文件解析')

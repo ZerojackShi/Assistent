@@ -27,7 +27,7 @@ class CustomTreeWidgetItem(QtWidgets.QTreeWidgetItem):
         # Assuming the last element in text_list is the color
         self.color = text_list[-1]
         if self.color is not None:
-        # Apply the color to the description column (index 2 in this case)
+            # Apply the color to the description column (index 2 in this case)
             self.setTextColor(2, QtGui.QColor(self.color))
 
     def setTextColor(self, column, color):
@@ -403,15 +403,12 @@ class Alalysic(QWidget):
             frame = [int(hex_str[i:i + 2], 16) for i in range(0, len(hex_str), 2)]
 
             if protocol.is_dlt645_frame(frame):
-                protocol.frame_fun.globalprotocol = "DLT/645-2007"
                 protocol.FRAME_645.Analysis_645_fram_by_afn(frame, show_data,0)
             elif framedis.is_csg_frame(frame):
-                protocol.frame_fun.globalprotocol = "CSG13"
                 framedis.Analysis_csg_frame_by_afn(frame,show_data,0)
             elif meter_task.is_meter_task(frame):
                 meter_task.analysic_meter_task(frame,show_data, 0)
             elif FrameCCO.is_cco_frame(frame):
-                protocol.frame_fun.globalprotocol = "csg16"
                 FrameCCO.Analysis_cco_frame_by_afn(frame,show_data,0)
                                 
             self.tree_widget.create_tree(None, show_data, self.item_position)

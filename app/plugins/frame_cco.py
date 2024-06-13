@@ -1,7 +1,7 @@
 from .frame_fun import FrameFun as frame_fun
 from ..plugins.protocol import PraseFrameData
 from ..plugins.frame_fun import CustomMessageBox
-
+from ..common.config import ProtocolInfo,ConfigManager
 FRAME_START = 0x68
 FRAME_END = 0x16
 
@@ -176,17 +176,17 @@ class FrameCCO(object):
         didata = data_content[4:]
         prase_data = PraseFrameData()
         data_item = frame_fun.get_data_str_reverser(di)
-        data_item_elem = frame_fun.get_config_xml(data_item, frame_fun.globalprotocol, frame_fun.globregion)
+        data_item_elem = ConfigManager.get_config_xml(data_item, ProtocolInfo.PROTOCOL_CSG16.name(), frame_fun.globregion)
         pos = 0
         item_data = []
         if data_item_elem is not None:
             sub_length_cont = data_item_elem.find('length').text
             if sub_length_cont.upper() in "UNKNOWN":
-                sub_length = prase_data.caculate_item_length(data_item_elem, didata)
+                sub_length = prase_data.caculate_item_length(data_item_elem, didata, ProtocolInfo.PROTOCOL_CSG16.name())
             else:
                 sub_length = int(sub_length_cont)
             sub_datament = didata[pos:pos + sub_length]
-            alalysic_result = prase_data.parse_data(data_item,frame_fun.globalprotocol, frame_fun.globregion,sub_datament, index + pos + 4)
+            alalysic_result = prase_data.parse_data(data_item,ProtocolInfo.PROTOCOL_CSG16.name(), frame_fun.globregion,sub_datament, index + pos + 4)
             frame_fun.prase_data_with_config(alalysic_result, False, item_data)
             name = data_item_elem.find('name').text
             dis_data_identifier = "数据标识编码：" + f"[{data_item}]" + "-" + name

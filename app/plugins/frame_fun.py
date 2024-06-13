@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QMessageBox,QDialogButtonBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import Qt,pyqtSlot,QDateTime,QDate,QTime
 import re,binascii
-from ..common.config import config_645, config_csg13,log_config, config_csg16
+from ..common.config import log_config, ProtocolInfo,ConfigManager
 from qfluentwidgets import InfoBarIcon
 
 class CustomMessageBox(QMessageBox):
@@ -403,7 +403,7 @@ class FrameFun:
             return subitem_value, idx, subitem
         
     @staticmethod
-    def get_subitem_length(data_subitem_elem, splitlength, key, data_segment):
+    def get_subitem_length(data_subitem_elem, splitlength, key, data_segment, protocol):
         """获取子项的长度"""
         relues = data_subitem_elem.find('lengthrule')
         operator_mapping = {
@@ -482,8 +482,8 @@ class FrameFun:
             from .protocol import PraseFrameData
             prase_data = PraseFrameData()
             sub_type = data_subitem_elem.find('type').text
-            template = FrameFun.get_template_element(sub_type, FrameFun.globalprotocol, FrameFun.globregion)
-            sub_length = prase_data.caculate_item_length(template, data_segment)
+            template = FrameFun.get_template_element(sub_type, protocol, FrameFun.globregion)
+            sub_length = prase_data.caculate_item_length(template, data_segment, protocol)
             decimal_number = sub_length
         return decimal_number, sub_length
     @staticmethod
@@ -533,7 +533,7 @@ class FrameFun:
             return ""
     
     @staticmethod
-    def caculate_item_box_length(item_ele):
+    def caculate_item_box_length(item_ele, protocol):
         pos = 0
         i = 0
         if item_ele.findall('item') is not None:
@@ -542,7 +542,7 @@ class FrameFun:
             all_item = None
         for item_elem in all_item:
             item_id = item_elem.text
-            item = FrameFun.get_config_xml(item_id, FrameFun.globalprotocol, FrameFun.globregion)
+            item = ConfigManager.get_config_xml(item_id, protocol, FrameFun.globregion)
             if item is not None:
                 item_length_ele = item.find('length')
                 if item_length_ele is not None:
@@ -586,43 +586,44 @@ class FrameFun:
         print("No parent found with protocol {} and region {}".format(target_protocol,region))
         return None
 
-    globregion = None
+    # globregion = None
     globalprotocol = None
-    @staticmethod
-    def get_config_xml(data_item_id:str, protocol:str, region:str, dir=None):
-        find_protocol = protocol.upper()
-        # data_item_id = data_item_id.upper()
-        if "DLT/645" in find_protocol:
-            if find_protocol != "DLT/645-2007":
-                find_protocol = "DLT/645-2007"
-            itemconfig = config_645.get_item(data_item_id, find_protocol, region)
-            if itemconfig is not None:
-                return itemconfig
-            else:
-                if data_item_id.isupper():
-                    return config_645.get_item(data_item_id.lower(), find_protocol, region, dir)
-                if itemconfig is not None:
-                    return config_645.get_item(data_item_id.upper(), find_protocol, region, dir)
-        elif "CSG13" in find_protocol:
-            itemconfig = config_csg13.get_item(data_item_id, find_protocol, region, dir)
-            if itemconfig is not None:
-                return itemconfig
-            else:
-                if data_item_id.isupper():
-                    return config_csg13.get_item(data_item_id.lower(), find_protocol, region, dir)
-                else:
-                    return config_csg13.get_item(data_item_id.upper(), find_protocol, region, dir)
-        elif "CSG16" in find_protocol:
-            itemconfig = config_csg16.get_item(data_item_id, find_protocol, region)
-            if itemconfig is not None:
-                return itemconfig
-            else:
-                if data_item_id.isupper():
-                    return config_csg16.get_item(data_item_id.lower(), find_protocol, region, dir)
-                else:
-                    return config_csg16.get_item(data_item_id.upper(), find_protocol, region, dir)
-        else:
-            return None
+    # @staticmethod
+    # def get_config_xml(data_item_id:str, protocol:str, region:str, dir=None):
+    #     find_protocol = protocol.upper()
+    #     # data_item_id = data_item_id.upper()
+    #     if "DLT/645" in find_protocol:
+    #         if find_protocol != ProtocolInfo.PROTOCOL_DLT64507.name():
+    #             find_protocol = ProtocolInfo.PROTOCOL_DLT64507.name()
+    #         itemconfig = config_645.get_item(data_item_id, find_protocol, region)
+    #         if itemconfig is not None:
+    #             return itemconfig
+    #         else:
+    #             if data_item_id.isupper():
+    #                 return config_645.get_item(data_item_id.lower(), find_protocol, region, dir)
+    #             if itemconfig is not None:
+    #                 return config_645.get_item(data_item_id.upper(), find_protocol, region, dir)
+    #     elif 'CSG13' in find_protocol:
+    #         itemconfig = config_csg13.get_item(data_item_id, find_protocol, region, dir)
+    #         if itemconfig is not None:
+    #             return itemconfig
+    #         else:
+    #             if data_item_id.isupper():
+    #                 return config_csg13.get_item(data_item_id.lower(), find_protocol, region, dir)
+    #             else:
+    #                 return config_csg13.get_item(data_item_id.upper(), find_protocol, region, dir)
+    #     elif "CSG16" in find_protocol:
+    #         itemconfig = config_csg16.get_item(data_item_id, find_protocol, region)
+    #         if itemconfig is not None:
+    #             return itemconfig
+    #         else:
+    #             if data_item_id.isupper():
+    #                 return config_csg16.get_item(data_item_id.lower(), find_protocol, region, dir)
+    #             else:
+    #                 return config_csg16.get_item(data_item_id.upper(), find_protocol, region, dir)
+    #     else:
+    #         return None
+    
     @staticmethod
     def get_template_element(template:str, protocol:str, region:str):
         find_protocol = protocol.upper()
@@ -636,7 +637,7 @@ class FrameFun:
                     return config_645.get_item(template.lower(), find_protocol, region)
                 else:
                     return config_645.get_item(template.upper(), find_protocol, region)
-        elif "CSG13" in find_protocol:
+        elif ProtocolInfo.PROTOCOL_CSG13.name() in find_protocol:
             itemconfig = config_csg13.get_item(template, find_protocol, region)
             if itemconfig is not None:
                 return itemconfig

@@ -20,6 +20,7 @@ from ..components.Splitter import Splitter
 from ..components.messageBox import Comwidget    
 from ..plugins.protocol_channel import WorkerThread,AsyncCommunicator
 import string
+from ..common.config import ProtocolInfo,ConfigManager
 
 class CheckableHeader(QFrame):
     checkBoxClicked = pyqtSignal(bool)
@@ -683,7 +684,7 @@ class ParamFrame(QWidget):
 
     def get_item_data_list(self, text):
         name_list = []
-        item = frame_fun.get_config_xml(text, "CSG13", "南网")
+        item = ConfigManager.get_config_xml(text, ProtocolInfo.PROTOCOL_CSG13.name(), "南网")
         if item is not None:
             allitem = item.findall('.//bit')
             if allitem is not None:

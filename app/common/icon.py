@@ -16,3 +16,5 @@ class Icon(FluentIconBase, Enum):
     REGION = "Region"
     def path(self, theme=Theme.AUTO):
         return f":/gallery/images/icons/{self.value}_{getIconColor(theme)}.svg"
+
+

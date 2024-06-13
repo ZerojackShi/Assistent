@@ -1,7 +1,7 @@
 
 from .frame_fun import FrameFun
 from .frame_fun import CustomMessageBox
-from ..common.config import oad_finder
+from ..common.config import oad_finder,ConfigManager
 
 MS_TYPE_ALL_USER                      = 0x01  #全部用户类型*/
 MS_TYPE_A_SET_OF_USER                 = 0x02  #一组用户类型 */
@@ -55,7 +55,7 @@ class MeterTask:
             region = FrameFun.globregion
         else:
             region = "南网"
-        template_element = FrameFun.get_config_xml(item_set, protocol,region)
+        template_element = ConfigManager.get_config_xml(item_set, protocol,region)
         if template_element is not None:
             name = template_element.find('name')
             if name is not None:

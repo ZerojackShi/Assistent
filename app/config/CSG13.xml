@@ -55096,6 +55096,18 @@
 			<type>BCD</type>
 		</splitByLength>
 	</dataItem>
+    <dataItem id="E0000E30" protocol="csg13" region="南网">
+            <name>断线检测允许时间</name>
+            <length>2</length>
+            <type>BCD</type>
+            <unit>分</unit>
+    </dataItem>
+    <dataItem id="E0000E31" protocol="csg13" region="南网">
+            <name>遥控信号允许时间</name>
+            <length>2</length>
+            <type>BCD</type>
+            <unit>分</unit>
+    </dataItem>
 	<dataItem id="E0000E32" protocol="csg13" region="南网">
 		<name>连续无通信保电判定时间</name>
 		<length>2</length>
