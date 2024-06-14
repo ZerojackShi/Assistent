@@ -88,7 +88,7 @@ def caculate_item_length(sub_element, data_segment, protocol, all_length_items=N
             if template_element is not None:
                 data_type = template_element.text.upper()
                 if data_type not in ("BCD", "BIN", "ASCII"):
-                    template = frame_fun.get_template_element(data_type, protocol, frame_fun.globregion)
+                    template = ConfigManager.get_template_element(data_type, protocol, frame_fun.globregion)
                     if template is not None:
                         # 递归调用子函数
                         template_items = template.findall('splitByLength')
@@ -236,7 +236,7 @@ def prase_type_item(data_item_elem, data_segment, index, need_delete, singal_len
         result[i] = subitem_value
         i+=1
     else:
-        template = frame_fun.get_template_element(sub_type, protocol, frame_fun.globregion)
+        template = ConfigManager.get_template_element(sub_type, protocol, frame_fun.globregion)
         if template is not None:
             # if sub_length / singal_length != 1:
             #     is_singal = False
@@ -693,7 +693,7 @@ class PraseFrameData():
         elif data_item_elem.find('type') is not None:
             data_type = data_item_elem.find('type').text.upper()
             if data_type not in ("BCD","BIN","ASCII"):
-                template = frame_fun.get_template_element(data_type, protocol, frame_fun.globregion)
+                template = ConfigManager.get_template_element(data_type, protocol, frame_fun.globregion)
                 if template is not None:
                     result = parse_splitByLength_data(template, data_segment, index,  need_delete, protocol)
                 elif data_type == "IPWITHPORT":
@@ -759,7 +759,7 @@ class PraseFrameData():
                     else:
                         data_type = template_element.text.upper()
                         if data_type not in ("BCD", "BIN", "ASCII"):
-                            template = frame_fun.get_template_element(data_type, protocol, frame_fun.globregion)
+                            template = ConfigManager.get_template_element(data_type, protocol, frame_fun.globregion)
                             if template is not None:
                                 # 递归调用子函数
                                 template_items = template.findall('splitByLength')

@@ -426,6 +426,41 @@ class ConfigManager:
         
         else:
             return None
+        
+    @staticmethod
+    def get_template_element(template:str, protocol:str, region:str):
+        ConfigManager._initialize_thread_local()
+        find_protocol = protocol.upper()
+        template = template.upper()
+        if "DLT/645" in protocol:
+            itemconfig = ConfigManager.thread_local.config_645.get_item(template, find_protocol, region)
+            if itemconfig is not None:
+                return itemconfig
+            else:
+                if template.isupper():
+                    return ConfigManager.thread_local.config_645.get_item(template.lower(), find_protocol, region)
+                else:
+                    return ConfigManager.thread_local.config_645.get_item(template.upper(), find_protocol, region)
+        elif ProtocolInfo.PROTOCOL_CSG13.name() in find_protocol:
+            itemconfig = ConfigManager.thread_local.config_csg13.get_item(template, find_protocol, region)
+            if itemconfig is not None:
+                return itemconfig
+            else:
+                if template.isupper():
+                    return ConfigManager.thread_local.config_csg13.get_item(template.lower(), find_protocol, region)
+                else:
+                    return ConfigManager.thread_local.config_csg13.get_item(template.upper(), find_protocol, region)
+        elif ProtocolInfo.PROTOCOL_CSG16.name() in find_protocol:
+            itemconfig = ConfigManager.thread_local.config_csg16.get_item(template, find_protocol, region)
+            if itemconfig is not None:
+                return itemconfig
+            else:
+                if template.isupper():
+                    return ConfigManager.thread_local.config_csg16.get_item(template.lower(), find_protocol, region)
+                else:
+                    return ConfigManager.thread_local.config_csg16.get_item(template.upper(), find_protocol, region)
+        else:
+            return None
 
 
 YEAR = 2023

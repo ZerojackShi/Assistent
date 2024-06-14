@@ -482,7 +482,7 @@ class FrameFun:
             from .protocol import PraseFrameData
             prase_data = PraseFrameData()
             sub_type = data_subitem_elem.find('type').text
-            template = FrameFun.get_template_element(sub_type, protocol, FrameFun.globregion)
+            template = ConfigManager.get_template_element(sub_type, protocol, FrameFun.globregion)
             sub_length = prase_data.caculate_item_length(template, data_segment, protocol)
             decimal_number = sub_length
         return decimal_number, sub_length
@@ -586,8 +586,8 @@ class FrameFun:
         print("No parent found with protocol {} and region {}".format(target_protocol,region))
         return None
 
-    # globregion = None
-    globalprotocol = None
+    globregion = None
+    # globalprotocol = None
     # @staticmethod
     # def get_config_xml(data_item_id:str, protocol:str, region:str, dir=None):
     #     find_protocol = protocol.upper()
@@ -623,40 +623,6 @@ class FrameFun:
     #                 return config_csg16.get_item(data_item_id.upper(), find_protocol, region, dir)
     #     else:
     #         return None
-    
-    @staticmethod
-    def get_template_element(template:str, protocol:str, region:str):
-        find_protocol = protocol.upper()
-        template = template.upper()
-        if "DLT/645" in protocol:
-            itemconfig = config_645.get_item(template, find_protocol, region)
-            if itemconfig is not None:
-                return itemconfig
-            else:
-                if template.isupper():
-                    return config_645.get_item(template.lower(), find_protocol, region)
-                else:
-                    return config_645.get_item(template.upper(), find_protocol, region)
-        elif ProtocolInfo.PROTOCOL_CSG13.name() in find_protocol:
-            itemconfig = config_csg13.get_item(template, find_protocol, region)
-            if itemconfig is not None:
-                return itemconfig
-            else:
-                if template.isupper():
-                    return config_csg13.get_item(template.lower(), find_protocol, region)
-                else:
-                    return config_csg13.get_item(template.upper(), find_protocol, region)
-        elif "CSG16" in find_protocol:
-            itemconfig = config_csg16.get_item(template, find_protocol, region)
-            if itemconfig is not None:
-                return itemconfig
-            else:
-                if template.isupper():
-                    return config_csg16.get_item(template.lower(), find_protocol, region)
-                else:
-                    return config_csg16.get_item(template.upper(), find_protocol, region)
-        else:
-            return None
             
 
 

@@ -464,16 +464,29 @@ class NormalSendReceive(BaseSendReceive):
         self.basesend = BaseSend(self)
         self.message_type = self.basesend.get_type()
         self.sendandreceive = BaseSendRecive(self.title, self.message_type, self)
+
+                # Main Widget
         self.qvlayout = QVBoxLayout(self)
-        size_policy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.sendandreceive.setSizePolicy(size_policy)
-        self.basesend.setSizePolicy(size_policy)
-        self.qvlayout.addWidget(self.sendandreceive, 7)
-        self.qvlayout.addSpacing(10)
-        self.qvlayout.addWidget(self.basesend, 3)
         self.qvlayout.setContentsMargins(0, 0, 0, 0)
-        self.qvlayout.setStretch(0, 7)  # sendandreceive
-        self.qvlayout.setStretch(1, 3)  # basesend
+
+        # Splitter
+        splitter = QSplitter(self)
+        splitter.setOrientation(Qt.Vertical)
+
+        # Upper Part (sendandreceive)
+        size_policy_upper = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.sendandreceive.setSizePolicy(size_policy_upper)
+        splitter.addWidget(self.sendandreceive)
+
+
+        # Lower Part (basesend)
+        size_policy_lower = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.basesend.setSizePolicy(size_policy_lower)
+        splitter.addWidget(self.basesend)
+
+        # Add the splitter to the main layout
+        self.qvlayout.addWidget(splitter)
+        
         self.slot_init()
 
     def slot_init(self):

@@ -1,6 +1,6 @@
 from token import STAR
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QApplication,QVBoxLayout,QVBoxLayout,QHBoxLayout
+from PyQt5.QtWidgets import QApplication,QVBoxLayout,QVBoxLayout,QHBoxLayout,QSplitter
 from PyQt5.QtGui import QImage,QPainter,QRegion,QPixmap,QFont
 # coding:utf-8
 from PyQt5.QtWidgets import QWidget, QVBoxLayout,QSizePolicy
@@ -261,7 +261,13 @@ class Alalysic(QWidget):
         self.input_text.setPlaceholderText(self.tr('请输入报文...'))
         self.tree_widget = CustomTreeWidget()
 
-        self.vBoxLayout = QVBoxLayout(self)
+                # Main Widget
+        self.qvlayout = QVBoxLayout(self)
+        self.qvlayout.setContentsMargins(0, 0, 0, 0)
+
+        # Splitter
+        self.splitter = QSplitter(self)
+        self.splitter.setOrientation(QtCore.Qt.Vertical)
 
         self.item_position = {}
         self.frame_len  = 0
@@ -273,13 +279,22 @@ class Alalysic(QWidget):
 
     def __initWidget(self):
 
-        self.vBoxLayout.setContentsMargins(0, 0, 0, 0)
-        self.vBoxLayout.setSpacing(5)
-        self.vBoxLayout.addWidget(self.input_text, 3)
-        self.vBoxLayout.addWidget(self.tree_widget, 7)
-        size_policy = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.input_text.setSizePolicy(size_policy)
-        self.tree_widget.setSizePolicy(size_policy)
+        # Upper Part (sendandreceive)
+        size_policy_upper = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.input_text.setSizePolicy(size_policy_upper)
+        self.splitter.addWidget(self.input_text)
+
+
+        # Lower Part (basesend)
+        size_policy_lower = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.tree_widget.setSizePolicy(size_policy_lower)
+        self.splitter.addWidget(self.tree_widget)
+
+        # Add the splitter to the main layout
+        self.qvlayout.addWidget(self.splitter)
+        self.splitter.setStretchFactor(0, 3)
+        self.splitter.setStretchFactor(1, 7)
+
         self.tree_widget.header().resizeSection(0,int(720 * 0.35))
         self.tree_widget.header().resizeSection(1,int(720 * 0.25))   
 

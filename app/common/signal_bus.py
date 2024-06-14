@@ -15,7 +15,7 @@ class SignalBus(QObject):
     supportSignal = pyqtSignal()
     windowschange = pyqtSignal(QSize)
     sendmessage = pyqtSignal(object, bytes)
-    messagereceive = pyqtSignal(bytes, object)
+    messagereceive = pyqtSignal(object, bytes)
     tcpSocketChange = pyqtSignal(list)
     infopopup = pyqtSignal(bool, str, str)
     upgrade = pyqtSignal()
